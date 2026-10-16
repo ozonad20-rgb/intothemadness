@@ -1,0 +1,1690 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Mesa virtual para o RPG Into the Madness: campanhas, fichas, rolagens e área do mestre.">
+<title>Into the Madness VTT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Courier+Prime:wght@400;700&display=swap">
+<style>
+/* Layout: dossiê de investigação — barra superior fixa, conteúdo em colunas que viram uma só no celular; fichas como pastas de arquivo. */
+:root{
+  --bg:#0c110f; --bg-2:#131a17; --bg-3:#1a231f; --bg-4:#222d28; --line:#2e3b35; --line-2:#3e4d45;
+  --fg:#f1ecdc; --muted:#c4cabb; --faint:#a1a996;
+  --accent:#95c9a3; --accent-2:#6fae84; --accent-ink:#0c110f;
+  --brass:#d6b268; --blood:#e3796b; --ether:#bba8ea; --ok:#95c9a3;
+  --shadow:0 10px 30px rgba(0,0,0,.45);
+  --f-display:'Cinzel','Trajan Pro',Georgia,'Times New Roman',serif;
+  --f-title:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --f-body:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --f-ui:'Atkinson Hyperlegible',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-mono:'Courier Prime','Courier New',ui-monospace,monospace;
+  --r:6px;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]){
+  --bg:#e9e1cc; --bg-2:#f4eee0; --bg-3:#e0d6bd; --bg-4:#d5c9ab; --line:#c5b893; --line-2:#ac9e78;
+  --fg:#16130d; --muted:#4a4334; --faint:#5f5644;
+  --accent:#2c6643; --accent-2:#245537; --accent-ink:#f4eee0;
+  --brass:#7f5a12; --blood:#9e3326; --ether:#553f91; --ok:#2c6643;
+  --shadow:0 10px 26px rgba(60,45,20,.22);
+  color-scheme:light;
+}}
+:root[data-theme="light"]{
+  --bg:#e9e1cc; --bg-2:#f4eee0; --bg-3:#e0d6bd; --bg-4:#d5c9ab; --line:#c5b893; --line-2:#ac9e78;
+  --fg:#16130d; --muted:#4a4334; --faint:#5f5644;
+  --accent:#2c6643; --accent-2:#245537; --accent-ink:#f4eee0;
+  --brass:#7f5a12; --blood:#9e3326; --ether:#553f91; --ok:#2c6643;
+  --shadow:0 10px 26px rgba(60,45,20,.22);
+  color-scheme:light;
+}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+img{max-width:100%}
+html,body{min-height:100%}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font-family:var(--f-body); font-size:19px; line-height:1.6; font-weight:450; font-optical-sizing:auto;
+  background-image:
+    radial-gradient(1200px 600px at 85% -10%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 70%),
+    radial-gradient(900px 500px at -10% 110%, color-mix(in srgb, var(--ether) 7%, transparent), transparent 70%);
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bg-2)}
+::selection{background:color-mix(in srgb,var(--accent) 35%,transparent)}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:600;line-height:1.2;margin:0;text-wrap:balance;letter-spacing:.02em}
+h1{font-size:clamp(2.1rem,5vw,3.2rem)} h2{font-size:clamp(1.6rem,3.4vw,2.1rem)} h3{font-size:1.4rem} h4{font-size:1.15rem}
+p{margin:0}
+a{color:var(--accent)}
+button,input,select,textarea{font:inherit;color:inherit}
+.label,label.lbl{font-family:var(--f-ui);font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--f-mono)}
+.muted{color:var(--muted)}
+.num{font-variant-numeric:tabular-nums;font-family:var(--f-mono)}
+:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+
+/* ---------- controls ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;min-height:46px;padding:.45em 1.05em;border-radius:var(--r);border:1px solid var(--line-2);background:var(--bg-3);color:var(--fg);cursor:pointer;font-family:var(--f-ui);font-size:1.02rem;font-weight:700;line-height:1.2;text-decoration:none;transition:background .15s,border-color .15s,transform .05s}
+.btn:hover{background:var(--bg-4);border-color:var(--accent-2)}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{background:var(--accent-2);border-color:var(--accent-2)}
+.btn.danger{border-color:color-mix(in srgb,var(--blood) 60%,var(--line));color:var(--blood);background:transparent}
+.btn.danger:hover{background:color-mix(in srgb,var(--blood) 14%,transparent)}
+.btn.ghost{background:transparent;border-color:transparent}
+.btn.ghost:hover{background:var(--bg-3);border-color:var(--line)}
+.btn.sm{min-height:38px;font-size:.92rem;padding:.3em .75em}
+.btn.xs{min-height:32px;font-size:.85rem;padding:.2em .6em;font-weight:500}
+.btn.icon{min-width:44px;padding:0 .6em}
+.btn.roll{border-color:color-mix(in srgb,var(--accent) 55%,var(--line));color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+.btn.roll:hover{background:color-mix(in srgb,var(--accent) 18%,transparent)}
+input[type=text],input[type=password],input[type=number],input:not([type]),select,textarea{
+  width:100%;min-height:46px;padding:.45em .7em;border-radius:var(--r);border:1px solid var(--line-2);
+  background:var(--bg);color:var(--fg);font-size:1.05rem;font-family:var(--f-ui);}
+textarea{min-height:110px;resize:vertical;line-height:1.5}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+input[readonly],textarea[readonly],select:disabled,input:disabled{opacity:.85;border-style:dashed}
+input[type=number]{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+input[type=checkbox]{width:22px;height:22px;accent-color:var(--accent);cursor:pointer}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.row.end{justify-content:flex-end}
+.row.between{justify-content:space-between}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:14px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.stack.lg{gap:24px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:.2em .7em;border-radius:99px;border:1px solid var(--line-2);font-size:.98rem;font-family:var(--f-ui);background:var(--bg-3)}
+.chip button{background:none;border:0;color:var(--muted);cursor:pointer;font-size:1.1rem;line-height:1;padding:0 2px}
+.chip button:hover{color:var(--blood)}
+.pill{display:inline-block;font-family:var(--f-ui);font-weight:700;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;padding:.15em .6em;border-radius:99px;border:1px solid currentColor}
+.pill.mestre{color:var(--brass)} .pill.jogador{color:var(--accent)} .pill.npc{color:var(--blood)}
+.hr{height:1px;background:var(--line);border:0;margin:0}
+
+/* ---------- shell ---------- */
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:color-mix(in srgb,var(--bg-2) 92%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:14px;min-height:64px;padding-block:8px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:700;font-size:1.25rem;color:var(--fg);text-decoration:none;cursor:pointer;background:none;border:0;padding:0}
+.brand svg{width:34px;height:34px;color:var(--accent)}
+.theme-btn svg{width:22px;height:22px}
+.topbar .sp{flex:1}
+.who{display:flex;align-items:center;gap:8px;font-size:1rem;color:var(--muted);font-family:var(--f-ui)}
+.who b{color:var(--fg);font-weight:600}
+main{padding-block:28px 120px}
+.banner-local{background:color-mix(in srgb,var(--brass) 14%,var(--bg-2));border-bottom:1px solid color-mix(in srgb,var(--brass) 40%,var(--line));color:var(--fg);font-size:.95rem}
+.banner-local .wrap{padding-block:8px}
+
+/* ---------- login ---------- */
+.login{min-height:calc(100vh - 40px);display:grid;grid-template-columns:1.1fr 1fr;gap:0;align-items:stretch}
+.login-art{position:relative;overflow:hidden;border-right:1px solid var(--line);display:flex;flex-direction:column;justify-content:flex-end;padding:48px max(16px,env(safe-area-inset-left,0px)) 48px 48px;background:
+  radial-gradient(circle at 50% 38%, color-mix(in srgb,var(--accent) 16%,transparent), transparent 55%), var(--bg-2)}
+.login-art canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.9}
+.login-art .copy{position:relative;max-width:30ch}
+.login-art h1{font-size:clamp(2.8rem,6vw,4.6rem);line-height:.95;color:var(--fg)}
+.login-art h1 em{display:block;font-family:var(--f-title);font-style:italic;color:var(--accent);font-size:.55em;letter-spacing:.02em;margin-bottom:.2em}
+.login-art p{color:var(--muted);margin-top:14px;font-size:1.1rem}
+.login-form{display:flex;align-items:center;justify-content:center;padding:40px max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px))}
+.login-card{width:100%;max-width:440px;display:flex;flex-direction:column;gap:18px}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line-2);border-radius:var(--r);overflow:hidden}
+.seg button{min-height:48px;background:transparent;border:0;cursor:pointer;font-family:var(--f-ui);font-weight:700;color:var(--muted)}
+.seg button[aria-pressed=true]{background:var(--bg-4);color:var(--fg);box-shadow:inset 0 -3px 0 var(--accent)}
+.err{color:var(--blood);font-size:.95rem;min-height:1.4em}
+.note{font-size:.95rem;color:var(--muted)}
+@media (max-width:820px){.login{grid-template-columns:1fr}.login-art{min-height:300px;border-right:0;border-bottom:1px solid var(--line);padding:32px max(16px,env(safe-area-inset-left,0px))}}
+
+/* ---------- home ---------- */
+.hero-home{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:26px}
+.hero-home .k{font-family:var(--f-ui);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-size:.9rem}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:22px;overflow-x:auto;scrollbar-width:thin}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:12px 16px;cursor:pointer;font-family:var(--f-ui);font-weight:700;font-size:1.08rem;color:var(--muted);white-space:nowrap;display:flex;align-items:center;gap:8px}
+.tabs button[aria-selected=true]{color:var(--fg);border-bottom-color:var(--accent)}
+.tabs button .count{font-family:var(--f-mono);font-size:.8rem;background:var(--bg-3);border:1px solid var(--line);border-radius:99px;padding:0 .5em}
+.tabs.small button{font-size:1rem;padding:10px 14px}
+.camp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:22px}
+.camp{background:var(--bg-2);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .15s,transform .15s}
+.camp:hover{border-color:var(--line-2)}
+.cover{position:relative;aspect-ratio:16/9;max-width:100%;background:var(--bg-3);overflow:hidden}
+.cover img{width:100%;height:100%;object-fit:cover;display:block}
+.cover .ph{position:absolute;inset:0;display:grid;place-items:center;color:var(--faint);background:
+  repeating-linear-gradient(135deg, transparent 0 14px, color-mix(in srgb,var(--line) 45%,transparent) 14px 15px), var(--bg-3)}
+.cover .ph svg{width:72px;height:72px;opacity:.6;color:var(--accent)}
+.camp .body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px;flex:1}
+.camp h3{font-size:1.5rem}
+.camp .meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.92rem;color:var(--muted)}
+.camp .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:8px}
+.empty{border:1px dashed var(--line-2);border-radius:10px;padding:34px 24px;text-align:center;color:var(--muted);display:flex;flex-direction:column;gap:12px;align-items:center}
+.empty h3{color:var(--fg)}
+
+/* ---------- campaign ---------- */
+.camp-head{display:grid;grid-template-columns:minmax(0,420px) 1fr;gap:26px;align-items:end;margin-bottom:24px}
+.camp-head .cover{border-radius:10px;border:1px solid var(--line)}
+.camp-head .info{display:flex;flex-direction:column;gap:10px;min-width:0}
+.camp-head .back{align-self:flex-start}
+@media (max-width:760px){.camp-head{grid-template-columns:1fr}}
+.panel{background:var(--bg-2);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.panel>header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.panel h3 small{font-family:var(--f-ui);font-size:.95rem;color:var(--muted);margin-left:6px}
+.code-box{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.code{font-family:var(--f-mono);font-size:2.2rem;letter-spacing:.28em;color:var(--brass);background:var(--bg);border:1px dashed var(--line-2);border-radius:var(--r);padding:.1em .5em .1em .7em;user-select:all}
+.master-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:20px}
+.span4{grid-column:span 4}.span5{grid-column:span 5}.span6{grid-column:span 6}.span7{grid-column:span 7}.span8{grid-column:span 8}.span12{grid-column:span 12}
+@media (max-width:980px){.span4,.span5,.span6,.span7,.span8{grid-column:span 12}}
+.list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.list .it{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line);background:var(--bg-2);flex-wrap:wrap}
+.list .it:first-child{border-top:0}
+.list .it .grow{flex:1;min-width:160px}
+.list .it .t{font-weight:600;font-size:1.08rem}
+.list .it .s{color:var(--muted);font-size:.9rem}
+.list .it.off{opacity:.55}
+.list .it.off .t{text-decoration:line-through}
+.chars{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:18px}
+.char{text-align:left;background:var(--bg-2);border:1px solid var(--line);border-radius:10px;padding:18px;cursor:pointer;display:flex;flex-direction:column;gap:10px;position:relative;color:var(--fg)}
+.char:hover{border-color:var(--accent-2)}
+.char::after{content:"";position:absolute;top:-1px;right:22px;width:70px;height:10px;border:1px solid var(--line);border-top:0;border-radius:0 0 6px 6px;background:var(--bg-3)}
+.char h3{font-size:1.45rem}
+.char .sub{color:var(--muted);font-size:1rem}
+.meters{display:flex;flex-direction:column;gap:6px}
+.meter{display:grid;grid-template-columns:92px 1fr 60px;align-items:center;gap:8px;font-size:.92rem}
+.meter .bar{height:8px;border-radius:99px;background:var(--bg-4);overflow:hidden}
+.meter .bar i{display:block;height:100%;background:var(--blood)}
+.meter.san .bar i{background:var(--ether)}
+.meter .num{text-align:right;color:var(--muted)}
+.create-card{border-style:dashed;align-items:flex-start;justify-content:center;min-height:180px}
+.create-card::after{display:none}
+
+/* dice roller */
+.dice-quick{display:flex;flex-wrap:wrap;gap:8px}
+.die-btn{min-width:62px;min-height:52px;border-radius:var(--r);border:1px solid var(--line-2);background:var(--bg-3);cursor:pointer;font-family:var(--f-mono);font-weight:700;font-size:1.05rem}
+.die-btn:hover{border-color:var(--accent);color:var(--accent)}
+.die-btn[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.result{border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.result .total{font-family:var(--f-mono);font-size:2.6rem;font-weight:700;line-height:1}
+.result .det{font-family:var(--f-mono);color:var(--muted);font-size:.95rem;word-break:break-word}
+.dice-faces{display:flex;flex-wrap:wrap;gap:6px}
+.face{min-width:36px;height:36px;padding:0 6px;display:inline-grid;place-items:center;border:1px solid var(--line-2);border-radius:5px;font-family:var(--f-mono);font-weight:700;background:var(--bg-3)}
+.face.max{border-color:var(--brass);color:var(--brass)}
+.face.min{border-color:var(--blood);color:var(--blood)}
+.face.drop{opacity:.4;text-decoration:line-through}
+.face.nef{border-radius:50%;border-style:double;border-width:3px}
+
+/* ---------- sheet ---------- */
+.sheet{display:flex;flex-direction:column;gap:20px}
+.sheet-top{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:start}
+@media (max-width:760px){.sheet-top{grid-template-columns:1fr}}
+.sheet-name input{font-family:var(--f-display);font-size:clamp(1.8rem,4vw,2.6rem);background:transparent;border:0;border-bottom:1px dashed var(--line-2);border-radius:0;padding:0 0 4px;min-height:auto}
+.sheet-name input:focus{box-shadow:none;border-bottom-color:var(--accent)}
+.rollbar{position:sticky;top:calc(env(safe-area-inset-top,0px) + 64px);z-index:30;background:color-mix(in srgb,var(--bg-2) 96%,transparent);border:1px solid var(--line);border-radius:10px;padding:10px 14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;box-shadow:var(--shadow)}
+.rollbar .seg{grid-template-columns:repeat(3,auto)}
+.rollbar .seg button{min-height:40px;padding:0 12px;font-size:.92rem}
+.rollbar select{width:auto;min-height:40px}
+.rollbar label.tog{display:flex;align-items:center;gap:8px;font-size:.95rem;cursor:pointer}
+.sec{background:var(--bg-2);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sec>h3{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:8px}
+.sheet-cols{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:20px;align-items:start}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:12px}
+.attrs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.attrs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.attr{border:1px solid var(--line-2);border-radius:10px;background:var(--bg);padding:12px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.attr .nm{font-family:var(--f-display);font-weight:700;font-size:1.05rem}
+.attr .val{font-family:var(--f-mono);font-size:2.3rem;font-weight:700;line-height:1}
+.stepper{display:flex;align-items:center;gap:4px}
+.stepper button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-2);background:var(--bg-3);cursor:pointer;font-size:1.2rem;line-height:1}
+.stepper button:hover{border-color:var(--accent)}
+.stepper input{width:70px;text-align:center;min-height:40px}
+.vitals{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:12px}
+.vital{border:1px solid var(--line-2);border-radius:10px;background:var(--bg);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.vital .head{display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+.vital .big{font-family:var(--f-mono);font-size:1.9rem;font-weight:700}
+.vital .big small{font-size:1rem;color:var(--muted);font-weight:400}
+.vital.hp .big{color:var(--blood)} .vital.san .big{color:var(--ether)} .vital.det .big{color:var(--brass)}
+.vital .bar{height:10px;border-radius:99px;background:var(--bg-4);overflow:hidden}
+.vital .bar i{display:block;height:100%;background:var(--blood);transition:width .3s}
+.vital.san .bar i{background:var(--ether)}
+.vital .ctr{display:flex;gap:6px;align-items:center}
+.vital .ctr input{min-height:38px;padding:.2em .4em;text-align:center}
+.saves{display:flex;flex-direction:column;gap:8px}
+.save{display:grid;grid-template-columns:1fr 74px 80px auto;gap:10px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.save .nm{font-weight:700;font-family:var(--f-ui)}
+.save .nm small{display:block;font-weight:400;color:var(--muted);font-size:.9rem;line-height:1.35}
+.save .tot{font-family:var(--f-mono);font-size:1.5rem;font-weight:700;text-align:center}
+.save label{display:flex;gap:6px;align-items:center;font-size:.85rem;color:var(--muted)}
+@media (max-width:520px){.save{grid-template-columns:1fr auto;}.save .bonus{display:none}}
+.tbl{width:100%;border-collapse:collapse;font-size:.98rem}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+.tbl th{font-family:var(--f-ui);font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px;background:var(--bg-3);font-weight:700;white-space:nowrap}
+.tbl td{padding:6px 8px;border-top:1px solid var(--line);vertical-align:middle}
+.tbl td input,.tbl td select{min-height:40px;font-size:.98rem}
+.tbl .w-s{width:90px}.tbl .w-xs{width:64px}
+.carga{display:flex;flex-direction:column;gap:6px}
+.carga .track{display:grid;grid-template-columns:repeat(4,1fr);gap:3px}
+.carga .track span{height:10px;border-radius:2px;background:var(--bg-4)}
+.carga .track span.on{background:var(--accent)}
+.carga .track span.on.w{background:var(--brass)} .carga .track span.on.x{background:var(--blood)}
+.deaths{display:flex;gap:20px;flex-wrap:wrap}
+.deaths .boxes{display:flex;gap:6px}
+.dots{display:flex;gap:6px}
+.dots button{width:28px;height:28px;border-radius:50%;border:2px solid var(--brass);background:transparent;cursor:pointer}
+.dots button.on{background:var(--brass)}
+.dots button:disabled{cursor:default}
+.ins-item{display:grid;grid-template-columns:130px 1fr auto;gap:10px;align-items:start}
+@media (max-width:560px){.ins-item{grid-template-columns:1fr}}
+.readonly-note{border:1px dashed var(--line-2);border-radius:8px;padding:10px 14px;color:var(--muted);font-size:.95rem}
+
+/* ---------- roll log balloon ---------- */
+.log-fab{position:fixed;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:70;width:70px;height:70px;border-radius:14px;border:1px solid var(--accent-2);background:var(--bg-3);color:var(--accent);box-shadow:var(--shadow);cursor:pointer;display:grid;place-items:center}
+.log-fab svg{width:36px;height:36px}
+.log-fab .badge{position:absolute;top:-8px;right:-8px;background:var(--blood);color:#fff;border-radius:99px;font-family:var(--f-mono);font-size:.8rem;font-weight:700;min-width:24px;height:24px;display:grid;place-items:center;padding:0 6px}
+.log-fab::after{content:"";position:absolute;bottom:-9px;right:16px;width:16px;height:16px;background:var(--bg-3);border-right:1px solid var(--accent-2);border-bottom:1px solid var(--accent-2);transform:rotate(45deg)}
+.log-panel{position:fixed;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:70;width:min(420px,calc(100vw - 32px));height:min(620px,calc(100vh - 120px));background:var(--bg-2);border:1px solid var(--accent-2);border-radius:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden}
+.log-panel header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px 10px 16px;border-bottom:1px solid var(--line);background:var(--bg-3)}
+.log-panel header h3{font-size:1.3rem}
+.log-list{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px}
+.log-entry{border:1px solid var(--line);border-left:4px solid var(--line-2);border-radius:8px;padding:8px 10px;background:var(--bg);display:flex;flex-direction:column;gap:4px}
+.log-entry .top{display:flex;justify-content:space-between;gap:8px;font-size:.88rem;color:var(--muted);font-family:var(--f-ui)}
+.log-entry .lbl2{font-weight:700;font-size:1.02rem;font-family:var(--f-ui)}
+.log-entry .tt{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.log-entry .tt b{font-family:var(--f-mono);font-size:1.6rem}
+.log-entry .det{font-family:var(--f-mono);font-size:.85rem;color:var(--muted);word-break:break-word}
+.log-entry.triunfo{border-left-color:var(--brass)} .log-entry.desespero{border-left-color:var(--blood)}
+.log-entry.beneficio{border-left-color:var(--accent)} .log-entry.ameaca{border-left-color:var(--ether)}
+.log-entry.secret{border-style:dashed}
+.tag{font-family:var(--f-ui);font-weight:700;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;padding:.1em .5em;border-radius:4px;border:1px solid currentColor}
+.tag.triunfo{color:var(--brass)} .tag.desespero{color:var(--blood)} .tag.beneficio{color:var(--accent)} .tag.ameaca{color:var(--ether)}
+.tag.ok{color:var(--ok)} .tag.fail{color:var(--blood)} .tag.sec{color:var(--muted)}
+.log-form{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line)}
+.log-form input{min-height:42px}
+@media (max-width:560px){.log-panel{right:0;left:0;bottom:0;width:100%;border-radius:14px 14px 0 0;height:min(78vh,620px);padding-bottom:env(safe-area-inset-bottom,0px)}}
+
+/* ---------- modal / toast ---------- */
+.modal-bg{position:fixed;inset:0;z-index:90;background:color-mix(in srgb,#000 62%,transparent);display:flex;align-items:flex-start;justify-content:center;padding:max(24px,env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) 24px max(12px,env(safe-area-inset-left,0px));overflow-y:auto}
+.modal{width:100%;max-width:640px;background:var(--bg-2);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;margin-block:auto}
+.modal.wide{max-width:920px}
+.modal>header{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.modal>.mb{padding:20px;display:flex;flex-direction:column;gap:16px}
+.modal>footer{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--line);flex-wrap:wrap}
+.toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:100;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:min(560px,calc(100vw - 32px))}
+.toast{background:var(--bg-4);border:1px solid var(--line-2);border-radius:8px;padding:10px 16px;box-shadow:var(--shadow);font-size:.98rem;pointer-events:auto}
+.toast.err{border-color:var(--blood);color:var(--fg)}
+.toast.ok{border-color:var(--accent)}
+.roll-pop{border:1px solid var(--accent-2);border-radius:10px;background:var(--bg);padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+
+/* cover editor */
+.crop{position:relative;aspect-ratio:16/9;max-width:100%;width:100%;background:var(--bg);border:1px solid var(--line-2);border-radius:8px;overflow:hidden;cursor:grab;touch-action:none}
+.crop canvas{width:100%;height:100%;display:block}
+.crop:active{cursor:grabbing}
+
+/* wizard */
+.steps{display:flex;gap:6px;flex-wrap:wrap}
+.steps span{font-family:var(--f-ui);font-weight:700;font-size:.82rem;padding:.2em .6em;border-radius:99px;border:1px solid var(--line);color:var(--faint)}
+.steps span.on{border-color:var(--accent);color:var(--accent)}
+.steps span.done{color:var(--muted);border-color:var(--line-2)}
+.opt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:10px}
+.opt{text-align:left;border:1px solid var(--line-2);border-radius:8px;background:var(--bg);padding:12px 14px;cursor:pointer;display:flex;flex-direction:column;gap:4px;color:var(--fg)}
+.opt:hover{border-color:var(--accent-2)}
+.opt[aria-pressed=true]{border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent);background:color-mix(in srgb,var(--accent) 8%,var(--bg))}
+.opt b{font-family:var(--f-display);font-weight:700;font-size:1.1rem}
+.opt small{color:var(--muted);font-size:.95rem;line-height:1.45}
+.hint{font-size:.95rem!important;color:var(--muted);font-style:normal;line-height:1.5}
+.ref{font-size:.98rem;color:var(--muted)}
+.loading{display:grid;place-items:center;min-height:60vh;text-align:center;color:var(--muted);font-size:1.25rem}
+.loading svg{width:80px;height:80px;color:var(--accent);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35;transform:scale(.94)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.pop-wrap{position:fixed;left:calc(18px + env(safe-area-inset-left,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:75;width:min(420px,calc(100vw - 130px))}
+.pop-wrap:empty{display:none}
+.pop-wrap .roll-pop{box-shadow:var(--shadow);background:var(--bg-2)}
+@media (max-width:560px){.pop-wrap{left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));width:auto;bottom:calc(100px + env(safe-area-inset-bottom,0px))}}
+@media (max-width:640px){.who{display:none}.brand span{font-size:1.1rem}body{font-size:18px}.rollbar{top:calc(env(safe-area-inset-top,0px) + 64px);gap:8px;padding:8px 10px}.rollbar .label{display:none}}
+details>summary{list-style:none}details>summary::-webkit-details-marker{display:none}details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary::before{content:"▾ "}
+.sheet-name input{font-weight:700;letter-spacing:.02em}
+.camp h3{font-size:1.35rem}
+.rollbar label.tog,.save label,.camp .meta,.list .it .s{font-family:var(--f-ui)}
+.list .it .t{font-family:var(--f-ui);font-weight:700}
+.err{font-family:var(--f-ui);font-weight:700}
+.toast{font-family:var(--f-ui)}
+</style>
+
+</head>
+<body>
+<div id="app"></div>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, sendPasswordResetEmail, sendEmailVerification, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc as fsDoc, getDoc, setDoc, deleteDoc, collection as fsCollection, query as fsQuery, where as fsWhere, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ===== Dados do sistema Into the Madness (Jonas Picholaro, CC BY-SA) ===== */
+const ATTRS = [
+  {k:'cor', n:'Corpo', d:'Força física e resistência. Ataques próximos, Saúde e Fortitude.'},
+  {k:'agi', n:'Agilidade', d:'Ataques à distância, Reflexos e Defesa.'},
+  {k:'ast', n:'Astúcia', d:'Esperteza e raciocínio. Iniciativa e Sanidade.'},
+  {k:'pre', n:'Presença', d:'Habilidades sociais e estabilidade emocional. Vontade.'}
+];
+const SAVES = [
+  {k:'fort', n:'Fortitude', a:'cor', d:'Cansaço, venenos, doenças, testes de morte.'},
+  {k:'refl', n:'Reflexos', a:'agi', d:'Quedas, áreas, rajadas de disparos.'},
+  {k:'vont', n:'Vontade', a:'pre', d:'Perda de sanidade, medo, controle mental.'},
+  {k:'inic', n:'Iniciativa', a:'ast', d:'Agir antes do inimigo, contra-ataque, percepção.'}
+];
+const DIFS = [
+  {v:5,n:'Muito fácil'},{v:10,n:'Fácil'},{v:15,n:'Média'},
+  {v:20,n:'Difícil'},{v:25,n:'Muito difícil'},{v:30,n:'Heroico'}
+];
+const ARQUETIPOS = [
+  {k:'audaz', n:'Audaz', d:'Dedica a vida à exploração e aventura, viajando o mundo atrás de adrenalina e conhecimento.', b:'+1 em dois atributos à sua escolha.'},
+  {k:'combatente', n:'Combatente', d:'Força física, esportes e lutas fazem parte da sua vida.', b:'+1 Corpo, +1 Fortitude, +1 ponto de Saúde.', attr:'cor', save:'fort', saude:1},
+  {k:'agil', n:'Ágil', d:'Extremamente ágil: artes circenses, esportes extremos ou grandes furtos.', b:'+1 Agilidade, +1 Reflexos.', attr:'agi', save:'refl'},
+  {k:'negociante', n:'Negociante', d:'Mais esperto que a maioria, enxerga o resultado das situações com antecedência.', b:'+1 Astúcia, +1 Iniciativa, +1 ponto de Sanidade.', attr:'ast', save:'inic', sanidade:1},
+  {k:'envolvente', n:'Envolvente', d:'Presença marcante, sabe seduzir com o corpo ou com as palavras.', b:'+1 Presença, +1 Vontade, começa com 1 de Determinação.', attr:'pre', save:'vont', det:1}
+];
+const PROFISSOES = [
+  ['Autor','Charme, Pesquisa, Criminologia/Leis, Ocultismo, Enganar/Atuar'],
+  ['Antiquário','Avaliação, História, Pesquisa, Idiomas Antigos, Idioma Adicional'],
+  ['Investigador Particular','Suborno, Dirigir, Seguir Pessoas, Pesquisa, Luta (+1 dano com os punhos), Armas de Fogo (leve)'],
+  ['Arqueólogo','Idiomas Antigos, Arqueologia, Idiomas Estrangeiros, Costumes Locais, Pesquisa'],
+  ['Doutor','Medicina, Pesquisa, Primeiros Socorros (cura 1d4), Mundo Natural'],
+  ['Socialite','Charme, Dirigir Carro, Crédito, +2 entre Marinhagem, Esgrima, Cavalgar, Caçar ou outros hobbies'],
+  ['Professor','Foco acadêmico (Antropologia, Linguística, Religião...), Investigar, Pesquisa, Charme'],
+  ['Psicólogo','Charme, Persuasão, Investigar, Psicologia, Terapia (recupera 1d4 sanidade/semana)'],
+  ['Cientista','Avaliação, Pesquisar, Ciência (campo à escolha), Mundo Natural'],
+  ['Mecânico','Mecânica, Dirigir, Atletismo, Luta (+1 dano com os punhos)'],
+  ['Performista','Performance (uma ou duas), Atletismo, Charme, Artimanha'],
+  ['Repórter','Charme, Persuasão, Crédito, Pesquisa, Idioma adicional ou Fotografia'],
+  ['Bonvivant','Avaliação, Charme, Persuasão, Enganar, Idioma Extra'],
+  ['Explorador','Lidar com Animais, Luta (+1 dano com punhos), Sobrevivência, Navegação, Condução'],
+  ['Femme Fatale','Atuação, Charme, Avaliação, Armas de Fogo (leve) ou Armas Brancas (+1 dano), Artimanha'],
+  ['Caçador','Lidar com Animais, Luta (+1 dano com punhos), Sobrevivência, Armas de Fogo (pesada), Armas Brancas (+1 dano)'],
+  ['Capanga','Luta (+1 dano com punhos), Armas Brancas (+1 dano), Armas de Fogo (leve ou pesada), Atletismo, Coerção'],
+  ['Aviador','Pilotar, Sobrevivência, Armas de Fogo (leve ou pesada), Mecânica, Navegação'],
+  ['Gângster','Luta (+1 dano com punhos), Armas de Fogo (leve ou pesada), Leis, Charme, Persuasão'],
+  ['Apostador','Jogos, Artimanhas, Punga, Enganar, Suborno'],
+  ['Mística','Atuação, Astronomia, Astrologia, Ocultismo, Leitura de Tarô ou outra perícia mística'],
+  ['Assassino','Furtividade, Armas de Fogo (leve), Sobrevivência, Luta, Armas Brancas (+1 dano), Atletismo'],
+  ['Militar','Sobrevivência, Luta ou Armas Brancas (+1 dano), Armas de Fogo (leve ou pesada), Primeiros Socorros (cura 1d4), Táticas'],
+  ['Ocultista','Ocultismo, Pesquisa, Investigação, Antropologia, Idiomas Antigos'],
+  ['Agente Federal','Armas de Fogo (leve), Investigação, Pesquisa, Dirigir, Leis, Persuasão'],
+  ['Detetive','Armas de Fogo (leve), Investigação, Dirigir, Pesquisar, Manha'],
+  ['Espião','Arma de Fogo (leve), Investigar, Seguir Pessoas, Furtividade, Charme'],
+  ['Atleta','Luta (+1 dano com punhos), Atletismo, Armas Brancas (+1 dano), Charme, Sobrevivência'],
+  ['Padre','Religião, Habilidades Sociais, História, Pesquisa, Exorcismo']
+];
+const PERICIAS_EX = ['Acadêmicos (História, Antropologia, Linguística, Religião...)','Armas Brancas','Armas de Fogo (Leves)','Armas de Fogo (Pesadas)','Arqueologia','Artesanato','Artimanha','Atletismo','Avaliação','Charme','Ciência','Coerção','Condução','Contabilidade','Disfarce','Enganar','Furtividade','Idioma Extra','Idiomas Antigos','Investigação','Leis/Criminologia','Lidar com Animais','Luta','Manha','Mecânica','Medicina','Mundo Natural','Mythos','Navegação','Ocultismo','Performance','Persuasão','Pesquisa','Pilotar','Primeiros Socorros','Psicologia','Seguir Pessoas','Sobrevivência','Suborno','Terapia'];
+const VIRTUDES = ['Corajoso','Cauteloso','Generoso','Honrado','Estudioso','Piedoso','Misericordioso','Inabalável','Trabalhador','Otimista','Cortês','Idealista','Reservado','Moderado','Modesto','Disciplinado','Casto','Indulgente','Racional','Contemplativo'];
+const VICIOS = ['Covarde','Viciado em Jogos','Rude','Ganancioso','Egoísta','Desatento','Irreverente','Cruel','Mau Temperamento','Preguiçoso','Pessimista','Cínico','Tempestuoso','Viciado em Substância','Vaidoso','Rebelde','Promíscuo','Vingativo','Supersticioso','Irrefletido'];
+const MOTIVACOES = [
+  ['Busca','Você busca por um objeto que acredita poder mudar sua vida.'],
+  ['Missão','Um mentor ou pessoa confiável enviou você para recuperar um objeto ou resgatar alguém. Você deve ter sucesso a todo custo.'],
+  ['Perseguição','Você persegue um adversário evasivo. Talvez ele tenha matado seu mestre, ou roubado algo seu.'],
+  ['Juramento/Dever','Você jurou seguir ou proteger alguém, servir seu país ou sustentar sua família sofredora.'],
+  ['Escapar','Você é perseguido por um crime que não cometeu (ou cometeu). Seu perseguidor dedicou a vida a encontrá-lo.'],
+  ['Vingança','Mataram alguém que você ama e deixaram você para morrer. Você não descansará até que a justiça seja feita.'],
+  ['Mistério','Você tem um passado misterioso, ou alguém da sua família foi assassinado e você tem uma única pista.'],
+  ['Rival','Você tem um rival com as mesmas habilidades, que aparece em horas inoportunas para frustrá-lo.'],
+  ['Amor','As circunstâncias separaram você de seu amor verdadeiro. Encontre-o ou morra tentando.'],
+  ['Amor Proibido','Você ama alguém que é errado para você: outra classe social, uma má pessoa, ou ambos.'],
+  ['Débito','Você deve muito dinheiro a alguém.'],
+  ['Queda Trágica','Você busca poder, e esse poder irá destruí-lo.']
+];
+const NOMES_F = {2:'Hillary',3:'Anna',4:'Lillian',5:'Betty',6:'Margaret',7:'Blythe',8:'Mary',9:'Catherine',10:'Mildred',11:'Clara',12:'Ruth',13:'Constance',14:'Penelope',15:'Dorothy',16:'Prudence',17:'Elizabeth',18:'Sloan',19:'Elinor',20:'Emma',21:'Felicity',22:'Florence',23:'Jane',24:'Alice'};
+const NOMES_M = {3:'Andrew',4:'Howard',5:'Aldrich',6:'James',7:'Allister',8:'John',9:'August',10:'Michael',11:'Betram',12:'Niles',13:'Blaine',14:'Pierce',15:'Bradley',16:'Porter',17:'Chad',18:'Reed',19:'Chandler',20:'Samuel',21:'Charles',22:'Spencer',23:'Chet',24:'Sterling',25:'Conrad',26:'Thatcher',27:'Danforth',28:'Trace',29:'Dean',30:'Trent',31:'George',32:'Wade',33:'Grant',34:'Warner',35:'Henry',36:'William'};
+const SOBRENOMES = ['Adams','Lowell','Ambrose','Luxford','Arboghast','Macallister','Armitage','Martin','Applegate','Mewborne','Atterbury','Milton','Barrington','Northrup','Beauchamp','Olmstead','Beaufort','Overton','Bidwell','Ovington','Brewster','Quincy','Buchanan','Parker','Canfield','Pemberton','Carter','Pemberwell','Carver','Phelps','Chesterfield','Phillips','Collins','Ponsonby','Cooke','Plumridge','Culverwell','Ponsonby','Cuthbertson','Prescott','Deveroux','Pruitt','Dimbleby','Quincy','Dimmesdale','Randolph','Edgecombe','Rossiter','Everett','Rothchild','Fairchild','Spencer','Faircliff','Strangford','Farnsworth','Throckmorton','Fletcher','Twyford','Fuller','VanBuren','Gladwell','Vanderbilt','Grinham','Wainsworth','Grisham','Wellesley','Guest','White','Hathaway','Williams','Huntley','Winslow','Hyde','Worthington','Illingworth','Jennison','Langstrom','Leatherwood','Lockewood','Lovejoy','Smith','Johnson','Williams','Jones','Brown','Davis','Miller','Wilson','Taylor','White','Harris','Martin','Thompson','Garcia','Martinez','Robinson','Clarck','Rodriguez','Lewis','Lee'];
+const RECURSOS = ['Falido: só uma quantia média de dinheiro vivo e o que carrega.','Trabalhador batalhador, ganha em média um salário mínimo.','Renda razoável, sem dívidas, veículo usado, apartamento alugado.','Renda confortável, veículo em bom estado, casa ou apartamento confortáveis.','Riqueza considerável: casarão, veículo de luxo, biblioteca, empregados.','Dinheiro não é preocupação: vários carros, empregados, avião particular.'];
+const ARMAS = [
+  // tipo: prox (Corpo) | dist (Agilidade)
+  {n:'Punhos',d:'1d4',t:'prox',a:'cor',c:0},
+  {n:'Porrete',d:'1d6',t:'prox',a:'cor',c:1},
+  {n:'Faca',d:'1d4',t:'prox',a:'agi',c:1,o:'AGI ou COR'},
+  {n:'Facão',d:'1d6',t:'prox',a:'cor',c:1},
+  {n:'Artes Marciais',d:'1d6',t:'prox',a:'agi',c:0,o:'AGI ou COR'},
+  {n:'Espada Curta',d:'1d6',t:'prox',a:'cor',c:1},
+  {n:'Espada Longa',d:'1d8',t:'prox',a:'cor',c:2,o:'1d10 com 2 mãos'},
+  {n:'Florete',d:'1d6',t:'prox',a:'agi',c:1,o:'COR ou AGI'},
+  {n:'Rapieira',d:'1d6',t:'prox',a:'agi',c:1,o:'COR ou AGI'},
+  {n:'Machado',d:'1d8',t:'prox',a:'cor',c:2,o:'1d10 com 2 mãos'},
+  {n:'Revólver Leve',d:'1d8',t:'dist',a:'agi',c:1,o:'Cad. 2 · Mun. 6 · recarga 1 turno/bala'},
+  {n:'Revólver Pesado',d:'2d6',t:'dist',a:'agi',c:1,o:'Cad. 1 · Mun. 6 · recarga 1 turno/bala'},
+  {n:'Pistola Leve',d:'1d8',t:'dist',a:'agi',c:1,o:'Cad. 3 · Mun. 9 · recarga 1 turno/cartucho'},
+  {n:'Pistola Pesada',d:'2d6',t:'dist',a:'agi',c:1,o:'Cad. 1 · Mun. 8 · uso governamental'},
+  {n:'Pistola de Bolso',d:'1d6',t:'dist',a:'agi',c:1,o:'Cad. 3 · Mun. 7'},
+  {n:'Rifle Militar',d:'3d6',t:'dist',a:'agi',c:2,o:'Cad. 1 · Mun. 10 · uso militar'},
+  {n:'Rifle Pesado',d:'2d8',t:'dist',a:'agi',c:2,o:'Cad. 1 · Mun. 2 · 1 turno p/ recarga'},
+  {n:'Rifle Leve',d:'2d6',t:'dist',a:'agi',c:2,o:'Cad. 2 · Mun. 9'},
+  {n:'Calibre 12 Cano Serrado',d:'2d6',t:'dist',a:'agi',c:2,o:'Cad. 2 · Mun. 2'},
+  {n:'Calibre 12',d:'3d6',t:'dist',a:'agi',c:2,o:'Cad. 2 · Mun. 2'},
+  {n:'SMG (Thompson)',d:'2d6',t:'dist',a:'agi',c:2,o:'Cad. 4 · Mun. 20 ou 30 · recarga 2 turnos'},
+  {n:'Granada',d:'4d6',t:'dist',a:'agi',c:1,o:'Arremesso · delay 2 turnos · área'},
+  {n:'Lança-Chamas',d:'3d6',t:'dist',a:'agi',c:3,o:'10 cargas · tanque nas costas'}
+];
+const PROTECOES = [
+  {n:'Roupas Comuns',def:0,max:5,c:2},
+  {n:'Casaco Pesado',def:1,max:4,c:2},
+  {n:'Casaco de Couro',def:2,max:4,c:2},
+  {n:'Colete Balístico Leve',def:3,max:3,c:3,o:'Uso restrito'},
+  {n:'Colete Balístico Pesado',def:4,max:2,c:3,o:'Uso militar'},
+  {n:'Armadura de Guerra',def:6,max:0,c:5,o:'Move-se lentamente'}
+];
+const ITENS = [
+  ['Lanterna',1,'Usos 1d6'],['Isqueiro',0,'Usos 1d8'],['Fósforos',0,'Usos 1d8'],['Pé de Cabra',1,''],['Lampião',1,'Usos 1d6'],
+  ['Roupas de Frio',2,''],['Roupas de Exploração',2,''],['Maleta Médica',2,'Usos 1d4'],['Kit de 1º Socorros',1,'Usos 1d4 · cura 1d6+1'],
+  ['Kit de Exploração',4,''],['Maleta Científica',3,''],['Cantil',1,'2 litros'],['Kit de Ferramentas',3,''],['Kit de Escrita',2,''],
+  ['Corda (15m)',2,''],['Arpéu',1,''],['Câmera Fotográfica',1,''],['Pistola Sinalizadora',1,'1 sinalizador'],['Kit de Falsificação',2,''],
+  ['Comida de Exploração (dia)',1,''],['Livros',1,''],['Caixa/Pente de Munição',0,'5 = 1 carga']
+];
+const BOLSAS = [{k:'',n:'Nenhuma',v:0},{k:'bolsa',n:'Bolsa (+2)',v:2},{k:'mochila',n:'Mochila (+5)',v:5},{k:'mala',n:'Mala (+8)',v:8}];
+
+const INS_CURTA = [
+  [1,20,'Catatônico, preso na própria mente e paralisado. Termina se sofrer dano.'],
+  [21,30,'Balbuciante: incapaz de falar, se comunicar ou conjurar magias.'],
+  [31,40,'Incapacitado: passa o turno gritando, rindo ou chorando.'],
+  [41,50,'Usa sua ação para atacar a criatura mais próxima.'],
+  [51,60,'Amedrontado: foge da fonte do medo.'],
+  [61,70,'Alucina: desvantagem em testes de atributos, combate ou proficiências.'],
+  [71,75,'Faz o que qualquer pessoa mandar, desde que não seja suicida.'],
+  [76,80,'Vontade inexplicável de comer coisas estranhas: terra, limo, mofo, restos.'],
+  [81,90,'Cai inconsciente.'],
+  [91,99,'Atordoado: desvantagem em qualquer teste, deslocamento pela metade.'],
+  [100,100,'Adquire uma Insanidade de Longa Duração.']
+];
+const INS_LONGA = [
+  [1,10,'Alucinações que parecem reais: desvantagem em testes de atributos, combate ou proficiências.'],
+  [11,20,'Considera a fonte da loucura totalmente repulsiva e a evita a qualquer custo.'],
+  [21,30,'Compulsão por repetir atividades: lavar as mãos, tocar objetos, rezar, contar moedas.'],
+  [31,40,'Paranoico: desvantagem em testes de Presença e Astúcia.'],
+  [41,45,'Experimenta uma alucinação poderosa.'],
+  [46,50,'Fica cego (25%) ou surdo (75%).'],
+  [51,60,'Ligado a um "talismã da sorte": desvantagem em tudo a mais de 9 metros dele.'],
+  [61,65,'Fica extremamente confuso sempre que recebe dano.'],
+  [66,75,'Tremores e tiques: desvantagem em jogadas de Corpo ou Agilidade.'],
+  [76,85,'Cai inconsciente. Nada consegue acordá-lo.'],
+  [86,95,'Perde a capacidade de falar.'],
+  [96,100,'Amnésia parcial: sabe quem é, mas não reconhece mais ninguém nem os fatos anteriores.']
+];
+const INS_PERM = ['Torna-se extremamente alcoólatra.','Torna-se um acumulador.','Fantasia ser igual a alguém que conhece: roupas, maneirismos.','Mente compulsivamente.','Fanático por um objetivo; não deixa ninguém interferir.','Não se importa com nada ao redor, só consigo mesmo.','Paranoico: sente que está sendo julgado o tempo todo.','Confiança excessiva: o mais forte, o mais inteligente, o mais belo.','Paranoico: alguém poderoso o observa o tempo todo.','Só confia em uma pessoa no mundo, e só você pode vê-la.','Não consegue levar nada a sério; quanto mais grave, mais engraçado.','Torna-se um assassino a sangue frio ou extremamente sádico.','Torna-se ninfomaníaco.','Sofre de ansiedade extrema.','Múltiplas personalidades (1d3 novas).','Adquire uma Fobia (role na lista de fobias).','Fome insaciável, extremamente guloso.','Descontrole financeiro, gasta tudo em prazeres.','Extremamente violento, especialmente quando contrariado.','Role duas vezes e adquira duas Insanidades Permanentes.'];
+const FOBIAS = ['Grandes alturas','Ventanias','Lugares abertos','Estar sozinho','Bactérias','Livros','Trovões','Neve','Multidões','Insetos','Atravessar pontes','Cometer erros','Luz do sol','Água','Curandeiros (médicos)','Ficar insano','Mortos','Dentes','Cobras','Crianças','Fogo','Espelhos','Monstros','Cirurgias','Estranhos e forasteiros','Gatos','Homens','Estrelas','Lugares profundos','Balas','Limos','Salas vazias','Lugares fechados','Árvores','Cavalos','Mulheres','Ser tocado','Sangue','Dormir','Peixes','Ratos','Noite/Anoitecer','Um nome, palavra ou frase','Pássaros','Barulhos','Escuro','Ser queimado vivo','Oceano','Vermes','Animais'];
+const DANO_FISICO = [[3,4,'Morto.'],[5,5,'Perde 1d8 PVs máximos.'],[6,6,'Perde 1d6 PVs máximos.'],[7,7,'Perde 1d4 PVs máximos.'],[8,8,'Perde 1 de Corpo.'],[9,10,'Perde uma mão.'],[11,12,'Lesão na perna (dificuldade de movimentação).'],[13,13,'Perde 1 de Agilidade.'],[14,14,'Perde 1 de Astúcia.'],[15,15,'Perde 1 de Presença.'],[16,18,'Somente inconsciente.']];
+const PERDA_SAN = [['Corpos mortos de maneira grotesca','1'],['Construção dedicada a um Deus Antigo Caótico','1'],['Presenciar uma situação desesperadora','1'],['Perceber "algo errado" com alguém, sua verdadeira natureza','1'],['Ser alvo de um feitiço de medo','1'],['Testemunhar um ritual de blasfêmia','2'],['Testemunhar uma carnificina','2'],['Testemunhar os mortos se levantarem','2'],['Enfrentar mortos-vivos','1d3'],['Enfrentar criaturas extradimensionais','1d4'],['Enfrentar criaturas deformadas ou pervertidas','1d3'],['Enfrentar uma criatura totalmente alienígena','4'],['Testemunhar um Grande Antigo em sua plenitude','5']];
+const FEITICOS = [
+  ['Mente Efervescente de Suleiman',1,'Suga o cérebro de um personagem causando 1d6 de dano mental.'],
+  ['Círculo de Naach-Tith',1,'Círculo de proteção contra uma criatura ou pessoa.'],
+  ["Névoas da Loucura de Shddle M'ell",1,'Névoa densa: vantagem aos aliados, desvantagem aos inimigos.'],
+  ['Devaneios de Hastur',1,'Maldição: desvantagem em todos os testes do alvo por 24 horas.'],
+  ['Respiro das Profundezas',2,'Drena 1d6 de saúde de outro personagem e recupera 1d6 na sua.'],
+  ['Vida Profana de Tarkhun Atep',2,'Cria um morto-vivo.'],
+  ['Palavras de Ka',2,'Cura ferimentos (1d12+nível), envenenamento ou doenças.'],
+  ['Palavras de Cura e Dor de Thoth',2,'Causa ou cura cegueira, mudez e surdez.'],
+  ['Aura Negra de Yog-Sothoth',2,'Terror em todos que olharem para você por 1d6 horas.'],
+  ['Mente Nebulosa de Ibn-Ghazi',2,'Faz alguém esquecer algo que você deseja.'],
+  ['Máscara de Nyarlathotep',2,'Assume a forma de outra pessoa por 1d6 horas.'],
+  ['Águas da Morte de Tarkhun Atep',3,'Causa uma doença rara ou desconhecida.'],
+  ["Canção da Morte de R'lyeh",3,'Todos que escutarem perdem 1d4 de sanidade.'],
+  ["Portal de Conhecimento de Shddle M'ell",3,'Contata as divindades em busca de conhecimento.'],
+  ['Portais Escuros de Azathoth',4,'Convoca uma criatura de outra dimensão.'],
+  ['Domínio de Yde Etad',4,'Domina a mente de uma pessoa por um curto período.'],
+  ['Poder da Vida de Nyogtha',4,'Traz um corpo de volta dos mortos, com efeitos colaterais.'],
+  ['Banimento de Gorgoroth',5,'Bane uma criatura ou pessoa para outra dimensão.'],
+  ['Maldição da Inexistência de Nyogtha',5,'Derrete toda matéria orgânica fora de uma área de proteção.'],
+  ['Maldição de Husk',5,'Troca a mente de duas pessoas de corpo.'],
+  ['Segredo da Vida de Husk',6,'Transfere sua mente para outro corpo, matando a da vítima.'],
+  ['Palavras da Fthagn',6,'Feitiço de morte ao custo de uma vida sacrificada.']
+];
+const BESTIARIO = [
+  {name:'Criatura das Profundezas',desc:'Mistura blasfêmica de rã e peixe, pegajosa, escamosa, olhos protuberantes.',attrs:{cor:3,agi:1,ast:-1,pre:1},insanidade:'1d4',defesa:12,saude:15,prof:1,ataques:[['Garras',14,4,'1d6+3']],resist:'Escamas: ataques causam no máximo 3 de dano cada.',fraq:'Anda cambaleando, salto lento; sempre ultrapassada em corrida.'},
+  {name:'Matraqueante do Além',desc:'Amorfo, asqueroso, tentáculos pegajosos, horror translúcido.',attrs:{cor:2,agi:1,ast:-3,pre:0},insanidade:'1d6',defesa:11,saude:20,prof:1,ataques:[['Tentáculo (1d6 tentáculos)',13,3,'1d6+2']],resist:'Corpo amorfo: ataques causam no máximo 4 de dano cada.',fraq:'Sal queima e causa 1d6 de dano.'},
+  {name:'Carniçal',desc:'Canibal feroz, sem nome, vagamente canino.',attrs:{cor:2,agi:2,ast:-2,pre:1},insanidade:'1d4',defesa:13,saude:15,prof:2,ataques:[['Garras e Presas (vantagem)',14,4,'1d8+2']],resist:'Morto-vivo: ataques causam no máximo 2 de dano cada.',fraq:'Luz brilhante os cega e faz com que se retirem.'},
+  {name:'Zumbi',desc:'Corpo putrefato de um ser humano, podre e fedido.',attrs:{cor:2,agi:0,ast:-2,pre:0},insanidade:'1d4',defesa:11,saude:12,prof:1,ataques:[['Pancada e Mordidas',13,3,'1d6+2']],resist:'Corpo morto: ataques causam no máximo 4 de dano cada.',fraq:'Fogo causa 2d6 de dano ao invés de 1d6.'},
+  {name:'Cultista Ritualista',desc:'Figura encapuzada, sombria, tenebrosa e amaldiçoada.',attrs:{cor:0,agi:1,ast:3,pre:2},insanidade:'',defesa:11,saude:10,prof:3,ataques:[['Adaga Ritual (vantagem)',14,4,'1d6+1']],resist:'+1 de defesa para cada criatura invocada próxima.',fraq:'Luz brilhante os cega e faz com que se retirem.',especial:'Provavelmente conhece magia de invocação e pode ter criaturas já invocadas.'},
+  {name:'Horror Sem Face',desc:'Humanoide sem rosto, só um buraco vazio no lugar da face.',attrs:{cor:1,agi:1,ast:1,pre:1},insanidade:'1d6',defesa:12,saude:10,prof:2,ataques:[['Punhos',13,3,'1d4+1'],['Revólver Leve',13,3,'1d8']],resist:'Ataques próximos e balas causam no máximo 4 de dano cada.',fraq:'Não possui vontade própria; é regido pelas forças do Caos.'},
+  {name:'Experiência Nazista',desc:'Soldado reanimado por tecnologia e magia negra.',attrs:{cor:3,agi:2,ast:0,pre:1},insanidade:'1d4',defesa:13,saude:15,prof:2,ataques:[['Pistola Leve',14,4,'1d8'],['Faca',15,5,'1d4+3'],['Punhos',15,5,'6']],resist:'Ataques físicos e balas causam no máximo 2 de dano.',fraq:'Fogo causa 2d6 de dano ao invés de 1d6.'}
+];
+
+/* ===================== utilidades ===================== */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rnd=n=>{const a=new Uint32Array(1);crypto.getRandomValues(a);return 1+(a[0]%n)};
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const sgn=v=>(v>=0?'+':'−')+Math.abs(v);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const lsGet=(k,d=null)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch{return d}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+const fmtTime=ts=>{const d=new Date(ts);return d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})};
+const fmtDate=ts=>{const d=new Date(ts);return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' '+fmtTime(ts)};
+function getPath(o,p){return p.split('.').reduce((a,k)=>a==null?a:a[k],o)}
+function setPath(o,p,v){const ks=p.split('.');let c=o;for(let i=0;i<ks.length-1;i++){const k=ks[i];if(c[k]==null||typeof c[k]!=='object')c[k]=/^\d+$/.test(ks[i+1])?[]:{};c=c[k]}c[ks[ks.length-1]]=v}
+
+const SIGIL=`<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="32" cy="32" r="29"/><path d="M7 32c7-10 15.5-15 25-15s18 5 25 15c-7 10-15.5 15-25 15S14 42 7 32z"/><circle cx="32" cy="32" r="8.5"/><circle cx="32" cy="32" r="3" fill="currentColor"/><path d="M32 3v9M32 52v9M3 32h4M57 32h4M11.5 11.5l5 5M47.5 47.5l5 5M52.5 11.5l-5 5M16.5 47.5l-5 5"/></svg>`;
+const D20=`<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M24 3 43 14v20L24 45 5 34V14z"/><path d="M24 3 14 20h20zM14 20 5 34M34 20l9 14M14 20l10 25 10-25M5 14l9 6M43 14l-9 6"/></svg>`;
+
+function toast(msg,kind=''){const t=document.createElement('div');t.className='toast '+kind;t.textContent=msg;$('#toasts').appendChild(t);setTimeout(()=>t.remove(),kind==='err'?6500:3800)}
+
+/* modal */
+function openModal({title,body,footer='',wide=false,onMount,onClose}){
+  const bg=document.createElement('div');bg.className='modal-bg';
+  bg.innerHTML=`<div class="modal ${wide?'wide':''}" role="dialog" aria-modal="true"><header><h3>${esc(title)}</h3><button class="btn ghost icon" data-x aria-label="Fechar">✕</button></header><div class="mb">${body}</div>${footer?`<footer>${footer}</footer>`:''}</div>`;
+  const close=()=>{bg.remove();onClose&&onClose()};
+  bg.addEventListener('mousedown',e=>{if(e.target===bg)bg._down=true});
+  bg.addEventListener('click',e=>{if((e.target===bg&&bg._down)||e.target.closest('[data-x]'))close();bg._down=false});
+  document.body.appendChild(bg);
+  const m={el:bg,close,body:$('.mb',bg),foot:$('footer',bg)};
+  onMount&&onMount(m);
+  const f=$('input,select,textarea',bg);f&&setTimeout(()=>f.focus(),30);
+  return m;
+}
+function confirmBox({title,text,ok='Confirmar',danger=true}){
+  return new Promise(res=>{let done=false;
+    const m=openModal({title,body:`<p>${text}</p>`,footer:`<button class="btn" data-x>Cancelar</button><button class="btn ${danger?'danger':'primary'}" id="cf-ok">${esc(ok)}</button>`,onClose:()=>{if(!done)res(false)}});
+    $('#cf-ok',m.el).onclick=()=>{done=true;m.close();res(true)};
+  });
+}
+
+/* ===================== dados ===================== */
+function parseDice(expr){
+  const s=String(expr||'').replace(/\s+/g,'').toLowerCase().replace(/^\+/,'');
+  if(!s||!/^[+-]?(\d*d\d+|\d+)([+-](\d*d\d+|\d+))*$/.test(s))return null;
+  const terms=s.match(/[+-]?(\d*d\d+|\d+)/g);const faces=[],mods=[];let total=0,count=0;
+  for(const t of terms){
+    const neg=t[0]==='-';const body=t.replace(/^[+-]/,'');
+    if(body.includes('d')){let[n,sd]=body.split('d');n=n===''?1:+n;sd=+sd;if(n<1||sd<2||sd>1000)return null;count+=n;if(count>100)return null;
+      for(let i=0;i<n;i++){const v=rnd(sd);faces.push({v,s:sd,neg});total+=neg?-v:v}}
+    else{const v=+body*(neg?-1:1);mods.push(['',v]);total+=v}
+  }
+  return{faces,mods,total};
+}
+const OUT={triunfo:['Triunfo','Benefício e +1 Determinação. A cena vira cinema.'],desespero:['Desespero','Ameaça e −1 Determinação. Deu indescritivelmente errado.'],beneficio:['Benefício','O Dado Nefasto sorriu: gaste um benefício.'],ameaca:['Ameaça','O Dado Nefasto rosnou: o mestre ganha uma ameaça.']};
+
+function facesHTML(faces){return `<div class="dice-faces">${(faces||[]).map(f=>`<span class="face ${f.nef?'nef':''} ${f.drop?'drop':''} ${!f.drop&&f.v===f.s?'max':''} ${!f.drop&&f.v===1?'min':''}" title="${f.nef?'Dado Nefasto (d6)':'d'+f.s}">${f.neg?'−':''}${f.v}</span>`).join('')}</div>`}
+function modsTxt(mods){return (mods||[]).filter(m=>m[1]!==0||m[0]).map(m=>`${sgn(m[1])}${m[0]?' '+esc(m[0]):''}`).join(' ')}
+function rollBody(r){
+  const tags=[];
+  if(r.outcome)tags.push(`<span class="tag ${r.outcome}">${OUT[r.outcome][0]}</span>`);
+  if(r.success===true)tags.push(`<span class="tag ok">Sucesso</span>`);
+  if(r.success===false)tags.push(`<span class="tag fail">Falha</span>`);
+  if(r.kind==='test'&&r.nat===20)tags.push(`<span class="tag triunfo">20 natural</span>`);
+  if(r.kind==='test'&&r.nat===1)tags.push(`<span class="tag desespero">1 natural</span>`);
+  if(r.secret)tags.push(`<span class="tag sec">Secreta</span>`);
+  return `<div class="tt"><b class="num">${esc(r.total)}</b>${r.target!=null?`<span class="muted mono">vs ${esc(r.target)}</span>`:''}${tags.join('')}</div>
+  ${facesHTML(r.faces)}<div class="det">${esc(r.expr||'')}${r.mods&&r.mods.length?' '+modsTxt(r.mods):''}${r.adv===1?' · vantagem':r.adv===-1?' · desvantagem':''}</div>${r.note?`<div style="font-size:.95rem">${esc(r.note)}</div>`:''}`;
+}
+
+/* ===================== estado ===================== */
+const st={user:null,view:'boot',home:{tab:lsGet('itm.hometab','mestre'),master:[],player:[]},
+  code:null,camp:null,isMaster:false,tab:'mesa',mtab:'mesa',sheets:[],rolls:[],rewards:[],
+  sheetId:null,sheet:null,dirty:new Set(),saving:false,saveAgain:false,saveT:null,
+  rb:{adv:0,dif:'',prof:false,secret:false},
+  rw:{sel:{},amt:{},all:'',reason:''},
+  dr:{n:1,s:20,mod:0,expr:'',label:'',secret:false,last:null},
+  logOpen:lsGet('itm.logopen',false),lastSeen:0};
+let subs=[];const clearSubs=()=>{subs.forEach(u=>{try{u()}catch{}});subs=[]};
+let pendingSoft=false,pendingSheet=false;
+const editingIn=sel=>{const a=document.activeElement;return a&&a.closest&&a.closest(sel)&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)&&a.type!=='checkbox'};
+document.addEventListener('focusout',()=>setTimeout(()=>{
+  if(pendingSheet&&st.sheetId&&!editingIn('#sheet')){pendingSheet=false;renderSheet()}
+  if(pendingSoft&&!st.sheetId&&!editingIn('#content')){pendingSoft=false;renderContent()}
+},260));
+
+/* ===================== shell ===================== */
+function applyTheme(){const t=lsGet('itm.theme',null);if(t)document.documentElement.setAttribute('data-theme',t);else document.documentElement.removeAttribute('data-theme')}
+function toggleTheme(){const cur=document.documentElement.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');lsSet('itm.theme',cur==='dark'?'light':'dark');applyTheme()}
+function renderShell(){
+  const u=st.user;
+  $('#app').innerHTML=`${Store.mode==='local'?`<div class="banner-local"><div class="wrap">Modo local: os dados ficam só neste navegador. Para jogar com o grupo, abra a mesa pelo link publicado no Claude.</div></div>`:''}
+  <header class="topbar"><div class="wrap">
+    <button class="brand" data-act="home">${SIGIL}<span>Into the Madness</span></button><span class="sp"></span>
+    ${u?`<span class="who">Investigando como <b>${esc(u.display)}</b></span>`:''}
+    <button class="btn ghost icon sm theme-btn" data-act="theme" aria-label="Alternar tema claro/escuro" title="Alternar tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg></button>
+    ${u?`<button class="btn sm" data-act="logout">Sair</button>`:''}
+  </div></header>
+  <main class="wrap" id="view"></main>`;
+}
+const LOADING=t=>`<div class="loading"><div>${SIGIL}<p>${esc(t)}</p></div></div>`;
+
+function drawAbyss(cv){
+  if(!cv)return;const ctx=cv.getContext('2d');let w,h,raf;const dpr=Math.min(2,devicePixelRatio||1);
+  const stars=Array.from({length:90},()=>({x:Math.random(),y:Math.random()*.8,r:Math.random()*1.4+.3,p:Math.random()*6}));
+  const tent=Array.from({length:7},(_,i)=>({x:.08+i*.14+Math.random()*.05,len:.35+Math.random()*.35,ph:Math.random()*6,sp:.25+Math.random()*.35,wd:6+Math.random()*10}));
+  const size=()=>{const r=cv.getBoundingClientRect();w=r.width;h=r.height;cv.width=w*dpr;cv.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)};
+  const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function frame(t){
+    if(!cv.isConnected){cancelAnimationFrame(raf);return}
+    t=(t||0)/1000;ctx.clearRect(0,0,w,h);const acc=css('--accent'),fg=css('--fg'),eth=css('--ether');
+    ctx.fillStyle=fg;for(const s of stars){ctx.globalAlpha=.25+.35*Math.abs(Math.sin(t*.6+s.p));ctx.beginPath();ctx.arc(s.x*w,s.y*h,s.r,0,7);ctx.fill()}
+    const ex=w*.62,ey=h*.34,er=Math.min(w,h)*.16;ctx.globalAlpha=.55;ctx.strokeStyle=acc;ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.ellipse(ex,ey,er*1.7,er*(.55+.12*Math.sin(t*.7)),0,0,7);ctx.stroke();
+    ctx.globalAlpha=.8;ctx.fillStyle=acc;ctx.beginPath();ctx.arc(ex+Math.sin(t*.4)*er*.35,ey,er*.28,0,7);ctx.fill();
+    ctx.fillStyle=css('--bg-2');ctx.beginPath();ctx.ellipse(ex+Math.sin(t*.4)*er*.35,ey,er*.06,er*.22,0,0,7);ctx.fill();
+    for(const k of tent){const bx=k.x*w;ctx.beginPath();const steps=30;ctx.globalAlpha=.32;ctx.strokeStyle=eth;
+      for(let i=0;i<=steps;i++){const q=i/steps;const y=h-q*k.len*h;const x=bx+Math.sin(q*4+t*k.sp+k.ph)*q*48;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}
+      ctx.lineWidth=k.wd;ctx.lineCap='round';ctx.stroke();ctx.lineWidth=k.wd*.3;ctx.globalAlpha=.5;ctx.strokeStyle=acc;ctx.stroke()}
+    ctx.globalAlpha=1;if(!still)raf=requestAnimationFrame(frame);
+  }
+  size();addEventListener('resize',size);frame(0);
+}
+
+/* ===================== início ===================== */
+function viewHome(){
+  if(st.sheetId)flushSave();
+  clearSubs();st.view='home';st.code=null;st.camp=null;st.sheetId=null;hideLog();
+  renderShell();renderHomeBody();
+  const u=st.user.uname;
+  subs.push(Store.watch('campaigns',[['master','==',u]],null,null,r=>{st.home.master=r.sort((a,b)=>(b.created||0)-(a.created||0));renderHomeBody()}));
+  subs.push(Store.watch('campaigns',[['players','array-contains',u]],null,null,r=>{st.home.player=r.sort((a,b)=>(b.created||0)-(a.created||0));renderHomeBody()}));
+}
+const coverCache={};
+const PH=`<div class="ph">${SIGIL}</div>`;
+function coverInner(code,v){
+  if(!v)return PH;const cc=coverCache[code];
+  if(cc&&cc.v===v)return cc.img?`<img alt="" src="${cc.img}">`:PH;
+  loadCover(code,v);return cc&&cc.img?`<img alt="" src="${cc.img}">`:PH;
+}
+async function loadCover(code,v){
+  const cc=coverCache[code]||(coverCache[code]={});if(cc.loading===v)return;cc.loading=v;
+  const d=await Store.get('covers/'+code).catch(()=>null);
+  coverCache[code]={v,img:d&&d.img||null};
+  $$(`[data-cover="${code}"]`).forEach(el=>el.innerHTML=coverInner(code,v));
+}
+function renderHomeBody(){
+  const v=$('#view');if(!v||st.view!=='home')return;
+  const tab=st.home.tab,list=tab==='mestre'?st.home.master:st.home.player;
+  v.innerHTML=`<div class="hero-home"><div class="stack" style="gap:6px"><span class="k">Arquivo de casos de ${esc(st.user.display)}</span><h1>Minhas Campanhas</h1></div>
+    <div class="row"><button class="btn" data-act="join">Entrar em Campanha</button><button class="btn primary" data-act="newcamp">Criar Campanha</button></div></div>
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="${tab==='mestre'}" data-act="htab" data-t="mestre">Como Mestre <span class="count">${st.home.master.length}</span></button>
+    <button role="tab" aria-selected="${tab==='jogador'}" data-act="htab" data-t="jogador">Como Jogador <span class="count">${st.home.player.length}</span></button>
+  </div>
+  ${list.length?`<div class="camp-grid">${list.map(c=>campCard(c,tab==='mestre')).join('')}</div>`:
+   tab==='mestre'?`<div class="empty">${''}<h3>Nenhuma campanha conduzida ainda</h3><p>Crie uma campanha para receber um código e convidar seus jogadores.</p><button class="btn primary" data-act="newcamp">Criar Campanha</button></div>`:
+   `<div class="empty"><h3>Você ainda não entrou em nenhuma mesa</h3><p>Peça o código de 6 letras ao seu mestre e use “Entrar em Campanha”.</p><button class="btn primary" data-act="join">Entrar em Campanha</button></div>`}`;
+}
+function campCard(c,isM){
+  const n=(c.players||[]).length;
+  return `<article class="camp"><div class="cover" data-cover="${esc(c.code)}">${coverInner(c.code,c.coverV)}</div>
+  <div class="body"><div class="meta"><span class="pill ${isM?'mestre':'jogador'}">${isM?'Mestre':'Jogador'}</span><span>${n} jogador${n===1?'':'es'}</span>${isM?`<span class="mono">· ${esc(c.code)}</span>`:`<span>· Mestre: ${esc((c.names&&c.names[c.master])||c.master)}</span>`}</div>
+  <h3>${esc(c.name)}</h3>${c.desc?`<p class="muted" style="font-size:.98rem">${esc(c.desc)}</p>`:''}
+  <div class="acts"><button class="btn primary sm" data-act="opencamp" data-c="${esc(c.code)}">Abrir mesa</button>
+  ${isM?`<button class="btn sm" data-act="cover" data-c="${esc(c.code)}">Capa</button><button class="btn danger sm" data-act="delcamp" data-c="${esc(c.code)}">Deletar</button>`:`<button class="btn danger sm" data-act="leave" data-c="${esc(c.code)}">Sair da campanha</button>`}</div></div></article>`;
+}
+function newCampModal(){
+  const m=openModal({title:'Criar Campanha',body:`<div class="field"><label class="lbl" for="nc-n">Nome da campanha</label><input id="nc-n" maxlength="80" placeholder="ex: As Sombras de Innsmouth"></div>
+  <div class="field"><label class="lbl" for="nc-d">Descrição curta (opcional)</label><textarea id="nc-d" maxlength="400" placeholder="Arkham, 1926. Um professor desapareceu..."></textarea></div>
+  <p class="hint">A campanha recebe um código de 6 caracteres. Você pode subir a capa logo depois.</p><div class="err" id="nc-e"></div>`,
+  footer:`<button class="btn" data-x>Cancelar</button><button class="btn primary" id="nc-go">Criar</button>`});
+  $('#nc-go',m.el).onclick=async()=>{
+    const name=$('#nc-n',m.el).value.trim();if(!name)return $('#nc-e',m.el).textContent='Dê um nome à campanha.';
+    $('#nc-go',m.el).disabled=true;
+    try{
+      let code;for(let i=0;i<6;i++){code=Array.from({length:6},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[rnd(32)-1]).join('');if(!(await Store.get('campaigns/'+code)))break}
+      await Store.set('campaigns/'+code,{code,name,desc:$('#nc-d',m.el).value.trim(),master:st.user.uname,players:[],names:{[st.user.uname]:st.user.display},created:Date.now(),coverV:0});
+      m.close();toast('Campanha criada. Código: '+code,'ok');openCampaign(code);
+    }catch(e){$('#nc-e',m.el).textContent=errMsg(e);$('#nc-go',m.el).disabled=false}
+  };
+}
+function joinModal(){
+  const m=openModal({title:'Entrar em Campanha',body:`<div class="field"><label class="lbl" for="jn-c">Código da campanha</label><input id="jn-c" maxlength="6" class="mono" style="font-size:1.6rem;letter-spacing:.3em;text-transform:uppercase" placeholder="XXXXXX" autocomplete="off"></div><p class="hint">O mestre encontra o código na Área do Mestre.</p><div class="err" id="jn-e"></div>`,
+  footer:`<button class="btn" data-x>Cancelar</button><button class="btn primary" id="jn-go">Entrar</button>`});
+  const go=async()=>{
+    const code=$('#jn-c',m.el).value.trim().toUpperCase();const e=$('#jn-e',m.el);
+    if(!/^[A-Z0-9]{6}$/.test(code))return e.textContent='O código tem 6 letras e números.';
+    try{
+      const c=await Store.get('campaigns/'+code);if(!c)return e.textContent='Nenhuma campanha com esse código.';
+      const u=st.user.uname;
+      if(c.master!==u&&!(c.players||[]).includes(u))await Store.update('campaigns/'+code,{players:[...(c.players||[]),u],names:{[u]:st.user.display}});
+      m.close();openCampaign(code);
+    }catch(x){e.textContent=errMsg(x)}
+  };
+  $('#jn-go',m.el).onclick=go;$('#jn-c',m.el).addEventListener('keydown',ev=>{if(ev.key==='Enter')go()});
+}
+async function leaveCamp(code){
+  const c=[...st.home.player,st.camp].find(x=>x&&x.code===code);
+  if(!(await confirmBox({title:'Sair da campanha?',text:`Você deixa de ver “${esc(c?c.name:code)}”. Suas fichas continuam com o mestre. Para voltar, use o código de novo.`,ok:'Sair da campanha'})))return;
+  try{const d=await Store.get('campaigns/'+code);if(d)await Store.update('campaigns/'+code,{players:(d.players||[]).filter(p=>p!==st.user.uname)});toast('Você saiu da campanha.');if(st.view!=='home')viewHome()}catch(e){toast(errMsg(e),'err')}
+}
+async function delCamp(code){
+  const c=[...st.home.master,st.camp].find(x=>x&&x.code===code);
+  if(!(await confirmBox({title:'Deletar campanha?',text:`Isso apaga “${esc(c?c.name:code)}” com todas as fichas, NPCs, rolagens e recompensas. Não dá para desfazer.`,ok:'Deletar para sempre'})))return;
+  try{
+    for(const coll of ['sheets','rolls','rewards']){const rows=await Store.query(coll,[['campaign','==',code]]);for(const r of rows)await Store.del(coll+'/'+r._id)}
+    await Store.del('covers/'+code).catch(()=>{});await Store.del('campaigns/'+code);
+    toast('Campanha deletada.');if(st.view!=='home')viewHome();
+  }catch(e){toast(errMsg(e),'err')}
+}
+
+/* ===================== editor de capa ===================== */
+async function coverEditor(code){
+  const W=1280,H=720;let img=null,zoom=1,ox=0,oy=0;
+  const m=openModal({title:'Capa da campanha',wide:true,body:`<p class="hint">Proporção 16:9. Arraste a imagem para enquadrar e use o zoom para ajustar.</p>
+  <div class="crop" id="cr-box"><canvas id="cr-cv" width="${W}" height="${H}"></canvas></div>
+  <div class="row"><label class="btn" for="cr-f">Escolher imagem</label><input id="cr-f" type="file" accept="image/*" hidden>
+  <div class="field" style="flex:1;min-width:180px"><label class="lbl" for="cr-z">Zoom</label><input id="cr-z" type="range" min="1" max="4" step="0.01" value="1"></div></div><div class="err" id="cr-e"></div>`,
+  footer:`<button class="btn danger" id="cr-rm">Remover capa</button><span style="flex:1"></span><button class="btn" data-x>Cancelar</button><button class="btn primary" id="cr-ok">Salvar capa</button>`});
+  const cv=$('#cr-cv',m.el),ctx=cv.getContext('2d');
+  const base=()=>img?Math.max(W/img.width,H/img.height):1;
+  const lim=()=>{const s=base()*zoom;const mx=Math.max(0,(img.width*s-W)/2),my=Math.max(0,(img.height*s-H)/2);ox=clamp(ox,-mx,mx);oy=clamp(oy,-my,my)};
+  const draw=(c=ctx,w=W,h=H)=>{c.fillStyle='#111';c.fillRect(0,0,w,h);if(!img){c.fillStyle='#777';c.font='40px Georgia';c.textAlign='center';c.fillText('Escolha uma imagem',w/2,h/2);return}
+    lim();const k=w/W,s=base()*zoom*k;c.drawImage(img,w/2-img.width*s/2+ox*k,h/2-img.height*s/2+oy*k,img.width*s,img.height*s)};
+  const load=src=>new Promise(r=>{const i=new Image();i.onload=()=>{img=i;zoom=1;ox=oy=0;$('#cr-z',m.el).value=1;draw();r()};i.onerror=()=>{$('#cr-e',m.el).textContent='Não consegui abrir essa imagem.';r()};i.src=src});
+  const cur=coverCache[code];if(cur&&cur.img)await load(cur.img);else{const d=await Store.get('covers/'+code).catch(()=>null);if(d&&d.img)await load(d.img);else draw()}
+  $('#cr-f',m.el).onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>load(r.result);r.readAsDataURL(f)};
+  $('#cr-z',m.el).oninput=e=>{zoom=+e.target.value;draw()};
+  let drag=null;const box=$('#cr-box',m.el);
+  box.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,ox,oy};box.setPointerCapture(e.pointerId)});
+  box.addEventListener('pointermove',e=>{if(!drag)return;const k=W/box.getBoundingClientRect().width;ox=drag.ox+(e.clientX-drag.x)*k;oy=drag.oy+(e.clientY-drag.y)*k;draw()});
+  box.addEventListener('pointerup',()=>drag=null);box.addEventListener('pointercancel',()=>drag=null);
+  box.addEventListener('wheel',e=>{if(!img)return;e.preventDefault();zoom=clamp(zoom*(e.deltaY<0?1.06:.94),1,4);$('#cr-z',m.el).value=zoom;draw()},{passive:false});
+  $('#cr-ok',m.el).onclick=async()=>{
+    if(!img)return $('#cr-e',m.el).textContent='Escolha uma imagem primeiro.';
+    let out,sizes=[[1280,720,.82],[1280,720,.7],[960,540,.72],[800,450,.68],[640,360,.62]];
+    for(const[w,h,q]of sizes){const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);out=c.toDataURL('image/jpeg',q);if(out.length<230000)break}
+    try{$('#cr-ok',m.el).disabled=true;const v=Date.now();await Store.set('covers/'+code,{img:out,campaign:code});coverCache[code]={v,img:out};await Store.update('campaigns/'+code,{coverV:v});m.close();toast('Capa salva.','ok')}
+    catch(e){$('#cr-e',m.el).textContent=errMsg(e);$('#cr-ok',m.el).disabled=false}
+  };
+  $('#cr-rm',m.el).onclick=async()=>{try{await Store.del('covers/'+code);await Store.update('campaigns/'+code,{coverV:0});delete coverCache[code];m.close();toast('Capa removida.')}catch(e){toast(errMsg(e),'err')}};
+}
+
+/* ===================== Firebase ===================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyB1HV50bFsWaSnNwWB4qePYni1mienaBzQ",
+  authDomain: "intothemadness-5b8db.firebaseapp.com",
+  projectId: "intothemadness-5b8db",
+  storageBucket: "intothemadness-5b8db.firebasestorage.app",
+  messagingSenderId: "489535110135",
+  appId: "1:489535110135:web:9e3325a96d34c4f9900cf2"
+};
+const fb={};
+function clean(o){const r={};for(const k in o){if(k[0]!=='_'&&o[k]!==undefined)r[k]=o[k]}return JSON.parse(JSON.stringify(r))}
+const Store={mode:'cloud',
+  init(){fb.app=initializeApp(firebaseConfig);fb.auth=getAuth(fb.app);fb.db=getFirestore(fb.app)},
+  ref(p){return fsDoc(fb.db,...p.split('/'))},
+  async retry(fn){try{return await fn()}catch(e){if(e&&e.code==='unavailable'){await sleep(500+Math.random()*700);return await fn()}throw e}},
+  _q(coll,w=[]){return fsQuery(fsCollection(fb.db,coll),...w.map(x=>fsWhere(...x)))},
+  _post(rows,order,limit){if(order){const[f,dir]=order;rows.sort((a,b)=>((a[f]??0)>(b[f]??0)?1:(a[f]??0)<(b[f]??0)?-1:0)*(dir==='desc'?-1:1))}return limit?rows.slice(0,limit):rows},
+  async get(p){return this.retry(async()=>{const s=await getDoc(this.ref(p));return s.exists()?{...structuredClone(s.data()),_id:s.id}:null})},
+  async set(p,d){return this.retry(()=>setDoc(this.ref(p),clean(d)))},
+  /* merge profundo: objetos aninhados se mesclam, listas são substituídas */
+  async update(p,d){return this.retry(()=>setDoc(this.ref(p),clean(d),{merge:true}))},
+  async del(p){return this.retry(()=>deleteDoc(this.ref(p)))},
+  async query(coll,w=[],order=null,limit=null){return this.retry(async()=>{const s=await getDocs(this._q(coll,w));return this._post(s.docs.map(d=>({...structuredClone(d.data()),_id:d.id})),order,limit)})},
+  watch(coll,w,order,limit,cb){
+    return onSnapshot(this._q(coll,w),s=>cb(this._post(s.docs.map(d=>({...structuredClone(d.data()),_id:d.id})),order,limit)),
+      e=>{console.warn(coll,e);if(e.code!=='permission-denied')toast('A conexão com a mesa caiu. Recarregue a página.','err')});
+  },
+  watchDoc(p,cb){return onSnapshot(this.ref(p),s=>cb(s.exists()?{...structuredClone(s.data()),_id:s.id}:null),e=>console.warn(p,e))},
+  async claim(){return true}
+};
+function errMsg(e){
+  const c=(e&&e.code)||'';
+  const M={
+    'permission-denied':'Sem permissão para isso nesta mesa. Confira se você faz parte da campanha e se as regras do Firestore foram publicadas.',
+    'resource-exhausted':'Muitas ações seguidas. Espere alguns segundos.',
+    'unavailable':'Sem conexão com o servidor. Verifique a internet.',
+    'auth/invalid-email':'E-mail inválido.',
+    'auth/missing-email':'Informe o e-mail.',
+    'auth/user-not-found':'Não existe conta com esse e-mail.',
+    'auth/wrong-password':'Senha incorreta.',
+    'auth/invalid-credential':'E-mail ou senha incorretos.',
+    'auth/email-already-in-use':'Já existe uma conta com esse e-mail. Use “Entrar”.',
+    'auth/weak-password':'A senha precisa de pelo menos 6 caracteres.',
+    'auth/too-many-requests':'Muitas tentativas. Espere um pouco e tente de novo.',
+    'auth/network-request-failed':'Sem conexão. Verifique a internet.',
+    'auth/operation-not-allowed':'O login por e-mail e senha não está ativado no Firebase (Authentication → Sign-in method).',
+    'auth/unauthorized-domain':'Este domínio não está autorizado no Firebase (Authentication → Settings → Authorized domains).'
+  };
+  return M[c]||(e&&e.message)||'Algo deu errado. Tente de novo.';
+}
+
+/* ===================== login ===================== */
+let loginMode='entrar',signingUp=false;
+function viewLogin(){
+  clearSubs();st.view='login';hideLog();
+  const m=loginMode;
+  const title={entrar:'Abra o seu dossiê',criar:'Registre um novo investigador',recuperar:'Recuperar senha'}[m];
+  $('#app').innerHTML=`<section class="login">
+    <div class="login-art"><canvas id="abyss" aria-hidden="true"></canvas>
+      <div class="copy"><h1><em>Bem-vindo ao</em>Into the Madness</h1><p>Fichas, rolagens e campanhas para investigadores que já viram demais.</p></div></div>
+    <div class="login-form"><form class="login-card" id="login-f" autocomplete="on" novalidate>
+      ${m!=='recuperar'?`<div class="seg" role="group" aria-label="Modo">
+        <button type="button" data-act="lmode" data-m="entrar" aria-pressed="${m==='entrar'}">Entrar</button>
+        <button type="button" data-act="lmode" data-m="criar" aria-pressed="${m==='criar'}">Criar conta</button></div>`:''}
+      <h2>${title}</h2>
+      ${m==='criar'?`<div class="field"><label class="lbl" for="lg-d">Nome de exibição</label><input id="lg-d" autocomplete="nickname" placeholder="Como a mesa vai ver você" maxlength="40"></div>`:''}
+      <div class="field"><label class="lbl" for="lg-e">E-mail</label><input id="lg-e" type="email" name="email" autocomplete="email" placeholder="voce@exemplo.com" required></div>
+      ${m!=='recuperar'?`<div class="field"><label class="lbl" for="lg-p">Senha</label><input id="lg-p" type="password" autocomplete="${m==='entrar'?'current-password':'new-password'}" required></div>`:''}
+      ${m==='criar'?`<div class="field"><label class="lbl" for="lg-p2">Confirmar senha</label><input id="lg-p2" type="password" autocomplete="new-password" required></div>`:''}
+      <div class="err" id="lg-err" role="alert"></div>
+      <button class="btn primary" type="submit" id="lg-go">${m==='entrar'?'Entrar':m==='criar'?'Criar conta e entrar':'Enviar link de recuperação'}</button>
+      ${m==='entrar'?`<button type="button" class="btn ghost sm" data-act="lmode" data-m="recuperar">Esqueci minha senha</button>`:''}
+      ${m==='recuperar'?`<button type="button" class="btn ghost sm" data-act="lmode" data-m="entrar">← Voltar para o login</button>`:''}
+      <p class="note">${m==='criar'?'Senha com pelo menos 6 caracteres. Enviaremos um e-mail de confirmação.':m==='recuperar'?'Você vai receber um link para criar uma nova senha.':'Ainda não tem conta? Toque em “Criar conta”.'}</p>
+    </form></div>
+  </section>`;
+  $('#login-f').addEventListener('submit',e=>{e.preventDefault();doLogin()});
+  drawAbyss($('#abyss'));
+}
+async function ensureProfile(u,display){
+  let p=await Store.get('users/'+u.uid).catch(()=>null);
+  if(!p){p={display:display||u.displayName||(u.email||'').split('@')[0]||'Investigador',email:u.email||'',created:Date.now()};await Store.set('users/'+u.uid,p)}
+  return{uname:u.uid,display:p.display,email:u.email};
+}
+async function doLogin(){
+  const err=$('#lg-err');err.textContent='';err.style.color='';
+  const email=$('#lg-e').value.trim();
+  if(!/^\S+@\S+\.\S+$/.test(email))return err.textContent='Informe um e-mail válido.';
+  const btn=$('#lg-go');btn.disabled=true;
+  try{
+    if(loginMode==='recuperar'){
+      await sendPasswordResetEmail(fb.auth,email);
+      err.style.color='var(--accent)';err.textContent='Se existir uma conta com esse e-mail, o link já está a caminho. Confira também o spam.';return;
+    }
+    const p=$('#lg-p').value;
+    if(loginMode==='criar'){
+      if(p.length<6){err.textContent='A senha precisa de pelo menos 6 caracteres.';return}
+      if(p!==$('#lg-p2').value){err.textContent='As senhas não conferem.';return}
+      const display=($('#lg-d').value||'').trim()||email.split('@')[0];
+      signingUp=true;
+      const cred=await createUserWithEmailAndPassword(fb.auth,email,p);
+      await updateProfile(cred.user,{displayName:display}).catch(()=>{});
+      st.user=await ensureProfile(cred.user,display);
+      sendEmailVerification(cred.user).catch(()=>{});
+      signingUp=false;toast('Conta criada. Enviamos um e-mail de confirmação.','ok');viewHome();
+    }else{
+      await signInWithEmailAndPassword(fb.auth,email,p);
+    }
+  }catch(e){signingUp=false;err.textContent=errMsg(e)}
+  finally{if(btn.isConnected)btn.disabled=false}
+}
+async function doLogout(){if(st.sheetId)await flushSave();clearSubs();st.user=null;loginMode='entrar';await signOut(fb.auth)}
+function merge(a,b){const o={...a};for(const k in b){const v=b[k];if(v&&typeof v==='object'&&!Array.isArray(v)&&o[k]&&typeof o[k]==='object'&&!Array.isArray(o[k]))o[k]=merge(o[k],v);else o[k]=v}return o}
+
+/* ===================== campanha ===================== */
+function openCampaign(code){
+  if(st.sheetId)flushSave();
+  clearSubs();Object.assign(st,{view:'camp',code,camp:null,sheets:[],rolls:[],rewards:[],sheetId:null,sheet:null,mtab:'mesa',rw:{sel:{},amt:{},all:'',reason:''}});
+  st.dr.last=null;st.lastSeen=Date.now();
+  renderShell();$('#view').innerHTML=LOADING('Abrindo os arquivos da campanha…');
+  let first=true;
+  subs.push(Store.watchDoc('campaigns/'+code,c=>{
+    if(st.view!=='camp'||st.code!==code)return;
+    if(!c){toast(first?'Campanha não encontrada.':'Esta campanha foi deletada.');viewHome();return}
+    const u=st.user.uname;
+    if(c.master!==u&&!(c.players||[]).includes(u)){toast('Você não faz parte desta campanha.');viewHome();return}
+    st.camp=c;st.isMaster=c.master===u;
+    if(first){first=false;st.tab=st.isMaster?'mestre':'mesa';renderCamp();startCampSubs()}
+    else{renderCampHead();softRender()}
+  }));
+}
+function startCampSubs(){
+  const code=st.code;
+  subs.push(Store.watch('sheets',st.isMaster?[['campaign','==',code]]:[['campaign','==',code],['owner','==',st.user.uname]],null,null,rows=>{st.sheets=rows.sort((a,b)=>(a.created||0)-(b.created||0));onSheets()}));
+  subs.push(Store.watch('rolls',[['campaign','==',code]],['ts','desc'],80,rows=>{st.rolls=rows;renderLog()}));
+  if(st.isMaster)subs.push(Store.watch('rewards',[['campaign','==',code]],null,null,rows=>{st.rewards=rows.sort((a,b)=>b.ts-a.ts);if(st.tab==='mestre'&&st.mtab==='rewards')softRender()}));
+}
+function softRender(){if(st.sheetId||st.view!=='camp')return;if(editingIn('#content')){pendingSoft=true;return}renderContent()}
+function onSheets(){
+  if(st.sheetId){const d=st.sheets.find(x=>x._id===st.sheetId);if(!d){toast('Esta ficha foi excluída.');st.sheetId=null;st.sheet=null;renderContent();return}sheetRemote(d)}
+  else softRender();
+}
+const nameOf=u=>(st.camp&&st.camp.names&&st.camp.names[u])||u||'—';
+function renderCamp(){
+  const v=$('#view');
+  v.innerHTML=`<div id="camp-head"></div><div class="tabs" role="tablist" id="camp-tabs"></div><div id="content"></div>`;
+  renderCampHead();renderContent();showLog();
+}
+function renderCampHead(){
+  const c=st.camp,h=$('#camp-head');if(!h)return;
+  h.innerHTML=`<div class="camp-head"><div class="cover" data-cover="${esc(c.code)}">${coverInner(c.code,c.coverV)}</div>
+  <div class="info"><button class="btn ghost sm back" data-act="home">← Minhas Campanhas</button>
+  <div class="row"><span class="pill ${st.isMaster?'mestre':'jogador'}">${st.isMaster?'Você é o Mestre':'Você é Jogador'}</span><span class="muted">Mestre: ${esc(nameOf(c.master))} · ${(c.players||[]).length} jogador(es)</span></div>
+  <h1>${esc(c.name)}</h1>${c.desc?`<p class="muted">${esc(c.desc)}</p>`:''}</div></div>`;
+  $('#camp-tabs').innerHTML=`${st.isMaster?`<button role="tab" aria-selected="${st.tab==='mestre'}" data-act="ctab" data-t="mestre">Área do Mestre</button>`:''}
+  <button role="tab" aria-selected="${st.tab==='mesa'}" data-act="ctab" data-t="mesa">Área dos Jogadores</button>`;
+}
+function renderContent(){
+  const el=$('#content');if(!el||!st.camp)return;pendingSoft=false;
+  if(st.sheetId&&st.sheet)return renderSheet();
+  if(st.tab==='mestre'&&st.isMaster)el.innerHTML=masterHTML();else el.innerHTML=mesaHTML();
+}
+
+/* ---------- área dos jogadores ---------- */
+function charCard(s){
+  const hp=s.saude||{},sn=s.sanidade||{};const pct=(a,b)=>b>0?clamp(a/b*100,0,100):0;
+  const arq=(ARQUETIPOS.find(a=>a.k===s.arquetipo)||{}).n;
+  return `<button class="char" data-act="opensheet" data-id="${s._id}"><h3>${esc(s.name||'Sem nome')}</h3>
+  <span class="sub">${esc([arq,s.profissao].filter(Boolean).join(' · ')||'Ficha em branco')} · Nível ${esc(s.nivel||1)} · ${esc(s.xp||0)} XP</span>
+  <div class="meters"><div class="meter"><span class="label">Saúde</span><span class="bar"><i style="width:${pct(hp.at,hp.max)}%"></i></span><span class="num">${hp.at||0}/${hp.max||0}</span></div>
+  <div class="meter san"><span class="label">Sanidade</span><span class="bar"><i style="width:${pct(sn.at,sn.max)}%"></i></span><span class="num">${sn.at||0}/${sn.max||0}</span></div></div></button>`;
+}
+function mesaHTML(){
+  const mine=st.sheets.filter(s=>s.type==='pc'&&s.owner===st.user.uname);
+  return `<div class="stack lg"><div class="row between"><div><h2>Meus Personagens</h2><p class="muted">Seus investigadores nesta campanha. Toque em um para abrir a ficha e rolar.</p></div>
+  <button class="btn primary" data-act="newpc">Criar ficha</button></div>
+  <div class="chars">${mine.map(charCard).join('')}
+  <button class="char create-card" data-act="newpc"><h3>+ Novo investigador</h3><span class="sub">Com o Assistente de Criação ou do zero.</span></button></div>
+  <details class="panel"><summary class="label" style="cursor:pointer">Referência rápida: dificuldades e Dado Nefasto</summary>
+  <div class="grid2"><div class="tbl-wrap"><table class="tbl"><tr><th>Dificuldade</th><th>Valor</th></tr>${DIFS.map(d=>`<tr><td>${d.n}</td><td class="num">${d.v}</td></tr>`).join('')}</table></div>
+  <div class="stack ref"><p>Todo teste rola <b>1d20 + atributo</b> e o <b>Dado Nefasto (d6)</b> junto.</p><p><b>6 no d6:</b> Benefício. <b>1 no d6:</b> Ameaça para o mestre.</p><p><b>20 + 6:</b> Triunfo, ganha 1 Determinação. <b>1 + 1:</b> Desespero, perde 1 Determinação.</p><p><b>Vantagem:</b> rola 2d20 e fica com o maior. <b>Desvantagem:</b> fica com o menor.</p></div></div></details></div>`;
+}
+function newPCModal(owner){
+  const m=openModal({title:'Criar ficha',body:`<div class="opt-grid">
+    <button class="opt" data-act="pcmode" data-m="wiz"><b>Criar com o Assistente</b><small>Passo a passo do livro: arquétipo, atributos, rolagens de Saúde e Sanidade, profissão, personalidade e equipamento.</small></button>
+    <button class="opt" data-act="pcmode" data-m="zero"><b>Criar do Zero</b><small>Uma ficha em branco para preencher como quiser.</small></button></div>`});
+  m.el.dataset.owner=owner||'';return m;
+}
+function blankPC(){return{type:'pc',name:'',concept:'',arquetipo:'',profissao:'',nivel:1,xp:0,attrs:{cor:0,agi:0,ast:0,pre:0},
+  saves:{fort:{b:0,p:false},refl:{b:0,p:false},vont:{b:0,p:false},inic:{b:0,p:false}},prof:0,defesaBonus:0,armor:{nome:'',def:0,max:5,c:0},bolsa:'',
+  saude:{at:0,max:0},sanidade:{at:0,max:0},determinacao:0,inspiracao:0,recursos:0,morte:{s:0,f:0},
+  virtude:'',vicio:'',motivacao:'',historia:'',pericias:[],idiomas:[],armas:[],itens:[],insanidades:[],feiticos:[],ferimentos:'',notas:''}}
+function blankNPC(){return{type:'npc',name:'',desc:'',attrs:{cor:0,agi:0,ast:0,pre:0},insanidade:'',defesa:11,saude:{at:10,max:10},prof:1,ataques:[],resist:'',fraq:'',especial:'',notas:''}}
+async function createSheet(data,{open=true}={}){
+  const id=uid();const doc={...data,campaign:st.code,createdBy:st.user.uname,created:Date.now(),updated:Date.now()};
+  if(doc.type==='pc'&&doc.owner===undefined)doc.owner=st.user.uname;
+  try{await Store.set('sheets/'+id,doc);if(open){st.sheets=[...st.sheets.filter(s=>s._id!==id),{...doc,_id:id}];openSheet(id)}return id}catch(e){toast(errMsg(e),'err')}
+}
+
+/* ---------- área do mestre ---------- */
+function masterHTML(){
+  const pcs=st.sheets.filter(s=>s.type==='pc'),npcs=st.sheets.filter(s=>s.type==='npc');
+  const t=st.mtab;
+  const tabs=`<div class="tabs small" role="tablist">
+   <button role="tab" aria-selected="${t==='mesa'}" data-act="mtab" data-t="mesa">Mesa do Mestre</button>
+   <button role="tab" aria-selected="${t==='pcs'}" data-act="mtab" data-t="pcs">Fichas dos Jogadores <span class="count">${pcs.length}</span></button>
+   <button role="tab" aria-selected="${t==='npcs'}" data-act="mtab" data-t="npcs">NPCs <span class="count">${npcs.length}</span></button>
+   <button role="tab" aria-selected="${t==='rewards'}" data-act="mtab" data-t="rewards">Recompensas</button></div>`;
+  let body='';
+  if(t==='mesa')body=masterMesa();
+  else if(t==='pcs')body=masterPCs(pcs);
+  else if(t==='npcs')body=masterNPCs(npcs);
+  else body=masterRewards(pcs);
+  return tabs+body;
+}
+function masterMesa(){
+  const c=st.camp,d=st.dr;
+  const players=(c.players||[]);
+  return `<div class="master-grid">
+  <section class="panel span5"><header><h3>Código da Campanha</h3></header>
+    <div class="code-box"><span class="code" id="camp-code">${esc(c.code)}</span><button class="btn sm" data-act="copycode">Copiar</button></div>
+    <p class="hint">Os jogadores usam esse código em “Entrar em Campanha”.</p>
+    <hr class="hr"><header><h3>Jogadores <small>${players.length}</small></h3></header>
+    ${players.length?`<div class="list">${players.map(p=>{const n=st.sheets.filter(s=>s.type==='pc'&&s.owner===p).map(s=>s.name||'Sem nome');return `<div class="it"><div class="grow"><div class="t">${esc(nameOf(p))}</div><div class="s">${n.length?esc(n.join(', ')):'sem ficha'}</div></div><button class="btn danger xs" data-act="kick" data-u="${esc(p)}">Remover</button></div>`}).join('')}</div>`:`<p class="muted">Ninguém entrou ainda. Envie o código acima.</p>`}
+  </section>
+  <section class="panel span7"><header><h3>Capa da Campanha</h3><button class="btn sm" data-act="cover" data-c="${esc(c.code)}">${c.coverV?'Trocar ou ajustar':'Subir imagem'}</button></header>
+    <div class="cover" style="border-radius:8px;border:1px solid var(--line)" data-cover="${esc(c.code)}">${coverInner(c.code,c.coverV)}</div>
+    <p class="hint">Todos na mesa veem a capa. Só você pode alterá-la.</p></section>
+  <section class="panel span12"><header><h3>Rolagem</h3><label class="row" style="gap:8px;font-size:.95rem"><input type="checkbox" id="dr-sec" data-chg="drsec" ${d.secret?'checked':''}> Rolagem secreta (só você vê)</label></header>
+    <div class="grid2" style="align-items:start">
+      <div class="stack">
+        <div class="field"><span class="lbl">Tipo de dado</span><div class="dice-quick">${[4,6,8,10,12,20,100].map(s=>`<button class="die-btn" data-act="drs" data-s="${s}" aria-pressed="${d.s===s&&!d.expr}">d${s}</button>`).join('')}</div></div>
+        <div class="row" style="align-items:flex-end">
+          <div class="field" style="width:120px"><label class="lbl" for="dr-n">Quantidade</label><input id="dr-n" type="number" min="1" max="100" value="${d.n}" data-inp="drn"></div>
+          <div class="field" style="width:120px"><label class="lbl" for="dr-m">Modificador</label><input id="dr-m" type="number" value="${d.mod}" data-inp="drm"></div>
+          <div class="field" style="flex:1;min-width:160px"><label class="lbl" for="dr-l">Rótulo (opcional)</label><input id="dr-l" value="${esc(d.label)}" data-inp="drl" placeholder="ex: Emboscada dos cultistas"></div>
+        </div>
+        <div class="field"><label class="lbl" for="dr-e">Ou digite uma expressão</label><input id="dr-e" class="mono" value="${esc(d.expr)}" data-inp="dre" placeholder="ex: 6d10, 2d6+3, 1d20+1d4−1"></div>
+        <button class="btn primary" data-act="drroll">${D20.replace('<svg','<svg width="22" height="22"')} Rolar <span class="mono" id="dr-preview">${esc(drExpr())}</span></button>
+      </div>
+      <div id="dr-result">${d.last?`<div class="result"><div class="label">${esc(d.last.label||'Rolagem')}</div>${rollBody(d.last)}</div>`:`<div class="result"><div class="label">Resultado</div><p class="muted">Escolha os dados e role. O resultado aparece aqui e no histórico da mesa.</p></div>`}</div>
+    </div></section></div>`;
+}
+const drExpr=()=>{const d=st.dr;if(d.expr.trim())return d.expr.trim();return `${d.n}d${d.s}${d.mod?(d.mod>0?'+'+d.mod:d.mod):''}`};
+async function drRoll(){
+  const d=st.dr,expr=drExpr(),r=parseDice(expr);
+  if(!r)return toast('Expressão inválida. Use algo como 2d6+3 (até 100 dados).','err');
+  const rec={kind:'free',label:d.label||'Rolagem do Mestre',expr,faces:r.faces,mods:r.mods.filter(m=>m[1]),total:r.total,secret:d.secret};
+  d.last=rec;const el=$('#dr-result');if(el)el.innerHTML=`<div class="result"><div class="label">${esc(rec.label)}</div>${rollBody(rec)}</div>`;
+  await postRoll(rec);
+}
+function ownerSelect(s){
+  const opts=[['','Sem jogador'],[st.camp.master,nameOf(st.camp.master)+' (você)'],...(st.camp.players||[]).map(p=>[p,nameOf(p)])];
+  return `<select data-chg="owner" data-id="${s._id}" aria-label="Jogador da ficha" style="width:auto;min-width:170px">${opts.map(([v,n])=>`<option value="${esc(v)}" ${((s.owner||'')===v)?'selected':''}>${esc(n)}</option>`).join('')}</select>`;
+}
+function masterPCs(pcs){
+  return `<div class="stack"><div class="row between"><p class="muted">Abra qualquer ficha para editar. Atribua cada ficha a um jogador e troque quando quiser.</p>
+  <div class="row"><button class="btn" data-act="mnewpc" data-m="zero">Ficha em branco</button><button class="btn primary" data-act="mnewpc" data-m="wiz">Nova ficha com Assistente</button></div></div>
+  ${pcs.length?`<div class="list">${pcs.map(s=>{const arq=(ARQUETIPOS.find(a=>a.k===s.arquetipo)||{}).n;return `<div class="it"><div class="grow"><div class="t">${esc(s.name||'Sem nome')}</div><div class="s">${esc([arq,s.profissao].filter(Boolean).join(' · ')||'—')} · Nível ${esc(s.nivel||1)} · ${esc(s.xp||0)} XP · Saúde ${esc((s.saude||{}).at||0)}/${esc((s.saude||{}).max||0)} · Sanidade ${esc((s.sanidade||{}).at||0)}/${esc((s.sanidade||{}).max||0)}</div></div>
+   ${ownerSelect(s)}<button class="btn sm" data-act="opensheet" data-id="${s._id}">Abrir</button><button class="btn danger sm" data-act="delsheet" data-id="${s._id}">Excluir</button></div>`}).join('')}</div>`:`<div class="empty"><h3>Nenhuma ficha de jogador</h3><p>Os jogadores criam fichas na Área dos Jogadores, ou você cria aqui e atribui.</p></div>`}</div>`;
+}
+function masterNPCs(npcs){
+  return `<div class="stack"><div class="row between"><p class="muted">Só você vê os NPCs. Use o bestiário do livro como ponto de partida.</p>
+  <div class="row"><select id="bst" style="width:auto" aria-label="Modelo do bestiário"><option value="">Do bestiário…</option>${BESTIARIO.map((b,i)=>`<option value="${i}">${esc(b.name)}</option>`).join('')}</select>
+  <button class="btn" data-act="npcbest">Criar do modelo</button><button class="btn primary" data-act="npcnew">Novo NPC</button></div></div>
+  ${npcs.length?`<div class="list">${npcs.map(s=>`<div class="it"><div class="grow"><div class="t">${esc(s.name||'NPC sem nome')}</div><div class="s">Defesa ${esc(s.defesa)} · Saúde ${esc((s.saude||{}).at)}/${esc((s.saude||{}).max)} · Prof +${esc(s.prof||0)}${s.insanidade?' · Insanidade '+esc(s.insanidade):''}</div></div>
+   <button class="btn sm" data-act="opensheet" data-id="${s._id}">Abrir</button><button class="btn sm" data-act="dupnpc" data-id="${s._id}">Duplicar</button><button class="btn danger sm" data-act="delsheet" data-id="${s._id}">Excluir</button></div>`).join('')}</div>`:`<div class="empty"><h3>Nenhum NPC ainda</h3><p>Crie um do zero ou a partir de um modelo do bestiário.</p></div>`}</div>`;
+}
+function masterRewards(pcs){
+  const rw=st.rw;
+  return `<div class="master-grid"><section class="panel span12"><header><h3>Conceder experiência</h3></header>
+  ${pcs.length?`<div class="row" style="align-items:flex-end"><div class="field" style="width:160px"><label class="lbl" for="rw-all">XP para os marcados</label><input id="rw-all" type="number" value="${esc(rw.all)}" data-inp="rwall" placeholder="ex: 10"></div>
+   <button class="btn sm" data-act="rwapply">Aplicar a todos marcados</button>
+   <div class="field" style="flex:1;min-width:200px"><label class="lbl" for="rw-r">Motivo (opcional)</label><input id="rw-r" value="${esc(rw.reason)}" data-inp="rwr" placeholder="ex: Sobreviveram ao Necronomicon"></div></div>
+  <div class="tbl-wrap"><table class="tbl"><thead><tr><th><input type="checkbox" data-chg="rwselall" aria-label="Marcar todas" ${pcs.every(s=>rw.sel[s._id])?'checked':''}></th><th>Ficha</th><th>Jogador</th><th>XP atual</th><th>Receberá</th><th>Ferramentas</th></tr></thead><tbody>
+  ${pcs.map(s=>`<tr><td><input type="checkbox" data-chg="rwsel" data-id="${s._id}" ${rw.sel[s._id]?'checked':''} aria-label="Marcar ${esc(s.name)}"></td><td><b>${esc(s.name||'Sem nome')}</b></td><td>${esc(nameOf(s.owner))}</td><td class="num">${esc(s.xp||0)}</td>
+   <td class="w-s"><input type="number" data-inp="rwamt" data-id="${s._id}" value="${esc(rw.amt[s._id]??'')}" aria-label="XP para ${esc(s.name)}"></td>
+   <td><div class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn xs" data-act="resetxp" data-id="${s._id}">Resetar XP</button><button class="btn danger xs" data-act="wipe" data-id="${s._id}">Limpar Ficha</button></div></td></tr>`).join('')}
+  </tbody></table></div><div class="row end"><button class="btn primary" data-act="rwgive">Conceder XP</button></div>
+  <p class="hint">“Resetar XP” zera o XP da ficha sem desfazer o que já foi alterado nela. “Limpar Ficha” deixa a ficha toda em branco.</p>`:`<p class="muted">Ainda não há fichas de jogadores.</p>`}
+  </section><section class="panel span12"><header><h3>Histórico de recompensas</h3></header>
+  ${st.rewards.length?`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Quando</th><th>Ficha</th><th>XP</th><th>Motivo</th><th></th></tr></thead><tbody>
+  ${st.rewards.map(r=>`<tr style="${r.reverted?'opacity:.55':''}"><td class="num">${fmtDate(r.ts)}</td><td>${esc(r.sheetName||'—')}</td><td class="num">${r.kind==='reset'?`zerado (era ${esc(r.prev)})`:sgn(r.amount)}</td><td>${esc(r.reason||'')}${r.reverted?' <span class="tag sec">revertido</span>':''}</td>
+   <td>${r.kind==='xp'&&!r.reverted?`<button class="btn xs" data-act="revert" data-id="${r._id}">Reverter</button>`:''}</td></tr>`).join('')}</tbody></table></div>`:`<p class="muted">Nenhuma recompensa concedida ainda.</p>`}</section></div>`;
+}
+async function giveXP(){
+  const rw=st.rw;const ids=Object.keys(rw.sel).filter(id=>rw.sel[id]&&st.sheets.some(s=>s._id===id));
+  if(!ids.length)return toast('Marque ao menos uma ficha.','err');
+  let n=0;
+  for(const id of ids){
+    const amt=parseInt(rw.amt[id]!==undefined&&rw.amt[id]!==''?rw.amt[id]:rw.all,10);if(!amt)continue;
+    const s=st.sheets.find(x=>x._id===id);
+    try{await Store.update('sheets/'+id,{xp:Math.max(0,(s.xp||0)+amt)});
+      await Store.set('rewards/'+uid(),{campaign:st.code,sheetId:id,sheetName:s.name||'Sem nome',amount:amt,reason:rw.reason,by:st.user.uname,ts:Date.now(),kind:'xp',reverted:false});n++}
+    catch(e){toast(errMsg(e),'err');break}
+  }
+  if(n){st.rw={sel:{},amt:{},all:'',reason:''};toast(`XP concedido a ${n} ficha(s).`,'ok');renderContent()}else toast('Informe a quantidade de XP.','err');
+}
+async function revertReward(id){
+  const r=st.rewards.find(x=>x._id===id);if(!r)return;const s=st.sheets.find(x=>x._id===r.sheetId);
+  if(!(await confirmBox({title:'Reverter recompensa?',text:`Remove ${esc(r.amount)} XP de ${esc(r.sheetName)}.`,ok:'Reverter',danger:false})))return;
+  try{if(s)await Store.update('sheets/'+s._id,{xp:Math.max(0,(s.xp||0)-r.amount)});await Store.update('rewards/'+id,{reverted:true,revertedAt:Date.now()});toast(s?'Recompensa revertida.':'A ficha não existe mais; marquei como revertida.')}catch(e){toast(errMsg(e),'err')}
+}
+async function resetXP(id){
+  const s=st.sheets.find(x=>x._id===id);if(!s)return;
+  if(!(await confirmBox({title:'Resetar XP?',text:`O XP de ${esc(s.name||'Sem nome')} volta a 0. Atributos, nível e o resto da ficha não mudam.`,ok:'Resetar XP'})))return;
+  try{await Store.update('sheets/'+id,{xp:0});await Store.set('rewards/'+uid(),{campaign:st.code,sheetId:id,sheetName:s.name||'Sem nome',amount:-(s.xp||0),prev:s.xp||0,reason:'Reset de XP',by:st.user.uname,ts:Date.now(),kind:'reset',reverted:false});toast('XP resetado.')}catch(e){toast(errMsg(e),'err')}
+}
+async function wipeSheet(id){
+  const s=st.sheets.find(x=>x._id===id);if(!s)return;
+  if(!(await confirmBox({title:'Limpar ficha?',text:`Tudo em ${esc(s.name||'Sem nome')} será apagado: atributos, itens, notas, XP. A ficha continua atribuída ao mesmo jogador.`,ok:'Limpar Ficha'})))return;
+  try{await Store.set('sheets/'+id,{...blankPC(),campaign:s.campaign,owner:s.owner||null,createdBy:s.createdBy,created:s.created,updated:Date.now()});toast('Ficha limpa.')}catch(e){toast(errMsg(e),'err')}
+}
+async function delSheet(id){
+  const s=st.sheets.find(x=>x._id===id);if(!s)return;
+  if(!(await confirmBox({title:'Excluir ficha?',text:`“${esc(s.name||'Sem nome')}” será apagada para sempre.`,ok:'Excluir'})))return;
+  try{await Store.del('sheets/'+id);toast('Ficha excluída.')}catch(e){toast(errMsg(e),'err')}
+}
+
+/* ===================== histórico de rolagens ===================== */
+async function postRoll(r){
+  const rec={campaign:st.code,by:st.user.uname,byName:st.user.display,ts:Date.now(),...r,secret:!!r.secret};
+  try{await Store.set('rolls/'+uid(),rec)}catch(e){toast(errMsg(e),'err')}
+  if(Math.random()<.08)pruneRolls();
+  return rec;
+}
+async function pruneRolls(){try{const rows=await Store.query('rolls',[['campaign','==',st.code]]);if(rows.length<=160)return;rows.sort((a,b)=>b.ts-a.ts);for(const r of rows.slice(150))await Store.del('rolls/'+r._id)}catch{}}
+const visibleRolls=()=>st.rolls.filter(r=>!r.secret||st.isMaster||r.by===st.user.uname);
+function showLog(){if(!$('#logw')){const d=document.createElement('div');d.id='logw';document.body.appendChild(d)}renderLog()}
+function hideLog(){const d=$('#logw');d&&d.remove();const p=$('#pop');p&&(p.innerHTML='')}
+function renderLog(){
+  const w=$('#logw');if(!w||st.view!=='camp')return;const rolls=visibleRolls();
+  if(!st.logOpen){
+    const unread=rolls.filter(r=>r.ts>st.lastSeen&&r.by!==st.user.uname).length;
+    w.innerHTML=`<button class="log-fab" data-act="logtoggle" aria-label="Abrir resumo de rolagens">${D20}${unread?`<span class="badge">${unread>9?'9+':unread}</span>`:''}</button>`;return;
+  }
+  st.lastSeen=Date.now();
+  const keep=$('#lg-in')?$('#lg-in').value:'';
+  w.innerHTML=`<section class="log-panel" aria-label="Resumo de rolagens"><header><h3>Rolagens da mesa</h3><button class="btn ghost sm" data-act="logtoggle" aria-label="Minimizar">Minimizar ▾</button></header>
+  <div class="log-list">${rolls.length?rolls.map(r=>`<div class="log-entry ${r.outcome||''} ${r.secret?'secret':''}"><div class="top"><span>${esc(r.byName||r.by)}${r.char?' · '+esc(r.char):''}</span><span class="num">${fmtTime(r.ts)}</span></div>
+   <div class="lbl2">${esc(r.label||'Rolagem')}</div>${rollBody(r)}</div>`).join(''):`<p class="muted" style="padding:10px">Nenhuma rolagem ainda. As rolagens de todos aparecem aqui.</p>`}</div>
+  <form class="log-form" id="lg-f"><input id="lg-in" class="mono" placeholder="Rolagem rápida: 1d20, 2d6+1" aria-label="Rolagem rápida" value="${esc(keep)}"><button class="btn primary sm" type="submit">Rolar</button></form></section>`;
+  $('#lg-f').addEventListener('submit',e=>{e.preventDefault();const v=$('#lg-in').value.trim();const r=parseDice(v);if(!r)return toast('Expressão inválida. Ex.: 2d6+1','err');$('#lg-in').value='';
+    postRoll({kind:'free',label:'Rolagem livre',expr:v,faces:r.faces,mods:r.mods.filter(m=>m[1]),total:r.total,char:st.sheet&&st.sheet.type==='pc'?st.sheet.name:null})});
+}
+let popT=null;
+function showPop(rec,actions=''){
+  let p=$('#pop');if(!p){p=document.createElement('div');p.id='pop';p.className='pop-wrap';document.body.appendChild(p)}
+  p.innerHTML=`<div class="roll-pop" role="status"><div class="row between"><span class="label">${esc(rec.label||'Rolagem')}</span><button class="btn ghost xs" data-act="popx" aria-label="Fechar">✕</button></div>${rollBody(rec)}
+  ${rec.outcome?`<p class="ref">${OUT[rec.outcome][1]}</p>`:''}${actions?`<div class="row" style="gap:8px">${actions}</div>`:''}</div>`;
+  clearTimeout(popT);popT=setTimeout(()=>{if(!p.matches(':hover'))p.innerHTML=''},actions?20000:10000);
+}
+
+/* ===================== fichas ===================== */
+function openSheet(id){
+  const d=st.sheets.find(s=>s._id===id);if(!d)return toast('Ficha não encontrada.','err');
+  if(d.type==='npc'&&!st.isMaster)return;
+  st.sheetId=id;st.sheet=normSheet(d);st.dirty.clear();pendingSheet=false;
+  st.rb={adv:0,dif:'',prof:false,secret:d.type==='npc'};
+  renderSheet();window.scrollTo({top:($('#content')?.offsetTop||0)-80,behavior:'smooth'});
+}
+async function closeSheet(){await flushSave();st.sheetId=null;st.sheet=null;renderContent()}
+const normSheet=d=>merge(d.type==='npc'?blankNPC():blankPC(),structuredClone(d));
+const canEditSheet=s=>st.isMaster||(s.type==='pc'&&s.owner===st.user.uname);
+function scheduleSave(){clearTimeout(st.saveT);setSaveState('Salvando…');st.saveT=setTimeout(flushSave,650)}
+async function flushSave(){
+  clearTimeout(st.saveT);if(!st.sheetId||!st.dirty.size)return;
+  if(st.saving){st.saveAgain=true;return}
+  st.saving=true;const id=st.sheetId,patch={updated:Date.now()};for(const k of st.dirty)patch[k]=st.sheet[k];st.dirty.clear();
+  try{await Store.update('sheets/'+id,patch);setSaveState('Salvo')}catch(e){setSaveState('Não salvo');toast(errMsg(e),'err')}
+  st.saving=false;if(st.saveAgain){st.saveAgain=false;flushSave()}
+}
+function setSaveState(t){const el=$('#save-st');if(el)el.textContent=t}
+function touch(k){st.dirty.add(k.split('.')[0]);scheduleSave()}
+function sheetRemote(d){
+  const merged=normSheet(d);for(const k of st.dirty)merged[k]=st.sheet[k];
+  const strip=o=>{const c={...o};delete c.updated;delete c._id;return JSON.stringify(c)};
+  if(strip(merged)===strip(st.sheet))return;
+  st.sheet=merged;if(editingIn('#sheet')){pendingSheet=true;return}renderSheet();
+}
+function calcPC(s){
+  const a=s.attrs||{},ar=s.armor||{};const o={};
+  for(const v of SAVES){const sv=(s.saves||{})[v.k]||{};o['save-'+v.k]=(a[v.a]||0)+(+sv.b||0)+(sv.p?(+s.prof||0):0)}
+  o.def=Math.min(a.agi||0,ar.max??5)+(+ar.def||0)+(+s.defesaBonus||0);
+  const bolsa=(BOLSAS.find(b=>b.k===s.bolsa)||BOLSAS[0]).v;
+  o.leve=10+(a.cor||0)+bolsa;
+  o.used=(s.itens||[]).reduce((t,i)=>t+(+i.c||0),0)+(s.armas||[]).reduce((t,i)=>t+(+i.c||0),0)+(+ar.c||0);
+  const lv=o.used<=o.leve?0:o.used<=o.leve+5?1:o.used<=o.leve+10?2:3;
+  o.lvl=['Leve','Média','Pesada','Máxima'][lv];o.lvlN=lv;o.pen=['Sem penalidade','Desvantagem em ataques · −1 Saúde/hora','Desvantagem em ataque e defesa · −2 Saúde/hora','Desvantagem em tudo · −3 Saúde/hora'][lv];
+  o.over=o.used>o.leve+15;
+  o.hpAt=s.saude.at;o.hpMax=s.saude.max;o.sanAt=s.sanidade.at;o.sanMax=s.sanidade.max;
+  return o;
+}
+function refreshCalc(){
+  const s=st.sheet;if(!s||s.type!=='pc')return;const c=calcPC(s);
+  $$('#sheet [data-calc]').forEach(el=>{const k=el.dataset.calc;if(k in c)el.textContent=(/^save|^def/.test(k)?sgn(c[k]):c[k])});
+  const pct=(x,y)=>y>0?clamp(x/y*100,0,100):0;
+  const hb=$('#sheet [data-bar="hp"]');hb&&(hb.style.width=pct(s.saude.at,s.saude.max)+'%');
+  const sb=$('#sheet [data-bar="san"]');sb&&(sb.style.width=pct(s.sanidade.at,s.sanidade.max)+'%');
+  const tr=$('#carga-track');if(tr)tr.innerHTML=[0,1,2,3].map(i=>`<span class="${i<=c.lvlN?'on':''} ${c.lvlN>=2?'x':c.lvlN===1?'w':''}"></span>`).join('');
+}
+function syncField(k){const v=getPath(st.sheet,k);$$(`#sheet [data-k="${k}"]`).forEach(el=>{if(el.type==='checkbox')el.checked=!!v;else if(document.activeElement!==el)el.value=v??''});refreshCalc()}
+function adjust(k,d,min=-999,max=999){if(!st.sheet)return;const v=clamp((+getPath(st.sheet,k)||0)+d,min,max);setPath(st.sheet,k,v);touch(k);syncField(k)}
+
+/* --- builders --- */
+const RO=()=>!canEditSheet(st.sheet);
+function fi(k,{type='text',ph='',cls='',lab='',attrs=''}={}){
+  const v=getPath(st.sheet,k);const ro=RO()?'readonly':'';
+  return `<input ${type==='number'?'type="number" data-t="n"':''} data-k="${k}" value="${esc(v??'')}" placeholder="${esc(ph)}" class="${cls}" ${lab?`aria-label="${esc(lab)}"`:''} ${ro} ${attrs}>`;
+}
+function ta(k,ph='',rows=4){return `<textarea data-k="${k}" placeholder="${esc(ph)}" rows="${rows}" ${RO()?'readonly':''}>${esc(getPath(st.sheet,k)||'')}</textarea>`}
+function sel(k,opts,lab=''){const v=getPath(st.sheet,k)??'';return `<select data-k="${k}" ${lab?`aria-label="${esc(lab)}"`:''} ${RO()?'disabled':''}>${opts.map(([val,n])=>`<option value="${esc(val)}" ${String(v)===String(val)?'selected':''}>${esc(n)}</option>`).join('')}</select>`}
+function cb(k,lab){return `<input type="checkbox" data-k="${k}" ${getPath(st.sheet,k)?'checked':''} ${RO()?'disabled':''} aria-label="${esc(lab)}">`}
+function stepper(k,min,max,lab){const ro=RO();return `<div class="stepper">${ro?'':`<button type="button" data-act="step" data-k="${k}" data-d="-1" data-min="${min}" data-max="${max}" aria-label="Diminuir ${esc(lab)}">−</button>`}${fi(k,{type:'number',lab})}${ro?'':`<button type="button" data-act="step" data-k="${k}" data-d="1" data-min="${min}" data-max="${max}" aria-label="Aumentar ${esc(lab)}">+</button>`}</div>`}
+function rollbarHTML(npc){
+  const rb=st.rb;
+  return `<div class="rollbar" id="rollbar"><span class="label">Próxima rolagem</span>
+   <div class="seg" role="group" aria-label="Vantagem">${[[-1,'Desvantagem'],[0,'Normal'],[1,'Vantagem']].map(([v,n])=>`<button type="button" data-act="adv" data-v="${v}" aria-pressed="${rb.adv===v}">${n}</button>`).join('')}</div>
+   <select data-rb="dif" aria-label="Dificuldade"><option value="">Sem dificuldade</option>${DIFS.map(d=>`<option value="${d.v}" ${String(rb.dif)===String(d.v)?'selected':''}>${d.n} (${d.v})</option>`).join('')}${[11,12,13,14,16,17,18].map(v=>`<option value="${v}" ${String(rb.dif)===String(v)?'selected':''}>Alvo ${v}</option>`).join('')}</select>
+   ${npc?'':`<label class="tog"><input type="checkbox" data-rb="prof" ${rb.prof?'checked':''}> Somar proficiência</label>`}
+   ${st.isMaster?`<label class="tog"><input type="checkbox" data-rb="secret" ${rb.secret?'checked':''}> Secreta</label>`:''}</div>`;
+}
+function renderSheet(){
+  const el=$('#content');if(!el||!st.sheet)return;pendingSheet=false;
+  el.innerHTML=st.sheet.type==='npc'?npcHTML():pcHTML();refreshCalc();
+}
+function pcHTML(){
+  const s=st.sheet,ro=RO(),c=calcPC(s),m=st.isMaster;
+  const pct=(x,y)=>y>0?clamp(x/y*100,0,100):0;
+  const arqOpts=[['','—'],...ARQUETIPOS.map(a=>[a.k,a.n])];
+  const arq=ARQUETIPOS.find(a=>a.k===s.arquetipo);
+  return `<div class="sheet" id="sheet">
+  <div class="row between"><button class="btn ghost sm" data-act="closesheet">← Voltar</button><div class="row"><span class="label" id="save-st">${ro?'Somente leitura':'Salvo'}</span>
+   ${!ro?`<button class="btn sm" data-act="levelup">Subir de nível</button>`:''}</div></div>
+  ${ro?`<div class="readonly-note">Você está vendo esta ficha sem permissão de edição.</div>`:''}
+  <div class="sheet-top"><div class="stack">
+   <div class="sheet-name">${fi('name',{ph:'Nome do investigador',lab:'Nome'})}</div>
+   <div class="meta-grid">
+    <div class="field"><label class="lbl">Arquétipo</label>${sel('arquetipo',arqOpts,'Arquétipo')}</div>
+    <div class="field"><label class="lbl">Profissão</label>${fi('profissao',{ph:'ex: Antiquário',lab:'Profissão',attrs:'list="dl-prof"'})}<datalist id="dl-prof">${PROFISSOES.map(p=>`<option value="${esc(p[0])}">`).join('')}</datalist></div>
+    <div class="field"><label class="lbl">Conceito</label>${fi('concept',{ph:'Professor obcecado por mapas',lab:'Conceito'})}</div>
+    <div class="field"><label class="lbl">Nível</label>${fi('nivel',{type:'number',lab:'Nível'})}</div>
+    <div class="field"><label class="lbl">XP</label><input type="number" data-t="n" data-k="xp" value="${esc(s.xp||0)}" ${m?'':'readonly title="Só o mestre altera o XP"'} aria-label="XP"></div>
+    <div class="field"><label class="lbl">Jogador</label>${m?ownerSelect({...s,_id:st.sheetId}):`<input value="${esc(nameOf(s.owner))}" readonly aria-label="Jogador">`}</div>
+   </div>${arq?`<p class="hint">${esc(arq.n)}: ${esc(arq.b)}</p>`:''}</div></div>
+  ${rollbarHTML(false)}
+  <div class="vitals">
+   <div class="vital hp"><div class="head"><span class="label">Saúde</span><span class="big num"><span data-calc="hpAt">${esc(s.saude.at)}</span><small>/<span data-calc="hpMax">${esc(s.saude.max)}</span></small></span></div><div class="bar"><i data-bar="hp" style="width:${pct(s.saude.at,s.saude.max)}%"></i></div>
+    <div class="ctr">${ro?'':`<button class="btn xs icon" data-act="adj" data-k="saude.at" data-d="-1" aria-label="Perder 1 Saúde">−1</button>`}${fi('saude.at',{type:'number',lab:'Saúde atual'})}<span class="muted">/</span>${fi('saude.max',{type:'number',lab:'Saúde máxima'})}${ro?'':`<button class="btn xs icon" data-act="adj" data-k="saude.at" data-d="1" aria-label="Recuperar 1 Saúde">+1</button>`}</div></div>
+   <div class="vital san"><div class="head"><span class="label">Sanidade</span><span class="big num"><span data-calc="sanAt">${esc(s.sanidade.at)}</span><small>/<span data-calc="sanMax">${esc(s.sanidade.max)}</span></small></span></div><div class="bar"><i data-bar="san" style="width:${pct(s.sanidade.at,s.sanidade.max)}%"></i></div>
+    <div class="ctr">${ro?'':`<button class="btn xs icon" data-act="adj" data-k="sanidade.at" data-d="-1" aria-label="Perder 1 Sanidade">−1</button>`}${fi('sanidade.at',{type:'number',lab:'Sanidade atual'})}<span class="muted">/</span>${fi('sanidade.max',{type:'number',lab:'Sanidade máxima'})}${ro?'':`<button class="btn xs icon" data-act="adj" data-k="sanidade.at" data-d="1" aria-label="Recuperar 1 Sanidade">+1</button>`}</div></div>
+   <div class="vital det"><div class="head"><span class="label">Determinação</span></div>${stepper('determinacao',0,99,'Determinação')}<span class="hint" style="font-size:.82rem">Gaste para ter vantagem.</span></div>
+   <div class="vital"><div class="head"><span class="label">Inspiração</span></div>${stepper('inspiracao',0,99,'Inspiração')}<span class="hint" style="font-size:.82rem">+1d6 ao conjurar.</span></div>
+   <div class="vital"><div class="head"><span class="label">Proficiência</span></div>${stepper('prof',0,6,'Proficiência')}</div>
+   <div class="vital"><div class="head"><span class="label">Defesa</span><span class="big num" data-calc="def">${sgn(c.def)}</span></div><span class="hint" style="font-size:.82rem">AGI (máx. da proteção) + proteção + outros. Role contra o ataque fixo do inimigo.</span><button class="btn roll sm" data-act="rdef">Rolar Defesa</button></div>
+  </div>
+  <div class="sheet-cols">
+   <section class="sec span7"><h3>Atributos <span class="hint" style="font-family:var(--f-body)">toque em Testar para 1d20 + atributo + Dado Nefasto</span></h3>
+    <div class="attrs">${ATTRS.map(a=>`<div class="attr" title="${esc(a.d)}"><span class="nm">${a.n}</span>${stepper('attrs.'+a.k,-3,5,a.n)}<button class="btn roll sm" data-act="rattr" data-a="${a.k}">Testar</button></div>`).join('')}</div></section>
+   <section class="sec span5"><h3>Salvaguardas</h3><div class="saves">${SAVES.map(v=>`<div class="save"><div class="nm">${v.n}<small>${esc(v.d)}</small></div><span class="tot num" data-calc="save-${v.k}">${sgn(c['save-'+v.k])}</span>
+     <div class="field bonus"><label class="lbl" style="font-size:.66rem">Bônus</label>${fi('saves.'+v.k+'.b',{type:'number',lab:'Bônus de '+v.n})}</div>
+     <div class="stack" style="gap:6px;align-items:flex-end"><label>${cb('saves.'+v.k+'.p','Proficiente em '+v.n)} Prof.</label><button class="btn roll xs" data-act="rsave" data-s="${v.k}">Rolar</button></div></div>`).join('')}</div>
+     <div class="row"><button class="btn sm" data-act="rsan">Teste de Sanidade (Vontade)</button></div></section>
+
+   <section class="sec span12"><h3>Armas e ataques ${ro?'':`<span class="row" style="gap:8px"><select id="add-arma" style="width:auto" aria-label="Arma do livro"><option value="">Arma do livro…</option>${ARMAS.map((w,i)=>`<option value="${i}">${esc(w.n)} (${w.d})</option>`).join('')}</select><button class="btn sm" data-act="addarma">Adicionar</button></span>`}</h3>
+    ${s.armas.length?`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Arma</th><th>Tipo</th><th>Atrib.</th><th>Dano</th><th>Prof.</th><th>Carga</th><th>Notas</th><th>Rolar</th>${ro?'':'<th></th>'}</tr></thead><tbody>
+    ${s.armas.map((w,i)=>`<tr><td style="min-width:150px">${fi(`armas.${i}.nome`,{lab:'Nome da arma'})}</td><td class="w-s">${sel(`armas.${i}.t`,[['prox','Próx.'],['dist','Dist.']],'Tipo')}</td><td class="w-s">${sel(`armas.${i}.a`,[['cor','COR'],['agi','AGI']],'Atributo')}</td>
+     <td class="w-s">${fi(`armas.${i}.d`,{lab:'Dano',cls:'mono'})}</td><td>${cb(`armas.${i}.p`,'Proficiente')}</td><td class="w-xs">${fi(`armas.${i}.c`,{type:'number',lab:'Carga'})}</td><td style="min-width:150px">${fi(`armas.${i}.o`,{lab:'Notas'})}</td>
+     <td><div class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn roll xs" data-act="ratk" data-i="${i}">Ataque</button><button class="btn roll xs" data-act="rdmg" data-i="${i}">Dano</button></div></td>${ro?'':`<td><button class="btn ghost xs" data-act="rm" data-l="armas" data-i="${i}" aria-label="Remover arma">✕</button></td>`}</tr>`).join('')}</tbody></table></div>`:`<p class="muted">Nenhuma arma. Punhos causam 1d4 + COR.</p>`}
+    ${ro?'':`<div><button class="btn xs" data-act="addcustom" data-l="armas">+ Arma personalizada</button></div>`}
+    <p class="hint">Próximo: 1d20 + COR. Distância: 1d20 + AGI. Proficiente soma a proficiência. 20 natural dobra o dano.</p></section>
+
+   <section class="sec span6"><h3>Proteção e carga</h3>
+    ${ro?'':`<div class="row"><select id="add-prot" style="width:auto;flex:1" aria-label="Proteção do livro"><option value="">Proteção do livro…</option>${PROTECOES.map((p,i)=>`<option value="${i}">${esc(p.n)} (Def ${p.def})</option>`).join('')}</select><button class="btn sm" data-act="setprot">Vestir</button></div>`}
+    <div class="grid3"><div class="field"><label class="lbl">Proteção</label>${fi('armor.nome',{lab:'Proteção'})}</div><div class="field"><label class="lbl">Defesa</label>${fi('armor.def',{type:'number',lab:'Defesa da proteção'})}</div>
+     <div class="field"><label class="lbl">Máx. AGI</label>${fi('armor.max',{type:'number',lab:'Máximo de Agilidade'})}</div><div class="field"><label class="lbl">Carga</label>${fi('armor.c',{type:'number',lab:'Carga da proteção'})}</div>
+     <div class="field"><label class="lbl">Outros bônus de Defesa</label>${fi('defesaBonus',{type:'number',lab:'Outros bônus de defesa'})}</div>
+     <div class="field"><label class="lbl">Bolsa</label>${sel('bolsa',BOLSAS.map(b=>[b.k,b.n]),'Bolsa')}</div></div>
+    <div class="carga"><div class="row between"><span>Carga <b class="num" data-calc="used">${c.used}</b> / leve <b class="num" data-calc="leve">${c.leve}</b></span><span class="pill" data-calc="lvl">${c.lvl}</span></div>
+     <div class="track" id="carga-track"></div><span class="hint" data-calc="pen">${c.pen}</span></div></section>
+
+   <section class="sec span6"><h3>Perícias e idiomas</h3>
+    <div class="field"><span class="lbl">Perícias</span><div class="row" style="gap:6px">${s.pericias.map((p,i)=>`<span class="chip">${esc(p)}${ro?'':`<button data-act="rm" data-l="pericias" data-i="${i}" aria-label="Remover ${esc(p)}">×</button>`}</span>`).join('')||'<span class="muted">Nenhuma</span>'}</div>
+     ${ro?'':`<div class="row"><input id="add-per" list="dl-per" placeholder="Adicionar perícia" style="flex:1"><datalist id="dl-per">${PERICIAS_EX.map(p=>`<option value="${esc(p)}">`).join('')}</datalist><button class="btn sm" data-act="addchip" data-l="pericias" data-src="add-per">Adicionar</button></div>`}</div>
+    <div class="field"><span class="lbl">Idiomas <span style="text-transform:none;letter-spacing:0">(nativo + Astúcia)</span></span><div class="row" style="gap:6px">${s.idiomas.map((p,i)=>`<span class="chip">${esc(p)}${ro?'':`<button data-act="rm" data-l="idiomas" data-i="${i}" aria-label="Remover ${esc(p)}">×</button>`}</span>`).join('')||'<span class="muted">Nenhum</span>'}</div>
+     ${ro?'':`<div class="row"><input id="add-idi" placeholder="Adicionar idioma" style="flex:1"><button class="btn sm" data-act="addchip" data-l="idiomas" data-src="add-idi">Adicionar</button></div>`}</div>
+    <div class="field"><label class="lbl">Recursos</label><div class="dots">${[0,1,2,3,4,5].map(i=>`<button type="button" class="${i<=s.recursos&&i>0?'on':''}" ${i===0?'style="border-style:dashed"':''} data-act="setrec" data-v="${i}" ${ro?'disabled':''} aria-label="Recursos ${i}"></button>`).join('')}</div><span class="hint">${s.recursos} · ${esc(RECURSOS[clamp(s.recursos||0,0,5)])}</span></div></section>
+
+   <section class="sec span6"><h3>Equipamento ${ro?'':`<span class="row" style="gap:8px"><select id="add-item" style="width:auto" aria-label="Item do livro"><option value="">Item do livro…</option>${ITENS.map((t,i)=>`<option value="${i}">${esc(t[0])}</option>`).join('')}</select><button class="btn sm" data-act="additem">Adicionar</button></span>`}</h3>
+    ${s.itens.length?`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Item</th><th>Carga</th><th>Usos / notas</th><th></th></tr></thead><tbody>${s.itens.map((t,i)=>`<tr><td>${fi(`itens.${i}.n`,{lab:'Item'})}</td><td class="w-xs">${fi(`itens.${i}.c`,{type:'number',lab:'Carga'})}</td><td>${fi(`itens.${i}.o`,{lab:'Notas'})}</td>
+     <td><div class="row" style="gap:4px;flex-wrap:nowrap">${/\dd\d/i.test(t.o||'')?`<button class="btn roll xs" data-act="ruse" data-i="${i}" title="Rolar dado de uso">Uso</button>`:''}${ro?'':`<button class="btn ghost xs" data-act="rm" data-l="itens" data-i="${i}" aria-label="Remover item">✕</button>`}</div></td></tr>`).join('')}</tbody></table></div>`:`<p class="muted">Nada na mochila.</p>`}
+    ${ro?'':`<div><button class="btn xs" data-act="addcustom" data-l="itens">+ Item personalizado</button></div>`}
+    <p class="hint">Dado de uso: se cair 1 ou 2, foi o último uso.</p></section>
+
+   <section class="sec span6"><h3>Personalidade e motivação</h3>
+    <div class="grid2"><div class="field"><label class="lbl">Virtude</label><div class="row" style="flex-wrap:nowrap">${sel('virtude',[['','—'],...VIRTUDES.map(v=>[v,v])],'Virtude')}${ro?'':`<button class="btn xs" data-act="rtab" data-t="virtude">d20</button>`}</div></div>
+     <div class="field"><label class="lbl">Vício</label><div class="row" style="flex-wrap:nowrap">${sel('vicio',[['','—'],...VICIOS.map(v=>[v,v])],'Vício')}${ro?'':`<button class="btn xs" data-act="rtab" data-t="vicio">d20</button>`}</div></div></div>
+    <div class="field"><label class="lbl">Motivação</label><div class="row" style="flex-wrap:nowrap">${sel('motivacao',[['','—'],...MOTIVACOES.map(v=>[v[0],v[0]])],'Motivação')}${ro?'':`<button class="btn xs" data-act="rtab" data-t="motivacao">d12</button>`}</div>
+     ${s.motivacao?`<span class="hint">${esc((MOTIVACOES.find(x=>x[0]===s.motivacao)||[])[1]||'')}</span>`:''}</div>
+    <div class="field"><label class="lbl">História</label>${ta('historia','De onde veio, o que viu, o que esconde…',5)}</div></section>
+
+   <section class="sec span6"><h3>Insanidades</h3>
+    <div class="row" style="gap:6px"><button class="btn roll xs" data-act="rins" data-t="curta">Curta (d100)</button><button class="btn roll xs" data-act="rins" data-t="longa">Longa (d100)</button><button class="btn roll xs" data-act="rins" data-t="perm">Permanente (d20)</button><button class="btn roll xs" data-act="rins" data-t="fobia">Fobia (d100)</button></div>
+    ${s.insanidades.length?s.insanidades.map((x,i)=>`<div class="ins-item">${sel(`insanidades.${i}.t`,[['curta','Curta (1d10 min)'],['longa','Longa (1d8 dias)'],['perm','Permanente'],['fobia','Fobia']],'Tipo')}${fi(`insanidades.${i}.x`,{lab:'Descrição'})}${ro?'':`<button class="btn ghost xs" data-act="rm" data-l="insanidades" data-i="${i}" aria-label="Remover insanidade">✕</button>`}</div>`).join(''):`<p class="muted">Mente intacta. Por enquanto.</p>`}
+    ${ro?'':`<div><button class="btn xs" data-act="addcustom" data-l="insanidades">+ Insanidade manual</button></div>`}
+    <details><summary class="label" style="cursor:pointer">Situações de perda de Sanidade</summary><div class="tbl-wrap" style="margin-top:8px"><table class="tbl">${PERDA_SAN.map(p=>`<tr><td>${esc(p[0])}</td><td class="num">${esc(p[1])}</td></tr>`).join('')}</table></div>
+    <p class="hint" style="margin-top:6px">Falhou na Vontade: perde 1 e ganha Insanidade Curta. Perdeu 2: Longa. Perdeu 3+: Permanente.</p></details></section>
+
+   <section class="sec span6"><h3>Feitiços ${ro?'':`<span class="row" style="gap:8px"><select id="add-spell" style="width:auto;max-width:220px" aria-label="Feitiço do livro"><option value="">Feitiço do livro…</option>${FEITICOS.map((f,i)=>`<option value="${i}">${esc(f[0])} (N${f[1]})</option>`).join('')}</select><button class="btn sm" data-act="addspell">Aprender</button></span>`}</h3>
+    ${s.feiticos.length?`<div class="list">${s.feiticos.map((f,i)=>`<div class="it"><div class="grow stack" style="gap:6px">${fi(`feiticos.${i}.n`,{lab:'Nome do feitiço'})}${fi(`feiticos.${i}.d`,{lab:'Descrição',ph:'Efeito'})}</div><div class="field" style="width:80px"><label class="lbl">Nível</label>${fi(`feiticos.${i}.l`,{type:'number',lab:'Nível'})}</div>
+     <div class="stack" style="gap:6px"><button class="btn roll xs" data-act="cast" data-i="${i}">Conjurar</button>${ro?'':`<button class="btn ghost xs" data-act="rm" data-l="feiticos" data-i="${i}">Esquecer</button>`}</div></div>`).join('')}</div>`:`<p class="muted">Nenhum conhecimento proibido. Ainda.</p>`}
+    <p class="hint">Conjurar: d6 contra 5 + nível. Cada ponto de Saúde/Sanidade/Inspiração gasto dá +1d6 (máx. 5d6). Cada 1 ou 2 custa 1 de Sanidade.</p></section>
+
+   <section class="sec span6"><h3>Ferimentos e morte</h3>
+    <div class="deaths"><div class="field"><span class="lbl">Sucessos</span><div class="dots">${[1,2,3].map(i=>`<button type="button" class="${(s.morte.s||0)>=i?'on':''}" data-act="death" data-w="s" data-v="${i}" ${ro?'disabled':''} aria-label="Sucesso ${i}"></button>`).join('')}</div></div>
+     <div class="field"><span class="lbl">Falhas</span><div class="dots">${[1,2,3].map(i=>`<button type="button" class="${(s.morte.f||0)>=i?'on':''}" style="border-color:var(--blood);${(s.morte.f||0)>=i?'background:var(--blood)':''}" data-act="death" data-w="f" data-v="${i}" ${ro?'disabled':''} aria-label="Falha ${i}"></button>`).join('')}</div></div></div>
+    <div class="row" style="gap:6px"><button class="btn roll xs" data-act="rdeath">Teste de morte (Fortitude)</button><button class="btn roll xs" data-act="rinj">Dano grave (3d6)</button>${ro?'':`<button class="btn xs" data-act="rest" data-t="curto">Descanso curto</button><button class="btn xs" data-act="rest" data-t="longo">Descanso longo</button>`}</div>
+    <div class="field"><label class="lbl">Ferimentos e sequelas</label>${ta('ferimentos','Mão perdida, lesão na perna…',3)}</div>
+    <p class="hint">Com Saúde 0: Fortitude por turno; 3 sucessos antes de 3 falhas estabiliza. Descanso curto (15 min): +1 Saúde por ponto de Corpo. Longo (8 h): +1d4.</p></section>
+
+   <section class="sec span6"><h3>Notas</h3>${ta('notas','Pistas, nomes, endereços, símbolos desenhados às pressas…',9)}</section>
+  </div></div>`;
+}
+function npcHTML(){
+  const s=st.sheet,ro=RO();
+  return `<div class="sheet" id="sheet">
+  <div class="row between"><button class="btn ghost sm" data-act="closesheet">← Voltar</button><span class="label" id="save-st">Salvo</span></div>
+  <div class="stack"><div class="row"><span class="pill npc">NPC</span></div><div class="sheet-name">${fi('name',{ph:'Nome do NPC',lab:'Nome'})}</div>${fi('desc',{ph:'Aparência em uma linha',lab:'Descrição'})}</div>
+  ${rollbarHTML(true)}
+  <div class="vitals">
+   <div class="vital hp"><div class="head"><span class="label">Saúde</span></div><div class="ctr"><button class="btn xs icon" data-act="adj" data-k="saude.at" data-d="-1" aria-label="−1 Saúde">−1</button>${fi('saude.at',{type:'number',lab:'Saúde atual'})}<span class="muted">/</span>${fi('saude.max',{type:'number',lab:'Saúde máxima'})}<button class="btn xs icon" data-act="adj" data-k="saude.at" data-d="1" aria-label="+1 Saúde">+1</button></div></div>
+   <div class="vital"><div class="head"><span class="label">Defesa</span></div>${stepper('defesa',0,40,'Defesa')}</div>
+   <div class="vital"><div class="head"><span class="label">Proficiência</span></div>${stepper('prof',0,10,'Proficiência')}</div>
+   <div class="vital san"><div class="head"><span class="label">Insanidade causada</span></div><div class="row" style="flex-wrap:nowrap">${fi('insanidade',{ph:'1d4',cls:'mono',lab:'Insanidade'})}<button class="btn roll xs" data-act="rnpcsan">Rolar</button></div></div>
+  </div>
+  <section class="sec"><h3>Atributos</h3><div class="attrs">${ATTRS.map(a=>`<div class="attr"><span class="nm">${a.n}</span>${stepper('attrs.'+a.k,-5,10,a.n)}<button class="btn roll sm" data-act="rnattr" data-a="${a.k}">Testar</button></div>`).join('')}</div></section>
+  <section class="sec"><h3>Ataques</h3>
+   ${s.ataques.length?`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Ataque</th><th>Valor fixo</th><th>Bônus</th><th>Dano</th><th>Rolar</th><th></th></tr></thead><tbody>${s.ataques.map((a,i)=>`<tr><td style="min-width:170px">${fi(`ataques.${i}.n`,{lab:'Ataque'})}</td><td class="w-s">${fi(`ataques.${i}.v`,{type:'number',lab:'Valor fixo'})}</td><td class="w-s">${fi(`ataques.${i}.b`,{type:'number',lab:'Bônus'})}</td><td class="w-s">${fi(`ataques.${i}.d`,{cls:'mono',lab:'Dano'})}</td>
+    <td><div class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn roll xs" data-act="rnatk" data-i="${i}">Ataque</button><button class="btn roll xs" data-act="rndmg" data-i="${i}">Dano</button></div></td><td><button class="btn ghost xs" data-act="rm" data-l="ataques" data-i="${i}" aria-label="Remover ataque">✕</button></td></tr>`).join('')}</tbody></table></div>`:`<p class="muted">Sem ataques.</p>`}
+   <div><button class="btn xs" data-act="addcustom" data-l="ataques">+ Ataque</button></div>
+   <p class="hint">O valor fixo é o número que o jogador precisa igualar na rolagem de Defesa. O bônus serve quando você prefere rolar.</p></section>
+  <div class="grid2"><section class="sec"><h3>Resistências</h3>${ta('resist','',3)}</section><section class="sec"><h3>Fraquezas</h3>${ta('fraq','',3)}</section>
+  <section class="sec"><h3>Especial</h3>${ta('especial','',3)}</section><section class="sec"><h3>Notas do mestre</h3>${ta('notas','',3)}</section></div></div>`;
+}
+
+/* --- rolagens da ficha --- */
+function resetRB(){st.rb.adv=0;st.rb.prof=false;const rb=$('#rollbar');if(rb){$$('[data-act="adv"]',rb).forEach(b=>b.setAttribute('aria-pressed',b.dataset.v==='0'));const p=$('[data-rb="prof"]',rb);p&&(p.checked=false)}}
+function rollTest({label,mods,nef=true,target}){
+  const s=st.sheet,adv=st.rb.adv;const a=rnd(20),b=adv?rnd(20):null;
+  const faces=[{v:a,s:20}];let nat=a;
+  if(adv){faces.push({v:b,s:20});const keep=adv===1?(a>=b?0:1):(a<=b?0:1);faces[1-keep].drop=true;nat=faces[keep].v}
+  mods=mods.filter(m=>m[1]!==0||m[0]==='');
+  const nv=nef?rnd(6):null;if(nef)faces.push({v:nv,s:6,nef:true});
+  const total=nat+mods.reduce((t,m)=>t+m[1],0);
+  const tg=target!==undefined?target:(st.rb.dif!==''?+st.rb.dif:null);
+  let outcome=null;if(nef){if(nat===20&&nv===6)outcome='triunfo';else if(nat===1&&nv===1)outcome='desespero';else if(nv===6)outcome='beneficio';else if(nv===1)outcome='ameaca'}
+  const rec={kind:'test',label,char:s?s.name||null:null,faces,mods,total,nat,adv,outcome,target:tg,success:tg!=null?total>=tg:null,expr:'1d20'+(nef?' + d6 nefasto':''),secret:st.rb.secret};
+  resetRB();postRoll(rec);return rec;
+}
+const profMod=()=>st.rb.prof&&st.sheet.prof?[['prof',+st.sheet.prof]]:[];
+function rollAttr(k){const a=ATTRS.find(x=>x.k===k);const r=rollTest({label:'Teste de '+a.n,mods:[[a.n.slice(0,3).toUpperCase(),+st.sheet.attrs[k]||0],...profMod()]});showPop(r,outcomeActions(r))}
+function rollSave(k,label){const v=SAVES.find(x=>x.k===k);const c=calcPC(st.sheet);const r=rollTest({label:label||v.n,mods:[[v.n,c['save-'+k]]]});return r}
+function outcomeActions(r){
+  if(RO())return'';
+  if(r.outcome==='triunfo')return `<button class="btn xs" data-act="adj" data-k="determinacao" data-d="1">+1 Determinação</button>`;
+  if(r.outcome==='desespero')return `<button class="btn xs" data-act="adj" data-k="determinacao" data-d="-1" data-min="0">−1 Determinação</button>`;
+  return '';
+}
+function rollDmg(expr,label,crit,secret){
+  const r=parseDice(expr);if(!r)return toast('Dano inválido: '+expr,'err');
+  let total=r.total;if(crit)total*=2;
+  const rec={kind:'damage',label:label+(crit?' (crítico ×2)':''),char:st.sheet?st.sheet.name:null,expr,faces:r.faces,mods:r.mods.filter(m=>m[1]),total:Math.max(0,total),secret};
+  postRoll(rec);showPop(rec);
+}
+function weaponDmgExpr(w){const s=st.sheet;let e=(w.d||'1d4').replace(/\s/g,'');if(w.t==='prox'){const m=+s.attrs[w.a||'cor']||0;if(m)e+=(m>0?'+':'')+m}return e}
+function rollTable(kind){
+  let r,txt,label;
+  if(kind==='curta'){r=rnd(100);txt=INS_CURTA.find(x=>r>=x[0]&&r<=x[1])[2];label='Insanidade de Curta Duração'}
+  else if(kind==='longa'){r=rnd(100);txt=INS_LONGA.find(x=>r>=x[0]&&r<=x[1])[2];label='Insanidade de Longa Duração'}
+  else if(kind==='perm'){r=rnd(20);txt=INS_PERM[r-1];label='Insanidade Permanente'}
+  else{r=rnd(100);txt=FOBIAS[Math.ceil(r/2)-1];label='Fobia'}
+  const dur=kind==='curta'?rnd(10)+' minutos':kind==='longa'?rnd(8)+' dias':'';
+  const rec={kind:'table',label,char:st.sheet?st.sheet.name:null,faces:[{v:r,s:kind==='perm'?20:100}],mods:[],total:r,note:txt+(dur?` Duração: ${dur}.`:''),secret:st.rb.secret};
+  postRoll(rec);
+  showPop(rec,RO()?'':`<button class="btn xs primary" data-act="insadd" data-t="${kind}" data-x="${esc(txt+(dur?` (${dur})`:''))}">Adicionar à ficha</button>`);
+}
+function castModal(i){
+  const s=st.sheet,f=s.feiticos[i];const lv=+f.l||1;
+  const m=openModal({title:'Conjurar: '+(f.n||'feitiço'),body:`<p>Dificuldade <b class="num">${5+lv}</b> (5 + nível ${lv}). Role 1d6 e some dados extras pagos com pontos. Máximo de 5d6.</p>
+   <div class="grid3"><div class="field"><label class="lbl" for="cs-h">Gastar Saúde</label><input id="cs-h" type="number" min="0" max="4" value="0"></div><div class="field"><label class="lbl" for="cs-s">Gastar Sanidade</label><input id="cs-s" type="number" min="0" max="4" value="0"></div><div class="field"><label class="lbl" for="cs-i">Gastar Inspiração</label><input id="cs-i" type="number" min="0" max="4" value="0"></div></div>
+   <p class="hint">Saúde e Sanidade gastas não podem passar do seu nível (${esc(s.nivel||1)}). Cada dado com 1 ou 2 custa 1 de Sanidade e encerra as conjurações do dia.</p><div class="err" id="cs-e"></div>`,
+   footer:`<button class="btn" data-x>Cancelar</button><button class="btn primary" id="cs-go">Conjurar</button>`});
+  $('#cs-go',m.el).onclick=()=>{
+    const h=+$('#cs-h',m.el).value||0,sn=+$('#cs-s',m.el).value||0,ins=+$('#cs-i',m.el).value||0;const ex=h+sn+ins;
+    if(h<0||sn<0||ins<0||ex>4)return $('#cs-e',m.el).textContent='No máximo 4 dados extras (5d6 no total).';
+    if(h+sn>(+s.nivel||1))return $('#cs-e',m.el).textContent='Saúde + Sanidade gastas não podem passar do seu nível.';
+    if(ins>(+s.inspiracao||0))return $('#cs-e',m.el).textContent='Inspiração insuficiente.';
+    m.close();
+    if(!RO()){if(h)adjust('saude.at',-h,0);if(sn)adjust('sanidade.at',-sn,0);if(ins)adjust('inspiracao',-ins,0)}
+    const faces=Array.from({length:1+ex},()=>({v:rnd(6),s:6}));const total=faces.reduce((t,f)=>t+f.v,0);const tg=5+lv;
+    const low=faces.filter(f=>f.v<=2).length,ones=faces.filter(f=>f.v===1).length;const ok=total>=tg;
+    let note=ok?'O feitiço funciona.':'A conjuração falha. Faça um teste de Vontade ou perca 1 de Sanidade.';
+    if(low)note+=` ${low} dado(s) com 1 ou 2: perde ${low} de Sanidade e não conjura mais hoje.`;
+    if(!ok&&ones>=2)note='FALHA CRÍTICA: o conjurador é devorado pelo que invocou, ou desaparece para outra dimensão. '+note;
+    const rec={kind:'spell',label:'Conjurar: '+(f.n||'feitiço'),char:s.name,expr:(1+ex)+'d6',faces,mods:[],total,target:tg,success:ok,note,secret:st.rb.secret};
+    postRoll(rec);showPop(rec,RO()?'':`${low?`<button class="btn xs" data-act="adj" data-k="sanidade.at" data-d="-${low}" data-min="0">−${low} Sanidade</button>`:''}${!ok?`<button class="btn xs" data-act="rsave2" data-s="vont">Teste de Vontade</button>`:''}`);
+    if(!RO())renderSheet();
+  };
+}
+function levelUpModal(){
+  const s=st.sheet;const r={san:rnd(4),prof:rnd(6),hp:rnd(6),per:rnd(12),rec:[rnd(6),rnd(6)]};
+  const nPer=(s.pericias||[]).length+(s.idiomas||[]).length;const recBest=Math.max(...r.rec);
+  const san=s.sanidade.at>=s.sanidade.max?{max:s.sanidade.max+1,at:s.sanidade.at+1,t:'Sanidade cheia: máximo +1'}:{max:s.sanidade.max,at:Math.min(s.sanidade.max,s.sanidade.at+r.san),t:`Recupera ${r.san} de Sanidade`};
+  const pf=+s.prof||0,newProf=r.prof>pf?pf+1:r.prof<pf?Math.max(0,pf-1):pf;
+  const newPer=r.per>nPer||r.per===12;
+  const rc=+s.recursos||0,newRec=recBest>rc?Math.min(5,rc+1):recBest<rc?rc-1:rc;
+  const m=openModal({title:'Subir para o nível '+((+s.nivel||1)+1),body:`<p class="hint">Rolagens do capítulo “Subindo de Nível”. Confira e aplique.</p>
+   <div class="list">
+   <div class="it"><div class="grow"><div class="t">Sanidade (1d4 → ${r.san})</div><div class="s">${san.t}: ${s.sanidade.at}/${s.sanidade.max} → ${san.at}/${san.max}</div></div></div>
+   <div class="it"><div class="grow"><div class="t">Proficiência (1d6 → ${r.prof})</div><div class="s">${pf} → ${newProf}</div></div></div>
+   <div class="it"><div class="grow"><div class="t">Saúde máxima (+1d6 → ${r.hp})</div><div class="s">${s.saude.max} → ${s.saude.max+r.hp}</div></div></div>
+   <div class="it"><div class="grow"><div class="t">Perícias (1d12 → ${r.per} vs ${nPer})</div><div class="s">${newPer?'Ganha uma nova perícia pela vivência (pode ser Mythos). Adicione na ficha.':'Nenhuma perícia nova.'}</div></div></div>
+   <div class="it"><div class="grow"><div class="t">Recursos (2d6 → ${r.rec.join(' e ')}, melhor ${recBest})</div><div class="s">${rc} → ${newRec}</div></div></div></div>
+   <p class="hint">Determinação: o mestre pode premiar com +1 se você jogou bem.</p>`,
+   footer:`<button class="btn" data-x>Cancelar</button><button class="btn primary" id="lv-ok">Aplicar nível ${(+s.nivel||1)+1}</button>`});
+  $('#lv-ok',m.el).onclick=()=>{
+    Object.assign(s,{nivel:(+s.nivel||1)+1,prof:newProf,recursos:newRec});s.sanidade={at:san.at,max:san.max};s.saude={at:s.saude.at+r.hp,max:s.saude.max+r.hp};
+    ['nivel','prof','recursos','sanidade','saude'].forEach(touch);
+    postRoll({kind:'level',label:'Subiu para o nível '+s.nivel,char:s.name,faces:[{v:r.san,s:4},{v:r.prof,s:6},{v:r.hp,s:6},{v:r.per,s:12},{v:r.rec[0],s:6},{v:r.rec[1],s:6}],mods:[],total:s.nivel,note:`Sanidade ${san.at}/${san.max} · Prof ${newProf} · Saúde máx ${s.saude.max} · Recursos ${newRec}${newPer?' · nova perícia':''}`});
+    m.close();renderSheet();toast('Nível aplicado.','ok');
+  };
+}
+
+/* ===================== assistente de criação ===================== */
+const WZ_STEPS=['Arquétipo','Atributos','Salvaguarda','Saúde e Sanidade','Profissão','Personalidade','Equipamento','Nome e revisão'];
+let wz=null,wzM=null;
+function startWizard(owner){
+  wz={step:0,owner:owner||st.user.uname,arq:'',audaz:[],metodo:'pontos',base:{cor:0,agi:0,ast:0,pre:0},dice:null,save:'',prof:'',profDice:null,
+    hp:'',hpDice:null,san:'',sanDice:null,rec:'',recDice:null,profissao:'',pericias:[],idiomas:['Português'],virtude:'',vicio:'',motivacao:'',historia:'',
+    armas:[],prot:'',itens:[],bolsa:'mochila',name:'',concept:''};
+  wzM=openModal({title:'Assistente de Criação',wide:true,body:'',footer:' ',onClose:()=>{wz=null;wzM=null}});
+  renderWz();
+}
+const wzArq=()=>ARQUETIPOS.find(a=>a.k===wz.arq);
+function wzAttrs(){const a={...wz.base};const q=wzArq();if(q){if(q.k==='audaz')wz.audaz.forEach(k=>a[k]=(a[k]||0)+1);else if(q.attr)a[q.attr]+=1}for(const k in a)a[k]=clamp(a[k],-3,5);return a}
+const best2of3=()=>{const d=[rnd(6),rnd(6),rnd(6)];const s=[...d].sort((x,y)=>x-y);return{d,v:s[1]+s[2],drop:d.indexOf(s[0])}};
+function wzFaces(d,drop){return facesHTML(d.map((v,i)=>({v,s:6,drop:i===drop})))}
+function renderWz(){
+  if(!wzM)return;const s=wz.step;let b='';
+  const stepsBar=`<div class="steps">${WZ_STEPS.map((n,i)=>`<span class="${i===s?'on':i<s?'done':''}">${i+1}. ${n}</span>`).join('')}</div>`;
+  const A=wzAttrs();
+  if(s===0){
+    b=`<h3>Escolha o arquétipo</h3><p class="hint">Cada arquétipo foca um atributo, exceto o Audaz, que é flexível.</p>
+    <div class="opt-grid">${ARQUETIPOS.map(a=>`<button class="opt" data-act="wzset" data-f="arq" data-v="${a.k}" aria-pressed="${wz.arq===a.k}"><b>${a.n}</b><small>${esc(a.d)}</small><small style="color:var(--accent)">${esc(a.b)}</small></button>`).join('')}</div>`;
+  }else if(s===1){
+    const sum=Object.values(wz.base).reduce((t,v)=>t+v,0);
+    b=`<h3>Atributos</h3><p class="hint">Combine o método com o mestre. Depois da rolagem, você pode diminuir −1 em até 2 atributos para aumentar +1 em outros. Valores vão de −3 a +5.</p>
+    <div class="opt-grid">${[['pontos','Distribuir 3 pontos','Base 0 em tudo. Distribua 3 pontos.'],['4d6','Rolar 4d6','Um dado por atributo: 1 = −1, 2–3 = 0, 4–5 = +1, 6 = +2.'],['3d6','3d6 por atributo','Cada 5 ou 6 dá +1. Um 1 anula um 5. Dois 1 sem 6 dá −1.']].map(([k,n,d])=>`<button class="opt" data-act="wzset" data-f="metodo" data-v="${k}" aria-pressed="${wz.metodo===k}"><b>${n}</b><small>${d}</small></button>`).join('')}</div>
+    ${wz.metodo!=='pontos'?`<div class="row"><button class="btn roll" data-act="wzrollattr">Rolar atributos</button>${wz.dice?`<span class="hint">Rolado. Ajuste abaixo se quiser trocar pontos.</span>`:''}</div>`:''}
+    <div class="attrs">${ATTRS.map(a=>`<div class="attr"><span class="nm">${a.n}</span>
+      ${wz.dice&&wz.dice[a.k]?facesHTML(wz.dice[a.k].map(v=>({v,s:6}))):''}
+      <div class="stepper"><button type="button" data-act="wzstep" data-a="${a.k}" data-d="-1" aria-label="Diminuir">−</button><span class="val num" style="font-size:1.6rem;min-width:56px">${sgn(wz.base[a.k])}</span><button type="button" data-act="wzstep" data-a="${a.k}" data-d="1" aria-label="Aumentar">+</button></div>
+      ${A[a.k]!==wz.base[a.k]?`<span class="hint">Final ${sgn(A[a.k])}</span>`:''}
+      ${wz.arq==='audaz'?`<label class="row" style="gap:6px;font-size:.88rem"><input type="checkbox" data-chg="wzaudaz" data-a="${a.k}" ${wz.audaz.includes(a.k)?'checked':''}> +1 Audaz</label>`:''}</div>`).join('')}</div>
+    <p class="mono muted">Soma dos valores base: ${sgn(sum)}${wz.metodo==='pontos'?` · ${sum===3?'distribuição completa':'o método pede soma +3'}`:wz.metodo==='4d6'&&wz.dice&&sum<2?' · abaixo de +2: pode rolar de novo':''}</p>
+    ${wz.arq==='audaz'?`<p class="hint">Audaz: marque exatamente 2 atributos para o bônus de +1 (${wz.audaz.length}/2).</p>`:''}`;
+  }else if(s===2){
+    const q=wzArq();
+    b=`<h3>Salvaguarda proficiente e proficiência</h3><p class="hint">Escolha uma salvaguarda em que seu investigador é proficiente: ele soma a proficiência nela.</p>
+    <div class="opt-grid">${SAVES.map(v=>{const tot=A[v.a]+(q&&q.save===v.k?1:0);return `<button class="opt" data-act="wzset" data-f="save" data-v="${v.k}" aria-pressed="${wz.save===v.k}"><b>${v.n}</b><small>${esc(v.d)}</small><small class="mono">Base ${sgn(tot)}${q&&q.save===v.k?' (inclui +1 do arquétipo)':''}</small></button>`}).join('')}</div>
+    <div class="row" style="align-items:flex-end"><button class="btn roll" data-act="wzroll" data-f="prof">Rolar 3d6, fica o menor</button>${wz.profDice?wzFaces(wz.profDice,-1):''}
+    <div class="field" style="width:140px"><label class="lbl" for="wz-prof">Proficiência</label><input id="wz-prof" type="number" data-wz="prof" value="${esc(wz.prof)}"></div></div>`;
+  }else if(s===3){
+    const q=wzArq()||{};
+    b=`<h3>Saúde, Sanidade e Recursos</h3><p class="hint">Saúde e Sanidade: 3d6 descartando o menor, somando Corpo e Astúcia. Recursos: 3d6, fica o do meio, −1.</p>
+    <div class="grid3">
+     <div class="panel"><h4>Saúde</h4><p class="ref">3d6 sem o menor ${sgn(A.cor)} COR${q.saude?' +1 Combatente':''}</p>${wz.hpDice?wzFaces(wz.hpDice.d,wz.hpDice.drop):''}<button class="btn roll sm" data-act="wzroll" data-f="hp">Rolar Saúde</button><input type="number" data-wz="hp" value="${esc(wz.hp)}" aria-label="Saúde"></div>
+     <div class="panel"><h4>Sanidade</h4><p class="ref">3d6 sem o menor ${sgn(A.ast)} AST${q.sanidade?' +1 Negociante':''}</p>${wz.sanDice?wzFaces(wz.sanDice.d,wz.sanDice.drop):''}<button class="btn roll sm" data-act="wzroll" data-f="san">Rolar Sanidade</button><input type="number" data-wz="san" value="${esc(wz.san)}" aria-label="Sanidade"></div>
+     <div class="panel"><h4>Recursos</h4><p class="ref">3d6, o do meio, −1 (0 a 5)</p>${wz.recDice?facesHTML(wz.recDice.map(v=>({v,s:6}))):''}<button class="btn roll sm" data-act="wzroll" data-f="rec">Rolar Recursos</button><input type="number" min="0" max="5" data-wz="rec" value="${esc(wz.rec)}" aria-label="Recursos">${wz.rec!==''?`<span class="hint">${esc(RECURSOS[clamp(+wz.rec,0,5)])}</span>`:''}</div>
+    </div>`;
+  }else if(s===4){
+    const p=PROFISSOES.find(x=>x[0]===wz.profissao);
+    b=`<h3>Profissão e perícias</h3><p class="hint">A profissão define o que seu investigador sabe. Depois escolha mais 2 perícias pela vivência dele.</p>
+    <div class="opt-grid" style="max-height:330px;overflow-y:auto;padding:2px">${PROFISSOES.map(x=>`<button class="opt" data-act="wzprof" data-v="${esc(x[0])}" aria-pressed="${wz.profissao===x[0]}"><b>${esc(x[0])}</b><small>${esc(x[1])}</small></button>`).join('')}</div>
+    <div class="field"><span class="lbl">Perícias (${wz.pericias.length})</span><div class="row" style="gap:6px">${wz.pericias.map((x,i)=>`<span class="chip">${esc(x)}<button data-act="wzrm" data-l="pericias" data-i="${i}" aria-label="Remover">×</button></span>`).join('')||'<span class="muted">Escolha uma profissão</span>'}</div>
+     <div class="row"><input id="wz-per" list="dl-wper" placeholder="+2 perícias extras" style="flex:1"><datalist id="dl-wper">${PERICIAS_EX.map(x=>`<option value="${esc(x)}">`).join('')}</datalist><button class="btn sm" data-act="wzadd" data-l="pericias" data-src="wz-per">Adicionar</button></div></div>
+    <div class="field"><span class="lbl">Idiomas: nativo + ${Math.max(0,A.ast)} extra(s) pela Astúcia</span><div class="row" style="gap:6px">${wz.idiomas.map((x,i)=>`<span class="chip">${esc(x)}<button data-act="wzrm" data-l="idiomas" data-i="${i}" aria-label="Remover">×</button></span>`).join('')}</div>
+     <div class="row"><input id="wz-idi" placeholder="ex: Latim, Inglês" style="flex:1"><button class="btn sm" data-act="wzadd" data-l="idiomas" data-src="wz-idi">Adicionar</button></div></div>`;
+  }else if(s===5){
+    b=`<h3>Personalidade e motivação</h3><p class="hint">Uma virtude e um vício. Escolha ou deixe os dados decidirem.</p>
+    <div class="grid2"><div class="field"><label class="lbl" for="wz-vir">Virtude</label><div class="row" style="flex-wrap:nowrap"><select id="wz-vir" data-wz="virtude"><option value="">—</option>${VIRTUDES.map((v,i)=>`<option ${wz.virtude===v?'selected':''}>${v}</option>`).join('')}</select><button class="btn roll sm" data-act="wzroll" data-f="virtude">d20</button></div></div>
+    <div class="field"><label class="lbl" for="wz-vic">Vício</label><div class="row" style="flex-wrap:nowrap"><select id="wz-vic" data-wz="vicio"><option value="">—</option>${VICIOS.map(v=>`<option ${wz.vicio===v?'selected':''}>${v}</option>`).join('')}</select><button class="btn roll sm" data-act="wzroll" data-f="vicio">d20</button></div></div></div>
+    <div class="field"><label class="lbl" for="wz-mot">Motivação</label><div class="row" style="flex-wrap:nowrap"><select id="wz-mot" data-wz="motivacao"><option value="">—</option>${MOTIVACOES.map(v=>`<option ${wz.motivacao===v[0]?'selected':''}>${v[0]}</option>`).join('')}</select><button class="btn roll sm" data-act="wzroll" data-f="motivacao">d12</button></div>
+    ${wz.motivacao?`<span class="hint">${esc(MOTIVACOES.find(x=>x[0]===wz.motivacao)[1])}</span>`:''}</div>
+    <div class="field"><label class="lbl" for="wz-his">História (opcional)</label><textarea id="wz-his" data-wz="historia" rows="4" placeholder="O que levou você às incertezas do oculto?">${esc(wz.historia)}</textarea></div>`;
+  }else if(s===6){
+    b=`<h3>Equipamento</h3><p class="hint">Você carrega o que sua profissão e seu status exigem. Combine com o mestre: uma arma de fogo pode ser ilegal para algumas profissões.</p>
+    <div class="grid2"><div class="field"><span class="lbl">Armas</span><div class="stack" style="gap:4px;max-height:260px;overflow-y:auto">${ARMAS.map((w,i)=>`<label class="row" style="gap:8px;flex-wrap:nowrap"><input type="checkbox" data-chg="wzarma" data-i="${i}" ${wz.armas.includes(i)?'checked':''}> ${esc(w.n)} <span class="mono muted">${w.d}${w.t==='prox'?' + '+w.a.toUpperCase():''}</span></label>`).join('')}</div></div>
+    <div class="stack"><div class="field"><label class="lbl" for="wz-prot">Proteção</label><select id="wz-prot" data-wz="prot"><option value="">Nenhuma</option>${PROTECOES.map((p,i)=>`<option value="${i}" ${String(wz.prot)===String(i)?'selected':''}>${esc(p.n)} (Def ${p.def}, máx AGI ${sgn(p.max)})</option>`).join('')}</select></div>
+     <div class="field"><label class="lbl" for="wz-bol">Bolsa</label><select id="wz-bol" data-wz="bolsa">${BOLSAS.map(x=>`<option value="${x.k}" ${wz.bolsa===x.k?'selected':''}>${x.n}</option>`).join('')}</select></div></div></div>
+    <div class="field"><span class="lbl">Itens gerais</span><div class="grid3" style="gap:4px">${ITENS.map((t,i)=>`<label class="row" style="gap:8px;flex-wrap:nowrap;font-size:.95rem"><input type="checkbox" data-chg="wzitem" data-i="${i}" ${wz.itens.includes(i)?'checked':''}> ${esc(t[0])}</label>`).join('')}</div></div>`;
+  }else{
+    const q=wzArq();
+    b=`<h3>Nome e revisão</h3><div class="grid2"><div class="field"><label class="lbl" for="wz-name">Nome</label><input id="wz-name" data-wz="name" value="${esc(wz.name)}" placeholder="Nome do investigador"></div>
+     <div class="field"><label class="lbl" for="wz-con">Conceito (opcional)</label><input id="wz-con" data-wz="concept" value="${esc(wz.concept)}" placeholder="ex: Arqueóloga que leu o que não devia"></div></div>
+    <div class="row"><button class="btn roll sm" data-act="wzname" data-g="f">Nome feminino (2d12)</button><button class="btn roll sm" data-act="wzname" data-g="m">Nome masculino (3d12)</button><button class="btn roll sm" data-act="wzname" data-g="s">Sobrenome (d100)</button></div>
+    ${st.isMaster?`<div class="field"><label class="lbl" for="wz-own">Jogador</label><select id="wz-own" data-wz="owner"><option value="">Sem jogador</option><option value="${esc(st.camp.master)}" ${wz.owner===st.camp.master?'selected':''}>${esc(nameOf(st.camp.master))} (você)</option>${(st.camp.players||[]).map(p=>`<option value="${esc(p)}" ${wz.owner===p?'selected':''}>${esc(nameOf(p))}</option>`).join('')}</select></div>`:''}
+    <div class="panel"><div class="grid2 ref" style="color:var(--fg)"><div><b>${esc(q?q.n:'Sem arquétipo')}</b> · ${esc(wz.profissao||'Sem profissão')}<br>${ATTRS.map(a=>`${a.n} ${sgn(A[a.k])}`).join(' · ')}<br>Salvaguarda: ${esc((SAVES.find(v=>v.k===wz.save)||{}).n||'—')} · Proficiência ${esc(wz.prof||0)}</div>
+     <div>Saúde ${esc(wz.hp||0)} · Sanidade ${esc(wz.san||0)} · Recursos ${esc(wz.rec||0)}<br>${esc([wz.virtude,wz.vicio].filter(Boolean).join(' / ')||'Sem personalidade')}${wz.motivacao?' · '+esc(wz.motivacao):''}<br>${wz.armas.length} arma(s), ${wz.itens.length} item(ns)</div></div></div>`;
+  }
+  wzM.body.innerHTML=stepsBar+`<div class="stack">${b}</div><div class="err" id="wz-e"></div>`;
+  wzM.foot.innerHTML=`${s>0?`<button class="btn" data-act="wznav" data-d="-1">← Voltar</button>`:''}<span style="flex:1"></span>${s<WZ_STEPS.length-1?`<button class="btn primary" data-act="wznav" data-d="1">Próximo →</button>`:`<button class="btn primary" data-act="wzdone">Criar investigador</button>`}`;
+}
+function wzValidate(){
+  const s=wz.step;
+  if(s===0&&!wz.arq)return 'Escolha um arquétipo.';
+  if(s===1&&wz.arq==='audaz'&&wz.audaz.length!==2)return 'Audaz: marque 2 atributos para o bônus.';
+  if(s===2&&!wz.save)return 'Escolha uma salvaguarda proficiente.';
+  if(s===3&&(wz.hp===''||wz.san===''))return 'Defina Saúde e Sanidade (role ou digite).';
+  return '';
+}
+function wzRollAttrs(){
+  wz.dice={};
+  for(const a of ATTRS){
+    if(wz.metodo==='4d6'){const v=rnd(6);wz.dice[a.k]=[v];wz.base[a.k]=v===1?-1:v<=3?0:v<=5?1:2}
+    else{const d=[rnd(6),rnd(6),rnd(6)];wz.dice[a.k]=d;const six=d.filter(x=>x===6).length,five=d.filter(x=>x===5).length,one=d.filter(x=>x===1).length;
+      let v=six+Math.max(0,five-one);if(one>=2&&six===0)v=-1;wz.base[a.k]=v}
+  }
+}
+function wzRoll(f){
+  const A=wzAttrs(),q=wzArq()||{};
+  if(f==='prof'){const d=[rnd(6),rnd(6),rnd(6)];wz.profDice=d;wz.prof=Math.min(...d)}
+  else if(f==='hp'){const r=best2of3();wz.hpDice=r;wz.hp=Math.max(1,r.v+A.cor+(q.saude||0))}
+  else if(f==='san'){const r=best2of3();wz.sanDice=r;wz.san=Math.max(1,r.v+A.ast+(q.sanidade||0))}
+  else if(f==='rec'){const d=[rnd(6),rnd(6),rnd(6)];wz.recDice=d;wz.rec=clamp([...d].sort((x,y)=>x-y)[1]-1,0,5)}
+  else if(f==='virtude')wz.virtude=VIRTUDES[rnd(20)-1];
+  else if(f==='vicio')wz.vicio=VICIOS[rnd(20)-1];
+  else if(f==='motivacao')wz.motivacao=MOTIVACOES[rnd(12)-1][0];
+  renderWz();
+}
+async function wzFinish(){
+  if(!wz.name.trim())return $('#wz-e').textContent='Dê um nome ao investigador.';
+  const q=wzArq()||{},A=wzAttrs(),s=blankPC();
+  Object.assign(s,{name:wz.name.trim(),concept:wz.concept,arquetipo:wz.arq,profissao:wz.profissao,attrs:A,prof:+wz.prof||0,
+    saude:{at:+wz.hp||0,max:+wz.hp||0},sanidade:{at:+wz.san||0,max:+wz.san||0},recursos:clamp(+wz.rec||0,0,5),determinacao:q.det||0,
+    virtude:wz.virtude,vicio:wz.vicio,motivacao:wz.motivacao,historia:wz.historia,pericias:[...wz.pericias],idiomas:[...wz.idiomas],bolsa:wz.bolsa,owner:wz.owner||null});
+  for(const v of SAVES)s.saves[v.k]={b:q.save===v.k?1:0,p:wz.save===v.k};
+  s.armas=wz.armas.map(i=>{const w=ARMAS[i];return{id:uid(),nome:w.n,t:w.t,a:w.a,d:w.d,p:false,c:w.c,o:w.o||''}});
+  if(wz.prot!==''){const p=PROTECOES[+wz.prot];s.armor={nome:p.n,def:p.def,max:p.max,c:p.c}}
+  s.itens=wz.itens.map(i=>({id:uid(),n:ITENS[i][0],c:ITENS[i][1],o:ITENS[i][2]}));
+  const m=wzM;wzM=null;m.close();wz=null;
+  await createSheet(s);toast('Investigador criado.','ok');
+}
+
+/* ===================== ações ===================== */
+const ACT={
+  theme:()=>toggleTheme(),
+  home:()=>{if(st.user)viewHome()},
+  logout:()=>doLogout(),
+  lmode:t=>{loginMode=t.dataset.m;viewLogin()},
+  htab:t=>{st.home.tab=t.dataset.t;lsSet('itm.hometab',st.home.tab);renderHomeBody()},
+  newcamp:()=>newCampModal(),
+  join:()=>joinModal(),
+  opencamp:t=>openCampaign(t.dataset.c),
+  cover:t=>coverEditor(t.dataset.c),
+  delcamp:t=>delCamp(t.dataset.c),
+  leave:t=>leaveCamp(t.dataset.c),
+  ctab:async t=>{if(st.sheetId)await closeSheet();st.tab=t.dataset.t;renderCampHead();renderContent()},
+  mtab:t=>{st.mtab=t.dataset.t;renderContent()},
+  copycode:()=>{const c=st.camp.code;try{navigator.clipboard.writeText(c).then(()=>toast('Código copiado.','ok'),()=>selCode())}catch{selCode()}},
+  kick:async t=>{const u=t.dataset.u;if(!(await confirmBox({title:'Remover jogador?',text:`${esc(nameOf(u))} deixa de ver a campanha. As fichas dele continuam aqui.`,ok:'Remover'})))return;
+    try{await Store.update('campaigns/'+st.code,{players:(st.camp.players||[]).filter(p=>p!==u)})}catch(e){toast(errMsg(e),'err')}},
+  drs:t=>{st.dr.s=+t.dataset.s;st.dr.expr='';const e=$('#dr-e');e&&(e.value='');$$('[data-act="drs"]').forEach(b=>b.setAttribute('aria-pressed',b===t));updDr()},
+  drroll:()=>drRoll(),
+  newpc:()=>newPCModal(st.user.uname),
+  mnewpc:t=>{if(t.dataset.m==='wiz')startWizard('');else createSheet({...blankPC(),owner:null})},
+  pcmode:t=>{const m=t.closest('.modal-bg');const owner=m.dataset.owner;m.remove();if(t.dataset.m==='wiz')startWizard(owner);else createSheet({...blankPC(),owner:owner||null})},
+  npcnew:()=>createSheet(blankNPC()),
+  npcbest:()=>{const i=$('#bst').value;if(i==='')return toast('Escolha um modelo no bestiário.','err');const b=BESTIARIO[+i];
+    createSheet({...blankNPC(),name:b.name,desc:b.desc,attrs:{...b.attrs},insanidade:b.insanidade,defesa:b.defesa,saude:{at:b.saude,max:b.saude},prof:b.prof,
+      ataques:b.ataques.map(a=>({id:uid(),n:a[0],v:a[1],b:a[2],d:a[3]})),resist:b.resist||'',fraq:b.fraq||'',especial:b.especial||''})},
+  dupnpc:t=>{const s=st.sheets.find(x=>x._id===t.dataset.id);if(!s)return;const c=structuredClone(s);delete c._id;c.name=(c.name||'NPC')+' (cópia)';createSheet(c,{open:false}).then(()=>toast('NPC duplicado.','ok'))},
+  opensheet:t=>openSheet(t.dataset.id),
+  closesheet:()=>closeSheet(),
+  delsheet:t=>delSheet(t.dataset.id),
+  rwapply:()=>{const v=st.rw.all;Object.keys(st.rw.sel).forEach(id=>{if(st.rw.sel[id])st.rw.amt[id]=v});renderContent()},
+  rwgive:()=>giveXP(),
+  revert:t=>revertReward(t.dataset.id),
+  resetxp:t=>resetXP(t.dataset.id),
+  wipe:t=>wipeSheet(t.dataset.id),
+  logtoggle:()=>{st.logOpen=!st.logOpen;lsSet('itm.logopen',st.logOpen);renderLog()},
+  popx:()=>{const p=$('#pop');p&&(p.innerHTML='')},
+  /* ficha */
+  step:t=>{if(RO())return;const k=t.dataset.k;adjust(k,+t.dataset.d,+t.dataset.min,+t.dataset.max);if(k==='attrs.cor'||k==='attrs.agi')refreshCalc()},
+  adj:t=>{if(!st.sheet||RO())return;adjust(t.dataset.k,+t.dataset.d,t.dataset.min!==undefined?+t.dataset.min:-999);toast('Ficha atualizada.','ok')},
+  setrec:t=>{if(RO())return;st.sheet.recursos=+t.dataset.v;touch('recursos');renderSheet()},
+  death:t=>{if(RO())return;const w=t.dataset.w,v=+t.dataset.v;st.sheet.morte[w]=st.sheet.morte[w]===v?v-1:v;touch('morte');renderSheet()},
+  adv:t=>{st.rb.adv=+t.dataset.v;$$('[data-act="adv"]').forEach(b=>b.setAttribute('aria-pressed',b===t))},
+  rattr:t=>rollAttr(t.dataset.a),
+  rsave:t=>{const r=rollSave(t.dataset.s);showPop(r,outcomeActions(r))},
+  rsave2:t=>{if(!st.sheet)return;const r=rollSave(t.dataset.s);showPop(r,outcomeActions(r))},
+  rsan:()=>{const r=rollSave('vont','Teste de Sanidade (Vontade)');showPop(r,RO()?'':`<button class="btn xs" data-act="adj" data-k="sanidade.at" data-d="-1" data-min="0">−1 Sanidade</button><button class="btn xs" data-act="rins" data-t="curta">Insanidade curta</button>${outcomeActions(r)}`)},
+  rdef:()=>{const c=calcPC(st.sheet);const r=rollTest({label:'Defesa',mods:[['Defesa',c.def]]});let note='';if(r.nat===20)note='20 natural: o inimigo sofre uma falha crítica.';if(r.nat===1)note='1 natural: como um 20 do inimigo, dano em dobro.';if(note){r.note=note}showPop(r,outcomeActions(r))},
+  ratk:t=>{const w=st.sheet.armas[+t.dataset.i];const a=w.t==='dist'?'agi':(w.a||'cor');const mods=[[a.toUpperCase(),+st.sheet.attrs[a]||0]];if(w.p&&st.sheet.prof)mods.push(['prof',+st.sheet.prof]);
+    const r=rollTest({label:'Ataque: '+(w.nome||'arma'),mods});
+    showPop(r,`<button class="btn roll xs" data-act="rdmg" data-i="${t.dataset.i}">Rolar dano</button>${r.nat===20?`<button class="btn roll xs" data-act="rdmg" data-i="${t.dataset.i}" data-crit="1">Dano crítico ×2</button>`:''}${r.nat===1?'<span class="hint">1 natural: arma cai, desequilibra ou emperra (1d4 turnos).</span>':''}${outcomeActions(r)}`)},
+  rdmg:t=>{const w=st.sheet.armas[+t.dataset.i];rollDmg(weaponDmgExpr(w),'Dano: '+(w.nome||'arma'),!!t.dataset.crit,st.rb.secret)},
+  rdeath:()=>{const r=rollSave('fort','Teste de morte (Fortitude)');showPop(r,RO()?'':`<button class="btn xs" data-act="death" data-w="s" data-v="${Math.min(3,(st.sheet.morte.s||0)+1)}">Marcar sucesso</button><button class="btn xs" data-act="death" data-w="f" data-v="${Math.min(3,(st.sheet.morte.f||0)+1)}">Marcar falha</button>`)},
+  rinj:()=>{const f=[rnd(6),rnd(6),rnd(6)];const tot=f[0]+f[1]+f[2];const row=DANO_FISICO.find(x=>tot>=x[0]&&tot<=x[1]);const rec={kind:'table',label:'Dano grave (3d6)',char:st.sheet.name,faces:f.map(v=>({v,s:6})),mods:[],total:tot,note:row[2]+' Ele tem 1d6 turnos para ser estabilizado (Astúcia 15).',secret:st.rb.secret};postRoll(rec);showPop(rec,RO()?'':`<button class="btn xs" data-act="injadd" data-x="${esc(row[2])}">Anotar em ferimentos</button>`)},
+  injadd:t=>{if(RO())return;st.sheet.ferimentos=(st.sheet.ferimentos?st.sheet.ferimentos+'\n':'')+t.dataset.x;touch('ferimentos');syncField('ferimentos');toast('Anotado.','ok')},
+  rest:t=>{const s=st.sheet;let g;if(t.dataset.t==='curto')g=Math.max(1,+s.attrs.cor||0);else g=rnd(4);const before=s.saude.at;s.saude.at=Math.min(s.saude.max,s.saude.at+g);touch('saude');syncField('saude.at');
+    postRoll({kind:'rest',label:t.dataset.t==='curto'?'Descanso curto':'Descanso longo (1d4)',char:s.name,faces:t.dataset.t==='curto'?[]:[{v:g,s:4}],mods:t.dataset.t==='curto'?[['Corpo',g]]:[],total:s.saude.at-before,note:`Saúde ${before} → ${s.saude.at}`})},
+  rins:t=>rollTable(t.dataset.t),
+  insadd:t=>{if(RO())return;st.sheet.insanidades.push({id:uid(),t:t.dataset.t,x:t.dataset.x});touch('insanidades');renderSheet();toast('Insanidade anotada.','ok')},
+  rtab:t=>{const f=t.dataset.t;if(f==='virtude')st.sheet.virtude=VIRTUDES[rnd(20)-1];else if(f==='vicio')st.sheet.vicio=VICIOS[rnd(20)-1];else st.sheet.motivacao=MOTIVACOES[rnd(12)-1][0];touch(f);renderSheet()},
+  ruse:t=>{const it=st.sheet.itens[+t.dataset.i];const m=(it.o||'').match(/(\d*)d(\d+)/i);const sd=+m[2];const v=rnd(sd);const rec={kind:'use',label:'Dado de uso: '+it.n,char:st.sheet.name,faces:[{v,s:sd}],mods:[],total:v,note:v<=2?'Último uso! Precisa de outro.':'Ainda funciona.',secret:st.rb.secret};postRoll(rec);showPop(rec)},
+  cast:t=>castModal(+t.dataset.i),
+  levelup:()=>levelUpModal(),
+  rm:t=>{if(RO())return;const l=t.dataset.l;st.sheet[l].splice(+t.dataset.i,1);touch(l);renderSheet()},
+  addcustom:t=>{const l=t.dataset.l;const n={armas:{id:uid(),nome:'',t:'prox',a:'cor',d:'1d6',p:false,c:1,o:''},itens:{id:uid(),n:'',c:1,o:''},insanidades:{id:uid(),t:'curta',x:''},ataques:{id:uid(),n:'',v:13,b:3,d:'1d6'}}[l];st.sheet[l].push(n);touch(l);renderSheet()},
+  addarma:()=>{const i=$('#add-arma').value;if(i==='')return;const w=ARMAS[+i];st.sheet.armas.push({id:uid(),nome:w.n,t:w.t,a:w.a,d:w.d,p:false,c:w.c,o:w.o||''});touch('armas');renderSheet()},
+  additem:()=>{const i=$('#add-item').value;if(i==='')return;const it=ITENS[+i];st.sheet.itens.push({id:uid(),n:it[0],c:it[1],o:it[2]});touch('itens');renderSheet()},
+  addspell:()=>{const i=$('#add-spell').value;if(i==='')return;const f=FEITICOS[+i];st.sheet.feiticos.push({id:uid(),n:f[0],l:f[1],d:f[2]});touch('feiticos');renderSheet()},
+  setprot:()=>{const i=$('#add-prot').value;if(i==='')return;const p=PROTECOES[+i];st.sheet.armor={nome:p.n,def:p.def,max:p.max,c:p.c};touch('armor');renderSheet()},
+  addchip:t=>{const inp=$('#'+t.dataset.src);const v=inp.value.trim();if(!v)return;st.sheet[t.dataset.l].push(v);touch(t.dataset.l);renderSheet()},
+  rnattr:t=>{const a=ATTRS.find(x=>x.k===t.dataset.a);const r=rollTest({label:(st.sheet.name||'NPC')+': '+a.n,mods:[[a.n.slice(0,3).toUpperCase(),+st.sheet.attrs[a.k]||0]],nef:false});showPop(r)},
+  rnatk:t=>{const a=st.sheet.ataques[+t.dataset.i];const r=rollTest({label:(st.sheet.name||'NPC')+': '+(a.n||'ataque'),mods:[['bônus',+a.b||0]],nef:false});r.note=`Valor fixo: ${a.v}. O jogador rola Defesa contra ele.`;showPop(r,`<button class="btn roll xs" data-act="rndmg" data-i="${t.dataset.i}">Rolar dano</button>`)},
+  rndmg:t=>{const a=st.sheet.ataques[+t.dataset.i];rollDmg(String(a.d||'1d6'),(st.sheet.name||'NPC')+': dano de '+(a.n||'ataque'),false,st.rb.secret)},
+  rnpcsan:()=>{const e=st.sheet.insanidade||'';const r=parseDice(e);if(!r)return toast('Informe a insanidade como dado, ex: 1d4.','err');const rec={kind:'free',label:'Perda de Sanidade: '+(st.sheet.name||'NPC'),expr:e,faces:r.faces,mods:r.mods.filter(m=>m[1]),total:r.total,secret:st.rb.secret};postRoll(rec);showPop(rec)},
+  /* assistente */
+  wzset:t=>{const f=t.dataset.f;wz[f]=t.dataset.v;if(f==='arq'&&wz.arq!=='audaz')wz.audaz=[];if(f==='metodo'){wz.dice=null;wz.base={cor:0,agi:0,ast:0,pre:0}}renderWz()},
+  wzstep:t=>{const k=t.dataset.a;wz.base[k]=clamp(wz.base[k]+(+t.dataset.d),-3,5);renderWz()},
+  wzrollattr:()=>{wzRollAttrs();renderWz()},
+  wzroll:t=>wzRoll(t.dataset.f),
+  wzprof:t=>{wz.profissao=t.dataset.v;const p=PROFISSOES.find(x=>x[0]===wz.profissao);wz.pericias=p[1].split(/,\s*(?![^()]*\))/).map(x=>x.trim()).filter(Boolean);renderWz()},
+  wzadd:t=>{const v=$('#'+t.dataset.src).value.trim();if(!v)return;wz[t.dataset.l].push(v);renderWz()},
+  wzrm:t=>{wz[t.dataset.l].splice(+t.dataset.i,1);renderWz()},
+  wzname:t=>{const g=t.dataset.g;if(g==='s'){const sn=SOBRENOMES[rnd(100)-1];wz.name=(wz.name.split(' ')[0]||'')+(wz.name?' ':'')+sn}else{const n=g==='f'?NOMES_F[rnd(12)+rnd(12)]:NOMES_M[rnd(12)+rnd(12)+rnd(12)];const parts=wz.name.split(' ');parts[0]=n;wz.name=parts.join(' ')}renderWz()},
+  wznav:t=>{const d=+t.dataset.d;if(d>0){const e=wzValidate();if(e)return $('#wz-e').textContent=e}wz.step=clamp(wz.step+d,0,WZ_STEPS.length-1);renderWz();wzM.el.scrollTop=0},
+  wzdone:()=>wzFinish()
+};
+function selCode(){const el=$('#camp-code');if(!el)return;const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);toast('Código selecionado. Copie com Ctrl+C.')}
+function updDr(){const p=$('#dr-preview');p&&(p.textContent=drExpr())}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-act]');if(!t)return;const fn=ACT[t.dataset.act];if(!fn)return;
+  if(t.tagName==='INPUT')return;e.preventDefault();
+  try{const r=fn(t,e);r&&r.catch&&r.catch(x=>toast(errMsg(x),'err'))}catch(x){console.error(x);toast(errMsg(x),'err')}
+});
+const INP={
+  drn:t=>{st.dr.n=clamp(parseInt(t.value)||1,1,100);updDr()},drm:t=>{st.dr.mod=parseInt(t.value)||0;updDr()},drl:t=>{st.dr.label=t.value},dre:t=>{st.dr.expr=t.value;$$('[data-act="drs"]').forEach(b=>b.setAttribute('aria-pressed',!t.value.trim()&&+b.dataset.s===st.dr.s));updDr()},
+  rwall:t=>{st.rw.all=t.value},rwr:t=>{st.rw.reason=t.value},rwamt:t=>{st.rw.amt[t.dataset.id]=t.value}
+};
+const CHG={
+  drsec:t=>{st.dr.secret=t.checked},
+  owner:async t=>{try{await Store.update('sheets/'+t.dataset.id,{owner:t.value||null});if(st.sheet&&st.sheetId===t.dataset.id)st.sheet.owner=t.value||null;toast('Ficha atribuída a '+(t.value?nameOf(t.value):'ninguém')+'.','ok')}catch(e){toast(errMsg(e),'err')}},
+  rwsel:t=>{st.rw.sel[t.dataset.id]=t.checked},
+  rwselall:t=>{st.sheets.filter(s=>s.type==='pc').forEach(s=>st.rw.sel[s._id]=t.checked);renderContent()},
+  wzaudaz:t=>{const k=t.dataset.a;if(t.checked){if(wz.audaz.length>=2){t.checked=false;return toast('O Audaz escolhe só 2 atributos.')}wz.audaz.push(k)}else wz.audaz=wz.audaz.filter(x=>x!==k);renderWz()},
+  wzarma:t=>{const i=+t.dataset.i;wz.armas=t.checked?[...wz.armas,i]:wz.armas.filter(x=>x!==i)},
+  wzitem:t=>{const i=+t.dataset.i;wz.itens=t.checked?[...wz.itens,i]:wz.itens.filter(x=>x!==i)}
+};
+function sheetInput(t){
+  if(!st.sheet||RO())return;const k=t.dataset.k;let v;
+  if(t.type==='checkbox')v=t.checked;else if(t.dataset.t==='n'){v=parseInt(t.value,10);if(isNaN(v))v=0}else v=t.value;
+  if(k==='xp'&&!st.isMaster)return;
+  setPath(st.sheet,k,v);touch(k);refreshCalc();
+  if(k==='arquetipo'||k==='motivacao'){if(!editingIn('#sheet'))renderSheet()}
+}
+document.addEventListener('input',e=>{
+  const t=e.target;if(t.type==='checkbox')return;
+  if(t.dataset.k&&t.closest('#sheet'))return sheetInput(t);
+  if(t.dataset.inp&&INP[t.dataset.inp])return INP[t.dataset.inp](t);
+  if(t.dataset.wz&&wz){wz[t.dataset.wz]=t.value;if(t.tagName==='SELECT')renderWz();return}
+  if(t.dataset.rb){st.rb[t.dataset.rb]=t.value}
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.type==='checkbox'&&t.dataset.k&&t.closest('#sheet'))return sheetInput(t);
+  if(t.dataset.chg&&CHG[t.dataset.chg])return CHG[t.dataset.chg](t);
+  if(t.dataset.rb&&t.type==='checkbox'){st.rb[t.dataset.rb]=t.checked}
+  if(t.tagName==='SELECT'&&t.dataset.k&&t.closest('#sheet')&&(t.dataset.k==='arquetipo'||t.dataset.k==='motivacao'))renderSheet();
+});
+addEventListener('beforeunload',()=>{if(st.sheetId)flushSave()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&st.sheetId)flushSave()});
+
+/* ===================== início ===================== */
+(function boot(){
+  applyTheme();
+  $('#app').innerHTML=LOADING('Acendendo as velas…');
+  Store.init();
+  onAuthStateChanged(fb.auth,async u=>{
+    if(signingUp)return;
+    if(u){
+      try{st.user=await ensureProfile(u)}catch(e){console.warn(e);st.user={uname:u.uid,display:u.displayName||u.email,email:u.email}}
+      if(st.view==='boot'||st.view==='login')viewHome();
+    }else{st.user=null;if(st.view!=='login')viewLogin()}
+  });
+})();
+
+</script>
+</body>
+</html>
