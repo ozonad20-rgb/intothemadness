@@ -347,6 +347,17 @@ details>summary{list-style:none}details>summary::-webkit-details-marker{display:
 .list .it .t{font-family:var(--f-ui);font-weight:700}
 .err{font-family:var(--f-ui);font-weight:700}
 .toast{font-family:var(--f-ui)}
+.portrait-col{display:flex;flex-direction:column;gap:10px;align-items:center;width:210px}
+.portrait-box{width:100%;aspect-ratio:3/4;max-width:100%;border-radius:10px;overflow:hidden;border:1px solid var(--line-2);background:var(--bg-3);box-shadow:var(--shadow)}
+.portrait-box img{width:100%;height:100%;object-fit:cover;display:block}
+.ph-portrait{display:grid;place-items:end center;width:100%;height:100%;color:var(--line-2);background:radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--accent) 10%,transparent),transparent 65%),var(--bg-3);overflow:hidden}
+.ph-portrait svg{width:78%;height:auto}
+.avatar{flex:none;width:66px;height:88px;border-radius:8px;object-fit:cover;border:1px solid var(--line-2);background:var(--bg-3)}
+.avatar.sm{width:42px;height:56px;border-radius:6px}
+span.avatar{display:grid}
+.char-head{display:flex;gap:14px;align-items:flex-start}
+.crop.portrait{aspect-ratio:3/4;width:min(100%,340px);margin:0 auto}
+@media (max-width:760px){.sheet-top .portrait-col{order:-1;width:170px;margin:0 auto}}
 </style>
 
 </head>
@@ -957,8 +968,8 @@ function renderContent(){
 function charCard(s){
   const hp=s.saude||{},sn=s.sanidade||{};const pct=(a,b)=>b>0?clamp(a/b*100,0,100):0;
   const arq=(ARQUETIPOS.find(a=>a.k===s.arquetipo)||{}).n;
-  return `<button class="char" data-act="opensheet" data-id="${s._id}"><h3>${esc(s.name||'Sem nome')}</h3>
-  <span class="sub">${esc([arq,s.profissao].filter(Boolean).join(' · ')||'Ficha em branco')} · Nível ${esc(s.nivel||1)} · ${esc(s.xp||0)} XP</span>
+  return `<button class="char" data-act="opensheet" data-id="${s._id}"><div class="char-head">${avatarHTML(s)}<div class="stack" style="gap:4px;min-width:0"><h3>${esc(s.name||'Sem nome')}</h3>
+  <span class="sub">${esc([arq,s.profissao].filter(Boolean).join(' · ')||'Ficha em branco')} · Nível ${esc(s.nivel||1)} · ${esc(s.xp||0)} XP</span></div></div>
   <div class="meters"><div class="meter"><span class="label">Saúde</span><span class="bar"><i style="width:${pct(hp.at,hp.max)}%"></i></span><span class="num">${hp.at||0}/${hp.max||0}</span></div>
   <div class="meter san"><span class="label">Sanidade</span><span class="bar"><i style="width:${pct(sn.at,sn.max)}%"></i></span><span class="num">${sn.at||0}/${sn.max||0}</span></div></div></button>`;
 }
@@ -981,8 +992,8 @@ function newPCModal(owner){
 function blankPC(){return{type:'pc',name:'',concept:'',arquetipo:'',profissao:'',nivel:1,xp:0,attrs:{cor:0,agi:0,ast:0,pre:0},
   saves:{fort:{b:0,p:false},refl:{b:0,p:false},vont:{b:0,p:false},inic:{b:0,p:false}},prof:0,defesaBonus:0,armor:{nome:'',def:0,max:5,c:0},bolsa:'',
   saude:{at:0,max:0},sanidade:{at:0,max:0},determinacao:0,inspiracao:0,recursos:0,morte:{s:0,f:0},
-  virtude:'',vicio:'',motivacao:'',historia:'',pericias:[],idiomas:[],armas:[],itens:[],insanidades:[],feiticos:[],ferimentos:'',notas:''}}
-function blankNPC(){return{type:'npc',name:'',desc:'',attrs:{cor:0,agi:0,ast:0,pre:0},insanidade:'',defesa:11,saude:{at:10,max:10},prof:1,ataques:[],resist:'',fraq:'',especial:'',notas:''}}
+  retrato:'',retratoSrc:'',retratoCrop:null,virtude:'',vicio:'',motivacao:'',historia:'',pericias:[],idiomas:[],armas:[],itens:[],insanidades:[],feiticos:[],ferimentos:'',notas:''}}
+function blankNPC(){return{type:'npc',name:'',desc:'',retrato:'',retratoSrc:'',retratoCrop:null,attrs:{cor:0,agi:0,ast:0,pre:0},insanidade:'',defesa:11,saude:{at:10,max:10},prof:1,ataques:[],resist:'',fraq:'',especial:'',notas:''}}
 async function createSheet(data,{open=true}={}){
   const id=uid();const doc={...data,campaign:st.code,createdBy:st.user.uname,created:Date.now(),updated:Date.now()};
   if(doc.type==='pc'&&doc.owner===undefined)doc.owner=st.user.uname;
@@ -1048,14 +1059,14 @@ function ownerSelect(s){
 function masterPCs(pcs){
   return `<div class="stack"><div class="row between"><p class="muted">Abra qualquer ficha para editar. Atribua cada ficha a um jogador e troque quando quiser.</p>
   <div class="row"><button class="btn" data-act="mnewpc" data-m="zero">Ficha em branco</button><button class="btn primary" data-act="mnewpc" data-m="wiz">Nova ficha com Assistente</button></div></div>
-  ${pcs.length?`<div class="list">${pcs.map(s=>{const arq=(ARQUETIPOS.find(a=>a.k===s.arquetipo)||{}).n;return `<div class="it"><div class="grow"><div class="t">${esc(s.name||'Sem nome')}</div><div class="s">${esc([arq,s.profissao].filter(Boolean).join(' · ')||'—')} · Nível ${esc(s.nivel||1)} · ${esc(s.xp||0)} XP · Saúde ${esc((s.saude||{}).at||0)}/${esc((s.saude||{}).max||0)} · Sanidade ${esc((s.sanidade||{}).at||0)}/${esc((s.sanidade||{}).max||0)}</div></div>
+  ${pcs.length?`<div class="list">${pcs.map(s=>{const arq=(ARQUETIPOS.find(a=>a.k===s.arquetipo)||{}).n;return `<div class="it">${avatarHTML(s,true)}<div class="grow"><div class="t">${esc(s.name||'Sem nome')}</div><div class="s">${esc([arq,s.profissao].filter(Boolean).join(' · ')||'—')} · Nível ${esc(s.nivel||1)} · ${esc(s.xp||0)} XP · Saúde ${esc((s.saude||{}).at||0)}/${esc((s.saude||{}).max||0)} · Sanidade ${esc((s.sanidade||{}).at||0)}/${esc((s.sanidade||{}).max||0)}</div></div>
    ${ownerSelect(s)}<button class="btn sm" data-act="opensheet" data-id="${s._id}">Abrir</button><button class="btn danger sm" data-act="delsheet" data-id="${s._id}">Excluir</button></div>`}).join('')}</div>`:`<div class="empty"><h3>Nenhuma ficha de jogador</h3><p>Os jogadores criam fichas na Área dos Jogadores, ou você cria aqui e atribui.</p></div>`}</div>`;
 }
 function masterNPCs(npcs){
   return `<div class="stack"><div class="row between"><p class="muted">Só você vê os NPCs. Use o bestiário do livro como ponto de partida.</p>
   <div class="row"><select id="bst" style="width:auto" aria-label="Modelo do bestiário"><option value="">Do bestiário…</option>${BESTIARIO.map((b,i)=>`<option value="${i}">${esc(b.name)}</option>`).join('')}</select>
   <button class="btn" data-act="npcbest">Criar do modelo</button><button class="btn primary" data-act="npcnew">Novo NPC</button></div></div>
-  ${npcs.length?`<div class="list">${npcs.map(s=>`<div class="it"><div class="grow"><div class="t">${esc(s.name||'NPC sem nome')}</div><div class="s">Defesa ${esc(s.defesa)} · Saúde ${esc((s.saude||{}).at)}/${esc((s.saude||{}).max)} · Prof +${esc(s.prof||0)}${s.insanidade?' · Insanidade '+esc(s.insanidade):''}</div></div>
+  ${npcs.length?`<div class="list">${npcs.map(s=>`<div class="it">${avatarHTML(s,true)}<div class="grow"><div class="t">${esc(s.name||'NPC sem nome')}</div><div class="s">Defesa ${esc(s.defesa)} · Saúde ${esc((s.saude||{}).at)}/${esc((s.saude||{}).max)} · Prof +${esc(s.prof||0)}${s.insanidade?' · Insanidade '+esc(s.insanidade):''}</div></div>
    <button class="btn sm" data-act="opensheet" data-id="${s._id}">Abrir</button><button class="btn sm" data-act="dupnpc" data-id="${s._id}">Duplicar</button><button class="btn danger sm" data-act="delsheet" data-id="${s._id}">Excluir</button></div>`).join('')}</div>`:`<div class="empty"><h3>Nenhum NPC ainda</h3><p>Crie um do zero ou a partir de um modelo do bestiário.</p></div>`}</div>`;
 }
 function masterRewards(pcs){
@@ -1234,7 +1245,7 @@ function pcHTML(){
     <div class="field"><label class="lbl">Nível</label>${fi('nivel',{type:'number',lab:'Nível'})}</div>
     <div class="field"><label class="lbl">XP</label><input type="number" data-t="n" data-k="xp" value="${esc(s.xp||0)}" ${m?'':'readonly title="Só o mestre altera o XP"'} aria-label="XP"></div>
     <div class="field"><label class="lbl">Jogador</label>${m?ownerSelect({...s,_id:st.sheetId}):`<input value="${esc(nameOf(s.owner))}" readonly aria-label="Jogador">`}</div>
-   </div>${arq?`<p class="hint">${esc(arq.n)}: ${esc(arq.b)}</p>`:''}</div></div>
+   </div>${arq?`<p class="hint">${esc(arq.n)}: ${esc(arq.b)}</p>`:''}</div>${portraitHTML()}</div>
   ${rollbarHTML(false)}
   <div class="vitals">
    <div class="vital hp"><div class="head"><span class="label">Saúde</span><span class="big num"><span data-calc="hpAt">${esc(s.saude.at)}</span><small>/<span data-calc="hpMax">${esc(s.saude.max)}</span></small></span></div><div class="bar"><i data-bar="hp" style="width:${pct(s.saude.at,s.saude.max)}%"></i></div>
@@ -1317,7 +1328,7 @@ function npcHTML(){
   const s=st.sheet,ro=RO();
   return `<div class="sheet" id="sheet">
   <div class="row between"><button class="btn ghost sm" data-act="closesheet">← Voltar</button><span class="label" id="save-st">Salvo</span></div>
-  <div class="stack"><div class="row"><span class="pill npc">NPC</span></div><div class="sheet-name">${fi('name',{ph:'Nome do NPC',lab:'Nome'})}</div>${fi('desc',{ph:'Aparência em uma linha',lab:'Descrição'})}</div>
+  <div class="sheet-top"><div class="stack"><div class="row"><span class="pill npc">NPC</span></div><div class="sheet-name">${fi('name',{ph:'Nome do NPC',lab:'Nome'})}</div>${fi('desc',{ph:'Aparência em uma linha',lab:'Descrição'})}</div>${portraitHTML()}</div>
   ${rollbarHTML(true)}
   <div class="vitals">
    <div class="vital hp"><div class="head"><span class="label">Saúde</span></div><div class="ctr"><button class="btn xs icon" data-act="adj" data-k="saude.at" data-d="-1" aria-label="−1 Saúde">−1</button>${fi('saude.at',{type:'number',lab:'Saúde atual'})}<span class="muted">/</span>${fi('saude.max',{type:'number',lab:'Saúde máxima'})}<button class="btn xs icon" data-act="adj" data-k="saude.at" data-d="1" aria-label="+1 Saúde">+1</button></div></div>
@@ -1423,13 +1434,70 @@ function levelUpModal(){
   };
 }
 
+/* ===================== retrato ===================== */
+const SILHOUETTE=`<svg viewBox="0 0 60 80" aria-hidden="true"><circle cx="30" cy="27" r="12" fill="currentColor"/><path d="M7 80c0-17 10.5-27 23-27s23 10 23 27z" fill="currentColor"/></svg>`;
+function avatarHTML(s,small){return s.retrato?`<img class="avatar ${small?'sm':''}" alt="" src="${s.retrato}">`:`<span class="avatar ph-portrait ${small?'sm':''}">${SILHOUETTE}</span>`}
+function portraitHTML(){
+  const s=st.sheet,ro=RO();
+  return `<div class="portrait-col"><div class="portrait-box">${s.retrato?`<img alt="Retrato de ${esc(s.name||'personagem')}" src="${s.retrato}">`:`<div class="ph-portrait">${SILHOUETTE}</div>`}</div>
+  ${ro?'':`<div class="row" style="gap:6px;justify-content:center">${s.retrato?`<button class="btn xs" data-act="portrait">Ajustar corte</button><button class="btn xs" data-act="portrait" data-new="1">Trocar</button><button class="btn ghost xs" data-act="portraitrm" aria-label="Remover retrato">✕</button>`:`<button class="btn sm" data-act="portrait" data-new="1">Adicionar retrato</button>`}</div>`}</div>`;
+}
+function loadImg(src){return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error('img'));i.src=src})}
+async function shrinkSrc(dataUrl){
+  const img=await loadImg(dataUrl);let out='';
+  for(const[max,q]of[[760,.82],[640,.75],[520,.7],[420,.65]]){
+    const k=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);out=c.toDataURL('image/jpeg',q);if(out.length<140000)break;
+  }
+  return out;
+}
+/* editor de corte 3:4. Guarda a imagem-fonte reduzida e o corte, para reajustar depois sem reenviar */
+async function portraitEditor({src,crop,pick,onSave,onRemove}){
+  const W=600,H=800;let img=null,zoom=(crop&&crop.z)||1,ox=((crop&&crop.x)||0)*W,oy=((crop&&crop.y)||0)*H,cur=src||'';
+  const m=openModal({title:'Retrato do personagem',body:`<p class="hint">Arraste a imagem para escolher o enquadramento e use o zoom para aproximar. O retrato é exibido em 3:4.</p>
+   <div class="crop portrait" id="pt-box"><canvas id="pt-cv" width="${W}" height="${H}"></canvas></div>
+   <div class="row"><label class="btn" for="pt-f">Escolher imagem</label><input id="pt-f" type="file" accept="image/*" hidden>
+   <div class="field" style="flex:1;min-width:160px"><label class="lbl" for="pt-z">Zoom</label><input id="pt-z" type="range" min="1" max="5" step="0.01" value="${zoom}"></div></div><div class="err" id="pt-e"></div>`,
+   footer:`${onRemove&&src?`<button class="btn danger" id="pt-rm">Remover</button>`:''}<span style="flex:1"></span><button class="btn" data-x>Cancelar</button><button class="btn primary" id="pt-ok">Salvar retrato</button>`});
+  const cv=$('#pt-cv',m.el),ctx=cv.getContext('2d'),box=$('#pt-box',m.el);
+  const base=()=>img?Math.max(W/img.width,H/img.height):1;
+  const lim=()=>{const s=base()*zoom;const mx=Math.max(0,(img.width*s-W)/2),my=Math.max(0,(img.height*s-H)/2);ox=clamp(ox,-mx,mx);oy=clamp(oy,-my,my)};
+  const draw=(c=ctx,w=W,h=H)=>{c.fillStyle='#111';c.fillRect(0,0,w,h);if(!img){c.fillStyle='#888';c.font='34px Georgia';c.textAlign='center';c.fillText('Escolha uma imagem',w/2,h/2);return}
+    lim();const k=w/W,s=base()*zoom*k;c.drawImage(img,w/2-img.width*s/2+ox*k,h/2-img.height*s/2+oy*k,img.width*s,img.height*s);
+    if(c===ctx){c.strokeStyle='rgba(255,255,255,.25)';c.lineWidth=2;[1,2].forEach(i=>{c.beginPath();c.moveTo(W*i/3,0);c.lineTo(W*i/3,H);c.moveTo(0,H*i/3);c.lineTo(W,H*i/3);c.stroke()})}};
+  const use=async(s,reset)=>{try{img=await loadImg(s);cur=s;if(reset){zoom=1;ox=oy=0;$('#pt-z',m.el).value=1}draw()}catch{$('#pt-e',m.el).textContent='Não consegui abrir essa imagem.'}};
+  if(src)await use(src,false);else draw();
+  const fileIn=$('#pt-f',m.el);
+  fileIn.onchange=e=>{const f=e.target.files[0];if(!f)return;if(!/^image\//.test(f.type))return $('#pt-e',m.el).textContent='Escolha um arquivo de imagem.';
+    const r=new FileReader();r.onload=async()=>{$('#pt-e',m.el).textContent='';use(await shrinkSrc(r.result),true)};r.readAsDataURL(f)};
+  if(pick&&!src)fileIn.click();
+  $('#pt-z',m.el).oninput=e=>{zoom=+e.target.value;draw()};
+  let drag=null;
+  box.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,ox,oy};box.setPointerCapture(e.pointerId)});
+  box.addEventListener('pointermove',e=>{if(!drag)return;const k=W/box.getBoundingClientRect().width;ox=drag.ox+(e.clientX-drag.x)*k;oy=drag.oy+(e.clientY-drag.y)*k;draw()});
+  box.addEventListener('pointerup',()=>drag=null);box.addEventListener('pointercancel',()=>drag=null);
+  box.addEventListener('wheel',e=>{if(!img)return;e.preventDefault();zoom=clamp(zoom*(e.deltaY<0?1.06:.94),1,5);$('#pt-z',m.el).value=zoom;draw()},{passive:false});
+  $('#pt-ok',m.el).onclick=()=>{
+    if(!img)return $('#pt-e',m.el).textContent='Escolha uma imagem primeiro.';
+    let out='';for(const[w,q]of[[360,.85],[300,.8],[240,.75]]){const c=document.createElement('canvas');c.width=w;c.height=w*4/3;draw(c.getContext('2d'),c.width,c.height);out=c.toDataURL('image/jpeg',q);if(out.length<50000)break}
+    m.close();onSave({img:out,src:cur,crop:{z:+zoom.toFixed(3),x:+(ox/W).toFixed(4),y:+(oy/H).toFixed(4)}});
+  };
+  const rmb=$('#pt-rm',m.el);if(rmb)rmb.onclick=()=>{m.close();onRemove()};
+}
+function editSheetPortrait(isNew){
+  if(!st.sheet||RO())return;const s=st.sheet;
+  const save=r=>{s.retrato=r.img;s.retratoSrc=r.src;s.retratoCrop=r.crop;['retrato','retratoSrc','retratoCrop'].forEach(k=>st.dirty.add(k));flushSave();renderSheet();toast('Retrato salvo.','ok')};
+  const remove=()=>{s.retrato='';s.retratoSrc='';s.retratoCrop=null;['retrato','retratoSrc','retratoCrop'].forEach(k=>st.dirty.add(k));flushSave();renderSheet();toast('Retrato removido.')};
+  portraitEditor({src:isNew?null:s.retratoSrc,crop:isNew?null:s.retratoCrop,pick:isNew,onSave:save,onRemove:remove});
+}
+
 /* ===================== assistente de criação ===================== */
 const WZ_STEPS=['Arquétipo','Atributos','Salvaguarda','Saúde e Sanidade','Profissão','Personalidade','Equipamento','Nome e revisão'];
 let wz=null,wzM=null;
 function startWizard(owner){
   wz={step:0,owner:owner||st.user.uname,arq:'',audaz:[],metodo:'pontos',base:{cor:0,agi:0,ast:0,pre:0},dice:null,save:'',prof:'',profDice:null,
     hp:'',hpDice:null,san:'',sanDice:null,rec:'',recDice:null,profissao:'',pericias:[],idiomas:['Português'],virtude:'',vicio:'',motivacao:'',historia:'',
-    armas:[],prot:'',itens:[],bolsa:'mochila',name:'',concept:''};
+    armas:[],prot:'',itens:[],bolsa:'mochila',name:'',concept:'',retrato:'',retratoSrc:'',retratoCrop:null};
   wzM=openModal({title:'Assistente de Criação',wide:true,body:'',footer:' ',onClose:()=>{wz=null;wzM=null}});
   renderWz();
 }
@@ -1493,9 +1561,11 @@ function renderWz(){
     <div class="field"><span class="lbl">Itens gerais</span><div class="grid3" style="gap:4px">${ITENS.map((t,i)=>`<label class="row" style="gap:8px;flex-wrap:nowrap;font-size:.95rem"><input type="checkbox" data-chg="wzitem" data-i="${i}" ${wz.itens.includes(i)?'checked':''}> ${esc(t[0])}</label>`).join('')}</div></div>`;
   }else{
     const q=wzArq();
-    b=`<h3>Nome e revisão</h3><div class="grid2"><div class="field"><label class="lbl" for="wz-name">Nome</label><input id="wz-name" data-wz="name" value="${esc(wz.name)}" placeholder="Nome do investigador"></div>
+    b=`<h3>Nome e revisão</h3><div class="sheet-top"><div class="stack"><div class="grid2"><div class="field"><label class="lbl" for="wz-name">Nome</label><input id="wz-name" data-wz="name" value="${esc(wz.name)}" placeholder="Nome do investigador"></div>
      <div class="field"><label class="lbl" for="wz-con">Conceito (opcional)</label><input id="wz-con" data-wz="concept" value="${esc(wz.concept)}" placeholder="ex: Arqueóloga que leu o que não devia"></div></div>
-    <div class="row"><button class="btn roll sm" data-act="wzname" data-g="f">Nome feminino (2d12)</button><button class="btn roll sm" data-act="wzname" data-g="m">Nome masculino (3d12)</button><button class="btn roll sm" data-act="wzname" data-g="s">Sobrenome (d100)</button></div>
+    <div class="row"><button class="btn roll sm" data-act="wzname" data-g="f">Nome feminino (2d12)</button><button class="btn roll sm" data-act="wzname" data-g="m">Nome masculino (3d12)</button><button class="btn roll sm" data-act="wzname" data-g="s">Sobrenome (d100)</button></div></div>
+    <div class="portrait-col"><div class="portrait-box">${wz.retrato?`<img alt="Retrato" src="${wz.retrato}">`:`<div class="ph-portrait">${SILHOUETTE}</div>`}</div>
+     <div class="row" style="gap:6px;justify-content:center">${wz.retrato?`<button class="btn xs" data-act="wzportrait">Ajustar corte</button><button class="btn xs" data-act="wzportrait" data-new="1">Trocar</button>`:`<button class="btn sm" data-act="wzportrait" data-new="1">Adicionar retrato</button>`}</div></div></div>
     ${st.isMaster?`<div class="field"><label class="lbl" for="wz-own">Jogador</label><select id="wz-own" data-wz="owner"><option value="">Sem jogador</option><option value="${esc(st.camp.master)}" ${wz.owner===st.camp.master?'selected':''}>${esc(nameOf(st.camp.master))} (você)</option>${(st.camp.players||[]).map(p=>`<option value="${esc(p)}" ${wz.owner===p?'selected':''}>${esc(nameOf(p))}</option>`).join('')}</select></div>`:''}
     <div class="panel"><div class="grid2 ref" style="color:var(--fg)"><div><b>${esc(q?q.n:'Sem arquétipo')}</b> · ${esc(wz.profissao||'Sem profissão')}<br>${ATTRS.map(a=>`${a.n} ${sgn(A[a.k])}`).join(' · ')}<br>Salvaguarda: ${esc((SAVES.find(v=>v.k===wz.save)||{}).n||'—')} · Proficiência ${esc(wz.prof||0)}</div>
      <div>Saúde ${esc(wz.hp||0)} · Sanidade ${esc(wz.san||0)} · Recursos ${esc(wz.rec||0)}<br>${esc([wz.virtude,wz.vicio].filter(Boolean).join(' / ')||'Sem personalidade')}${wz.motivacao?' · '+esc(wz.motivacao):''}<br>${wz.armas.length} arma(s), ${wz.itens.length} item(ns)</div></div></div>`;
@@ -1535,7 +1605,7 @@ async function wzFinish(){
   const q=wzArq()||{},A=wzAttrs(),s=blankPC();
   Object.assign(s,{name:wz.name.trim(),concept:wz.concept,arquetipo:wz.arq,profissao:wz.profissao,attrs:A,prof:+wz.prof||0,
     saude:{at:+wz.hp||0,max:+wz.hp||0},sanidade:{at:+wz.san||0,max:+wz.san||0},recursos:clamp(+wz.rec||0,0,5),determinacao:q.det||0,
-    virtude:wz.virtude,vicio:wz.vicio,motivacao:wz.motivacao,historia:wz.historia,pericias:[...wz.pericias],idiomas:[...wz.idiomas],bolsa:wz.bolsa,owner:wz.owner||null});
+    retrato:wz.retrato,retratoSrc:wz.retratoSrc,retratoCrop:wz.retratoCrop,virtude:wz.virtude,vicio:wz.vicio,motivacao:wz.motivacao,historia:wz.historia,pericias:[...wz.pericias],idiomas:[...wz.idiomas],bolsa:wz.bolsa,owner:wz.owner||null});
   for(const v of SAVES)s.saves[v.k]={b:q.save===v.k?1:0,p:wz.save===v.k};
   s.armas=wz.armas.map(i=>{const w=ARMAS[i];return{id:uid(),nome:w.n,t:w.t,a:w.a,d:w.d,p:false,c:w.c,o:w.o||''}});
   if(wz.prot!==''){const p=PROTECOES[+wz.prot];s.armor={nome:p.n,def:p.def,max:p.max,c:p.c}}
@@ -1607,6 +1677,9 @@ const ACT={
   rtab:t=>{const f=t.dataset.t;if(f==='virtude')st.sheet.virtude=VIRTUDES[rnd(20)-1];else if(f==='vicio')st.sheet.vicio=VICIOS[rnd(20)-1];else st.sheet.motivacao=MOTIVACOES[rnd(12)-1][0];touch(f);renderSheet()},
   ruse:t=>{const it=st.sheet.itens[+t.dataset.i];const m=(it.o||'').match(/(\d*)d(\d+)/i);const sd=+m[2];const v=rnd(sd);const rec={kind:'use',label:'Dado de uso: '+it.n,char:st.sheet.name,faces:[{v,s:sd}],mods:[],total:v,note:v<=2?'Último uso! Precisa de outro.':'Ainda funciona.',secret:st.rb.secret};postRoll(rec);showPop(rec)},
   cast:t=>castModal(+t.dataset.i),
+  portrait:t=>editSheetPortrait(!!t.dataset.new),
+  portraitrm:async()=>{if(!st.sheet||RO())return;if(!(await confirmBox({title:'Remover retrato?',text:'A imagem sai da ficha. Você pode adicionar outra depois.',ok:'Remover'})))return;const s=st.sheet;s.retrato='';s.retratoSrc='';s.retratoCrop=null;['retrato','retratoSrc','retratoCrop'].forEach(k=>st.dirty.add(k));flushSave();renderSheet()},
+  wzportrait:t=>portraitEditor({src:t.dataset.new?null:wz.retratoSrc,crop:t.dataset.new?null:wz.retratoCrop,pick:!!t.dataset.new,onSave:r=>{wz.retrato=r.img;wz.retratoSrc=r.src;wz.retratoCrop=r.crop;renderWz()},onRemove:()=>{wz.retrato='';wz.retratoSrc='';wz.retratoCrop=null;renderWz()}}),
   levelup:()=>levelUpModal(),
   rm:t=>{if(RO())return;const l=t.dataset.l;st.sheet[l].splice(+t.dataset.i,1);touch(l);renderSheet()},
   addcustom:t=>{const l=t.dataset.l;const n={armas:{id:uid(),nome:'',t:'prox',a:'cor',d:'1d6',p:false,c:1,o:''},itens:{id:uid(),n:'',c:1,o:''},insanidades:{id:uid(),t:'curta',x:''},ataques:{id:uid(),n:'',v:13,b:3,d:'1d6'}}[l];st.sheet[l].push(n);touch(l);renderSheet()},
