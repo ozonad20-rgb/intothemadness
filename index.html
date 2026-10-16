@@ -584,7 +584,7 @@ function confirmBox({title,text,ok='Confirmar',danger=true}){
 
 /* ===================== dados ===================== */
 function parseDice(expr){
-  const s=String(expr||'').replace(/\s+/g,'').toLowerCase().replace(/^\+/,'');
+  const s=String(expr||'').replace(/[\u2212\u2013\u2014]/g,'-').replace(/\s+/g,'').toLowerCase().replace(/^\+/,'');
   if(!s||!/^[+-]?(\d*d\d+|\d+)([+-](\d*d\d+|\d+))*$/.test(s))return null;
   const terms=s.match(/[+-]?(\d*d\d+|\d+)/g);const faces=[],mods=[];let total=0,count=0;
   for(const t of terms){
@@ -797,23 +797,27 @@ const firebaseConfig = {
 };
 const fb={};
 function clean(o){const r={};for(const k in o){if(k[0]!=='_'&&o[k]!==undefined)r[k]=o[k]}return JSON.parse(JSON.stringify(r))}
+/* Firestore não aceita listas dentro de listas: embrulha como {__arr:[...]} ao gravar e desembrulha ao ler */
+function enc(v){if(Array.isArray(v))return v.map(x=>Array.isArray(x)?{__arr:enc(x)}:enc(x));if(v&&typeof v==='object'){const o={};for(const k in v)o[k]=enc(v[k]);return o}return v}
+function dec(v){if(Array.isArray(v))return v.map(dec);if(v&&typeof v==='object'){if(Array.isArray(v.__arr)&&Object.keys(v).length===1)return dec(v.__arr);const o={};for(const k in v)o[k]=dec(v[k]);return o}return v}
+const snapData=s=>dec(structuredClone(s.data()));
 const Store={mode:'cloud',
   init(){fb.app=initializeApp(firebaseConfig);fb.auth=getAuth(fb.app);fb.db=getFirestore(fb.app)},
   ref(p){return fsDoc(fb.db,...p.split('/'))},
   async retry(fn){try{return await fn()}catch(e){if(e&&e.code==='unavailable'){await sleep(500+Math.random()*700);return await fn()}throw e}},
   _q(coll,w=[]){return fsQuery(fsCollection(fb.db,coll),...w.map(x=>fsWhere(...x)))},
   _post(rows,order,limit){if(order){const[f,dir]=order;rows.sort((a,b)=>((a[f]??0)>(b[f]??0)?1:(a[f]??0)<(b[f]??0)?-1:0)*(dir==='desc'?-1:1))}return limit?rows.slice(0,limit):rows},
-  async get(p){return this.retry(async()=>{const s=await getDoc(this.ref(p));return s.exists()?{...structuredClone(s.data()),_id:s.id}:null})},
-  async set(p,d){return this.retry(()=>setDoc(this.ref(p),clean(d)))},
+  async get(p){return this.retry(async()=>{const s=await getDoc(this.ref(p));return s.exists()?{...snapData(s),_id:s.id}:null})},
+  async set(p,d){return this.retry(()=>setDoc(this.ref(p),enc(clean(d))))},
   /* merge profundo: objetos aninhados se mesclam, listas são substituídas */
-  async update(p,d){return this.retry(()=>setDoc(this.ref(p),clean(d),{merge:true}))},
+  async update(p,d){return this.retry(()=>setDoc(this.ref(p),enc(clean(d)),{merge:true}))},
   async del(p){return this.retry(()=>deleteDoc(this.ref(p)))},
-  async query(coll,w=[],order=null,limit=null){return this.retry(async()=>{const s=await getDocs(this._q(coll,w));return this._post(s.docs.map(d=>({...structuredClone(d.data()),_id:d.id})),order,limit)})},
+  async query(coll,w=[],order=null,limit=null){return this.retry(async()=>{const s=await getDocs(this._q(coll,w));return this._post(s.docs.map(d=>({...snapData(d),_id:d.id})),order,limit)})},
   watch(coll,w,order,limit,cb){
-    return onSnapshot(this._q(coll,w),s=>cb(this._post(s.docs.map(d=>({...structuredClone(d.data()),_id:d.id})),order,limit)),
+    return onSnapshot(this._q(coll,w),s=>cb(this._post(s.docs.map(d=>({...snapData(d),_id:d.id})),order,limit)),
       e=>{console.warn(coll,e);if(e.code!=='permission-denied')toast('A conexão com a mesa caiu. Recarregue a página.','err')});
   },
-  watchDoc(p,cb){return onSnapshot(this.ref(p),s=>cb(s.exists()?{...structuredClone(s.data()),_id:s.id}:null),e=>console.warn(p,e))},
+  watchDoc(p,cb){return onSnapshot(this.ref(p),s=>cb(s.exists()?{...snapData(s),_id:s.id}:null),e=>console.warn(p,e))},
   async claim(){return true}
 };
 function errMsg(e){
@@ -1128,7 +1132,7 @@ function renderLog(){
   <div class="log-list">${rolls.length?rolls.map(r=>`<div class="log-entry ${r.outcome||''} ${r.secret?'secret':''}"><div class="top"><span>${esc(r.byName||r.by)}${r.char?' · '+esc(r.char):''}</span><span class="num">${fmtTime(r.ts)}</span></div>
    <div class="lbl2">${esc(r.label||'Rolagem')}</div>${rollBody(r)}</div>`).join(''):`<p class="muted" style="padding:10px">Nenhuma rolagem ainda. As rolagens de todos aparecem aqui.</p>`}</div>
   <form class="log-form" id="lg-f"><input id="lg-in" class="mono" placeholder="Rolagem rápida: 1d20, 2d6+1" aria-label="Rolagem rápida" value="${esc(keep)}"><button class="btn primary sm" type="submit">Rolar</button></form></section>`;
-  $('#lg-f').addEventListener('submit',e=>{e.preventDefault();const v=$('#lg-in').value.trim();const r=parseDice(v);if(!r)return toast('Expressão inválida. Ex.: 2d6+1','err');$('#lg-in').value='';
+  $('#lg-f').addEventListener('submit',e=>{e.preventDefault();const v=$('#lg-in').value.trim();if(!v)return;const r=parseDice(v);if(!r)return toast('Não entendi “'+v+'”. Use dados e números com + e −, como 2d6+1 ou 1d20-2 (até 100 dados).','err');$('#lg-in').value='';
     postRoll({kind:'free',label:'Rolagem livre',expr:v,faces:r.faces,mods:r.mods.filter(m=>m[1]),total:r.total,char:st.sheet&&st.sheet.type==='pc'?st.sheet.name:null})});
 }
 let popT=null;
