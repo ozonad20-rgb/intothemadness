@@ -226,7 +226,7 @@ main{padding-block:28px 120px}
 .sec{background:var(--bg-2);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
 .sec>h3{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:8px}
 .sheet-cols{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:20px;align-items:start}
-.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:12px}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:12px}
 .attrs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 @media (max-width:640px){.attrs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .attr{border:1px solid var(--line-2);border-radius:10px;background:var(--bg);padding:12px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
@@ -236,7 +236,7 @@ main{padding-block:28px 120px}
 .stepper button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-2);background:var(--bg-3);cursor:pointer;font-size:1.2rem;line-height:1}
 .stepper button:hover{border-color:var(--accent)}
 .stepper input{width:70px;text-align:center;min-height:40px}
-.vitals{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:12px}
+.vitals{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,178px),1fr));gap:12px}
 .vital{border:1px solid var(--line-2);border-radius:10px;background:var(--bg);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
 .vital .head{display:flex;justify-content:space-between;align-items:baseline;gap:6px}
 .vital .big{font-family:var(--f-mono);font-size:1.9rem;font-weight:700}
@@ -339,7 +339,7 @@ main{padding-block:28px 120px}
 .pop-wrap:empty{display:none}
 .pop-wrap .roll-pop{box-shadow:var(--shadow);background:var(--bg-2)}
 @media (max-width:560px){.pop-wrap{left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));width:auto;bottom:calc(100px + env(safe-area-inset-bottom,0px))}}
-@media (max-width:640px){.who{display:none}.brand span{font-size:1.1rem}body{font-size:18px}.rollbar{top:calc(env(safe-area-inset-top,0px) + 64px);gap:8px;padding:8px 10px}.rollbar .label{display:none}}
+@media (max-width:640px){.who-pre{display:none}.who{font-size:.9rem}.brand span{font-size:1.1rem}body{font-size:18px}.rollbar{top:calc(env(safe-area-inset-top,0px) + 64px);gap:8px;padding:8px 10px}.rollbar .label{display:none}}
 details>summary{list-style:none}details>summary::-webkit-details-marker{display:none}details>summary::before{content:"▸ ";color:var(--accent)}details[open]>summary::before{content:"▾ "}
 .sheet-name input{font-weight:700;letter-spacing:.02em}
 .camp h3{font-size:1.35rem}
@@ -358,6 +358,107 @@ span.avatar{display:grid}
 .char-head{display:flex;gap:14px;align-items:flex-start}
 .crop.portrait{aspect-ratio:3/4;width:min(100%,340px);margin:0 auto}
 @media (max-width:760px){.sheet-top .portrait-col{order:-1;width:170px;margin:0 auto}}
+.login-form{position:relative}
+.login-theme{position:absolute;top:14px;right:max(14px,env(safe-area-inset-right,0px))}
+.camp-head.compact{display:block;margin-bottom:14px}
+.camp-head.compact .crumb{font-family:var(--f-display);font-weight:700;font-size:1.2rem}
+.seg.mini{grid-template-columns:auto auto}
+.seg.mini button{min-height:34px;padding:0 10px;font-size:.85rem}
+.det-btn{border-color:color-mix(in srgb,var(--brass) 60%,var(--line));color:var(--brass);background:transparent}
+.det-btn:hover:not([disabled]){background:color-mix(in srgb,var(--brass) 14%,transparent)}
+.dmg-ctl{display:flex;gap:6px;align-items:center}
+.dmg-ctl input{min-height:34px;width:76px;padding:.2em .4em;font-size:.95rem}
+.roll-pop .dmg-ctl{flex-wrap:nowrap}
+.tt b.land{animation:land .35s ease-out}
+@keyframes land{0%{transform:scale(1.35);color:var(--brass)}100%{transform:scale(1)}}
+.scene-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr));gap:12px}
+.scene-tile{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;background:var(--bg);padding:12px}
+.scene-tile.down{border-color:var(--blood);box-shadow:inset 3px 0 0 var(--blood)}
+.linkbtn{background:none;border:0;padding:0;color:var(--fg);font-family:var(--f-ui);font-weight:700;font-size:1.05rem;cursor:pointer;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.linkbtn:hover{color:var(--accent);text-decoration:underline}
+.who-mini{font-family:var(--f-ui);font-size:.85rem;color:var(--muted);white-space:nowrap}
+.qbar{display:grid;grid-template-columns:64px 32px minmax(40px,1fr) 50px 32px;gap:6px;align-items:center}
+.qbar .label{font-size:.72rem}
+.qbar .btn.icon{min-width:32px;min-height:30px;padding:0}
+.qbar .bar{height:9px;border-radius:99px;background:var(--bg-4);overflow:hidden}
+.qbar .bar i{display:block;height:100%;background:var(--blood)}
+.qbar.san .bar i{background:var(--ether)}
+.qbar .num{font-size:.9rem;text-align:center}
+.mini-stats{font-family:var(--f-ui);font-size:.85rem;color:var(--muted)}
+.down-tag{color:var(--blood)}
+@media (min-width:1180px){
+  body.log-docked main.wrap,body.log-docked .topbar .wrap{max-width:none;margin-left:0;margin-right:400px}
+  body.log-docked .log-panel{top:0;bottom:0;right:0;height:auto;width:390px;border-radius:0;border-width:0 0 0 1px;z-index:65;padding-top:env(safe-area-inset-top,0px)}
+  body.log-docked .log-panel header{min-height:64px}
+}
+.attr .stepper{gap:3px}
+.attr .stepper button{width:32px;height:32px;flex:none}
+.attr .stepper input{width:52px;padding-inline:4px}
+.cimg{position:absolute;max-width:none!important;user-select:none;-webkit-user-drag:none;pointer-events:none;display:block}
+.cimg.full{inset:0;width:100%;height:100%;object-fit:cover}
+.avatar{position:relative;overflow:hidden;display:block}
+.portrait-box{position:relative}
+.crop-frame{position:relative;overflow:hidden;width:100%;max-width:100%;border:1px solid var(--line-2);border-radius:8px;background:var(--bg);cursor:grab;touch-action:none}
+.crop-frame:active{cursor:grabbing}
+.crop-frame.portrait{width:min(100%,340px);margin:0 auto}
+.crop-frame .ph-portrait svg{width:40%}
+.crop-grid{position:absolute;inset:0;pointer-events:none;background:
+ linear-gradient(to right,transparent calc(33.33% - 1px),rgba(255,255,255,.28) calc(33.33% - 1px),rgba(255,255,255,.28) 33.33%,transparent 33.33%,transparent calc(66.66% - 1px),rgba(255,255,255,.28) calc(66.66% - 1px),rgba(255,255,255,.28) 66.66%,transparent 66.66%),
+ linear-gradient(to bottom,transparent calc(33.33% - 1px),rgba(255,255,255,.28) calc(33.33% - 1px),rgba(255,255,255,.28) 33.33%,transparent 33.33%,transparent calc(66.66% - 1px),rgba(255,255,255,.28) calc(66.66% - 1px),rgba(255,255,255,.28) 66.66%,transparent 66.66%)}
+button.who{background:none;border:0;cursor:pointer;padding:6px 8px;border-radius:var(--r)}
+button.who:hover{background:var(--bg-3)}
+.combat-bar{border:1px solid color-mix(in srgb,var(--blood) 55%,var(--line));background:color-mix(in srgb,var(--blood) 7%,var(--bg-2));border-radius:10px;padding:10px 14px;margin-bottom:16px;display:flex;flex-direction:column;gap:8px}
+.combat-bar.my-turn{border-color:var(--brass);background:color-mix(in srgb,var(--brass) 12%,var(--bg-2));box-shadow:0 0 0 2px color-mix(in srgb,var(--brass) 35%,transparent)}
+.cb-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-family:var(--f-ui)}
+.cb-head .sp{flex:1}
+.cb-tag{font-family:var(--f-ui);font-weight:700;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--blood);border:1px solid currentColor;border-radius:99px;padding:.1em .6em}
+.my-turn .cb-tag{color:var(--brass)}
+.cb-now b{font-size:1.1rem}
+.cb-order{list-style:none;margin:0;padding:0;display:flex;gap:6px;flex-wrap:wrap;font-family:var(--f-ui);font-size:.92rem}
+.cb-order li{display:flex;gap:6px;align-items:center;border:1px solid var(--line-2);border-radius:99px;padding:.15em .7em;background:var(--bg)}
+.cb-order li .num{color:var(--muted);font-size:.85rem}
+.cb-order li.now{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 16%,var(--bg));font-weight:700}
+.cb-order li.mine{box-shadow:inset 0 -2px 0 var(--brass)}
+.cb-tip{font-size:.92rem;color:var(--muted);font-family:var(--f-ui);margin:0}
+.cmb-tbl tr.now td{background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.cmb-tbl .cmb-mark{color:var(--accent);font-weight:700;width:28px;text-align:center}
+.cmb-tbl .t{font-weight:700;font-family:var(--f-ui)}
+.cmb-tbl .s{font-size:.85rem}
+.cmb-tbl .qbar{grid-template-columns:32px minmax(70px,1fr) 50px 32px;min-width:200px}
+.cmb-tbl .qbar .label{display:none}
+.tabs .count.live{background:color-mix(in srgb,var(--blood) 25%,var(--bg-3));border-color:var(--blood);color:var(--fg)}
+.load-more{align-self:center;margin:6px 0}
+#print-area{display:none}
+@media print{
+  @page{size:A4;margin:12mm}
+  html,body{background:#fff!important;color:#111!important;font-size:10.5pt}
+  body::before{display:none!important}
+  body>*:not(#print-area){display:none!important}
+  #print-area{display:block!important}
+  .pr-sheet{font-family:var(--f-body);color:#111;line-height:1.4}
+  .pr-sheet h1{font-family:var(--f-display);font-size:22pt;margin:0}
+  .pr-sheet h2{font-family:var(--f-display);font-size:11.5pt;margin:10pt 0 4pt;border-bottom:1px solid #999;padding-bottom:2pt;break-after:avoid}
+  .pr-head{display:flex;gap:14pt;align-items:flex-start;margin-bottom:8pt;border-bottom:2px solid #111;padding-bottom:8pt}
+  .pr-portrait{position:relative;overflow:hidden;width:34mm;aspect-ratio:3/4;border:1px solid #555;border-radius:3pt;flex:none}
+  .pr-sub{font-family:var(--f-ui);font-weight:700;margin:3pt 0}
+  .pr-concept{font-style:italic;margin:2pt 0}
+  .pr-meta{font-family:var(--f-ui);font-size:9pt;color:#444;margin:2pt 0}
+  .pr-row{display:flex;flex-wrap:wrap;gap:5pt;margin:6pt 0}
+  .pr-box{border:1px solid #777;border-radius:3pt;padding:3pt 7pt;min-width:22mm;display:flex;flex-direction:column}
+  .pr-box span{font-family:var(--f-ui);font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#444}
+  .pr-box b{font-family:var(--f-mono);font-size:13pt}
+  .pr-cols{display:grid;grid-template-columns:1fr 1fr;gap:14pt}
+  .pr-tbl{width:100%;border-collapse:collapse;font-size:9.5pt}
+  .pr-tbl th,.pr-tbl td{border-bottom:1px solid #bbb;padding:2pt 4pt;text-align:left}
+  .pr-tbl th{font-family:var(--f-ui);font-size:8pt;text-transform:uppercase;color:#444}
+  .pr-tbl .r{text-align:right;font-family:var(--f-mono)}
+  .pr-text,.pr-li{margin:2pt 0}
+  .pr-empty{color:#777;margin:2pt 0}
+  .pr-foot{margin-top:12pt;font-family:var(--f-ui);font-size:8pt;color:#666;text-align:right}
+  .pr-sheet section,.pr-tbl tr{break-inside:avoid}
+}
+.brand span{white-space:nowrap}
+@media (max-width:480px){.brand span{display:none}}
 </style>
 
 </head>
@@ -367,7 +468,8 @@ span.avatar{display:grid}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, sendPasswordResetEmail, sendEmailVerification, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc as fsDoc, getDoc, setDoc, deleteDoc, collection as fsCollection, query as fsQuery, where as fsWhere, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, doc as fsDoc, getDoc, setDoc, deleteDoc, writeBatch, collection as fsCollection, query as fsQuery, where as fsWhere, orderBy as fsOrderBy, limit as fsLimit, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getStorage, ref as sRef, uploadString, getDownloadURL, deleteObject, listAll } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 /* ===== Dados do sistema Into the Madness (Jonas Picholaro, CC BY-SA) ===== */
 const ATTRS = [
@@ -571,7 +673,7 @@ function setPath(o,p,v){const ks=p.split('.');let c=o;for(let i=0;i<ks.length-1;
 const SIGIL=`<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="32" cy="32" r="29"/><path d="M7 32c7-10 15.5-15 25-15s18 5 25 15c-7 10-15.5 15-25 15S14 42 7 32z"/><circle cx="32" cy="32" r="8.5"/><circle cx="32" cy="32" r="3" fill="currentColor"/><path d="M32 3v9M32 52v9M3 32h4M57 32h4M11.5 11.5l5 5M47.5 47.5l5 5M52.5 11.5l-5 5M16.5 47.5l-5 5"/></svg>`;
 const D20=`<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M24 3 43 14v20L24 45 5 34V14z"/><path d="M24 3 14 20h20zM14 20 5 34M34 20l9 14M14 20l10 25 10-25M5 14l9 6M43 14l-9 6"/></svg>`;
 
-function toast(msg,kind=''){const t=document.createElement('div');t.className='toast '+kind;t.textContent=msg;$('#toasts').appendChild(t);setTimeout(()=>t.remove(),kind==='err'?6500:3800)}
+function toast(msg,kind=''){const box=$('#toasts');if(!box)return;[...box.children].forEach(c=>{if(c.textContent===msg)c.remove()});while(box.children.length>=3)box.firstChild.remove();const t=document.createElement('div');t.className='toast '+kind;t.textContent=msg;box.appendChild(t);setTimeout(()=>t.remove(),kind==='err'?6500:3200)}
 
 /* modal */
 function openModal({title,body,footer='',wide=false,onMount,onClose}){
@@ -646,7 +748,7 @@ function renderShell(){
   $('#app').innerHTML=`${Store.mode==='local'?`<div class="banner-local"><div class="wrap">Modo local: os dados ficam só neste navegador. Para jogar com o grupo, abra a mesa pelo link publicado no Claude.</div></div>`:''}
   <header class="topbar"><div class="wrap">
     <button class="brand" data-act="home">${SIGIL}<span>Into the Madness</span></button><span class="sp"></span>
-    ${u?`<span class="who">Investigando como <b>${esc(u.display)}</b></span>`:''}
+    ${u?`<button class="who" data-act="profile" title="Alterar nome de exibição"><span class="who-pre">Investigando como</span> <b>${esc(u.display)}</b></button>`:''}
     <button class="btn ghost icon sm theme-btn" data-act="theme" aria-label="Alternar tema claro/escuro" title="Alternar tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg></button>
     ${u?`<button class="btn sm" data-act="logout">Sair</button>`:''}
   </div></header>
@@ -685,10 +787,13 @@ function viewHome(){
   const u=st.user.uname;
   subs.push(Store.watch('campaigns',[['master','==',u]],null,null,r=>{st.home.master=r.sort((a,b)=>(b.created||0)-(a.created||0));renderHomeBody()}));
   subs.push(Store.watch('campaigns',[['players','array-contains',u]],null,null,r=>{st.home.player=r.sort((a,b)=>(b.created||0)-(a.created||0));renderHomeBody()}));
+  checkInvite();
 }
 const coverCache={};
 const PH=`<div class="ph">${SIGIL}</div>`;
-function coverInner(code,v){
+function coverInner(c){
+  if(c.coverSrc&&c.coverCrop&&c.coverCrop.ar)return cropImg(c.coverSrc,c.coverCrop,16/9,'');
+  const code=c.code,v=c.coverV;/* formato antigo: imagem recortada na coleção covers */
   if(!v)return PH;const cc=coverCache[code];
   if(cc&&cc.v===v)return cc.img?`<img alt="" src="${cc.img}">`:PH;
   loadCover(code,v);return cc&&cc.img?`<img alt="" src="${cc.img}">`:PH;
@@ -697,7 +802,7 @@ async function loadCover(code,v){
   const cc=coverCache[code]||(coverCache[code]={});if(cc.loading===v)return;cc.loading=v;
   const d=await Store.get('covers/'+code).catch(()=>null);
   coverCache[code]={v,img:d&&d.img||null};
-  $$(`[data-cover="${code}"]`).forEach(el=>el.innerHTML=coverInner(code,v));
+  $$(`[data-cover="${code}"]`).forEach(el=>el.innerHTML=coverInner({code,coverV:v}));
 }
 function renderHomeBody(){
   const v=$('#view');if(!v||st.view!=='home')return;
@@ -714,7 +819,7 @@ function renderHomeBody(){
 }
 function campCard(c,isM){
   const n=(c.players||[]).length;
-  return `<article class="camp"><div class="cover" data-cover="${esc(c.code)}">${coverInner(c.code,c.coverV)}</div>
+  return `<article class="camp"><div class="cover" data-cover="${esc(c.code)}">${coverInner(c)}</div>
   <div class="body"><div class="meta"><span class="pill ${isM?'mestre':'jogador'}">${isM?'Mestre':'Jogador'}</span><span>${n} jogador${n===1?'':'es'}</span>${isM?`<span class="mono">· ${esc(c.code)}</span>`:`<span>· Mestre: ${esc((c.names&&c.names[c.master])||c.master)}</span>`}</div>
   <h3>${esc(c.name)}</h3>${c.desc?`<p class="muted" style="font-size:.98rem">${esc(c.desc)}</p>`:''}
   <div class="acts"><button class="btn primary sm" data-act="opencamp" data-c="${esc(c.code)}">Abrir mesa</button>
@@ -735,8 +840,8 @@ function newCampModal(){
     }catch(e){$('#nc-e',m.el).textContent=errMsg(e);$('#nc-go',m.el).disabled=false}
   };
 }
-function joinModal(){
-  const m=openModal({title:'Entrar em Campanha',body:`<div class="field"><label class="lbl" for="jn-c">Código da campanha</label><input id="jn-c" maxlength="6" class="mono" style="font-size:1.6rem;letter-spacing:.3em;text-transform:uppercase" placeholder="XXXXXX" autocomplete="off"></div><p class="hint">O mestre encontra o código na Área do Mestre.</p><div class="err" id="jn-e"></div>`,
+function joinModal(prefill){
+  const m=openModal({title:'Entrar em Campanha',body:`<div class="field"><label class="lbl" for="jn-c">Código da campanha</label><input id="jn-c" maxlength="6" class="mono" style="font-size:1.6rem;letter-spacing:.3em;text-transform:uppercase" placeholder="XXXXXX" autocomplete="off" value="${esc(prefill||'')}"></div><p class="hint">O mestre encontra o código na Área do Mestre.</p><div class="err" id="jn-e"></div>`,
   footer:`<button class="btn" data-x>Cancelar</button><button class="btn primary" id="jn-go">Entrar</button>`});
   const go=async()=>{
     const code=$('#jn-c',m.el).value.trim().toUpperCase();const e=$('#jn-e',m.el);
@@ -759,43 +864,51 @@ async function delCamp(code){
   const c=[...st.home.master,st.camp].find(x=>x&&x.code===code);
   if(!(await confirmBox({title:'Deletar campanha?',text:`Isso apaga “${esc(c?c.name:code)}” com todas as fichas, NPCs, rolagens e recompensas. Não dá para desfazer.`,ok:'Deletar para sempre'})))return;
   try{
-    for(const coll of ['sheets','rolls','rewards']){const rows=await Store.query(coll,[['campaign','==',code]]);for(const r of rows)await Store.del(coll+'/'+r._id)}
-    await Store.del('covers/'+code).catch(()=>{});await Store.del('campaigns/'+code);
+    toast('Apagando a campanha…');
+    for(const coll of ['sheets','rolls','rewards']){const rows=await Store.query(coll,[['campaign','==',code]]);await Store.delMany(rows.map(r=>coll+'/'+r._id))}
+    await Store.del('covers/'+code).catch(()=>{});await Store.del('combat/'+code).catch(()=>{});await Media().purge(code);await Store.del('campaigns/'+code);
     toast('Campanha deletada.');if(st.view!=='home')viewHome();
   }catch(e){toast(errMsg(e),'err')}
 }
 
 /* ===================== editor de capa ===================== */
-async function coverEditor(code){
-  const W=1280,H=720;let img=null,zoom=1,ox=0,oy=0;
-  const m=openModal({title:'Capa da campanha',wide:true,body:`<p class="hint">Proporção 16:9. Arraste a imagem para enquadrar e use o zoom para ajustar.</p>
-  <div class="crop" id="cr-box"><canvas id="cr-cv" width="${W}" height="${H}"></canvas></div>
-  <div class="row"><label class="btn" for="cr-f">Escolher imagem</label><input id="cr-f" type="file" accept="image/*" hidden>
-  <div class="field" style="flex:1;min-width:180px"><label class="lbl" for="cr-z">Zoom</label><input id="cr-z" type="range" min="1" max="4" step="0.01" value="1"></div></div><div class="err" id="cr-e"></div>`,
-  footer:`<button class="btn danger" id="cr-rm">Remover capa</button><span style="flex:1"></span><button class="btn" data-x>Cancelar</button><button class="btn primary" id="cr-ok">Salvar capa</button>`});
-  const cv=$('#cr-cv',m.el),ctx=cv.getContext('2d');
-  const base=()=>img?Math.max(W/img.width,H/img.height):1;
-  const lim=()=>{const s=base()*zoom;const mx=Math.max(0,(img.width*s-W)/2),my=Math.max(0,(img.height*s-H)/2);ox=clamp(ox,-mx,mx);oy=clamp(oy,-my,my)};
-  const draw=(c=ctx,w=W,h=H)=>{c.fillStyle='#111';c.fillRect(0,0,w,h);if(!img){c.fillStyle='#777';c.font='40px Georgia';c.textAlign='center';c.fillText('Escolha uma imagem',w/2,h/2);return}
-    lim();const k=w/W,s=base()*zoom*k;c.drawImage(img,w/2-img.width*s/2+ox*k,h/2-img.height*s/2+oy*k,img.width*s,img.height*s)};
-  const load=src=>new Promise(r=>{const i=new Image();i.onload=()=>{img=i;zoom=1;ox=oy=0;$('#cr-z',m.el).value=1;draw();r()};i.onerror=()=>{$('#cr-e',m.el).textContent='Não consegui abrir essa imagem.';r()};i.src=src});
-  const cur=coverCache[code];if(cur&&cur.img)await load(cur.img);else{const d=await Store.get('covers/'+code).catch(()=>null);if(d&&d.img)await load(d.img);else draw()}
-  $('#cr-f',m.el).onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>load(r.result);r.readAsDataURL(f)};
-  $('#cr-z',m.el).oninput=e=>{zoom=+e.target.value;draw()};
-  let drag=null;const box=$('#cr-box',m.el);
-  box.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,ox,oy};box.setPointerCapture(e.pointerId)});
-  box.addEventListener('pointermove',e=>{if(!drag)return;const k=W/box.getBoundingClientRect().width;ox=drag.ox+(e.clientX-drag.x)*k;oy=drag.oy+(e.clientY-drag.y)*k;draw()});
-  box.addEventListener('pointerup',()=>drag=null);box.addEventListener('pointercancel',()=>drag=null);
-  box.addEventListener('wheel',e=>{if(!img)return;e.preventDefault();zoom=clamp(zoom*(e.deltaY<0?1.06:.94),1,4);$('#cr-z',m.el).value=zoom;draw()},{passive:false});
-  $('#cr-ok',m.el).onclick=async()=>{
-    if(!img)return $('#cr-e',m.el).textContent='Escolha uma imagem primeiro.';
-    let out,sizes=[[1280,720,.82],[1280,720,.7],[960,540,.72],[800,450,.68],[640,360,.62]];
-    for(const[w,h,q]of sizes){const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);out=c.toDataURL('image/jpeg',q);if(out.length<230000)break}
-    try{$('#cr-ok',m.el).disabled=true;const v=Date.now();await Store.set('covers/'+code,{img:out,campaign:code});coverCache[code]={v,img:out};await Store.update('campaigns/'+code,{coverV:v});m.close();toast('Capa salva.','ok')}
-    catch(e){$('#cr-e',m.el).textContent=errMsg(e);$('#cr-ok',m.el).disabled=false}
-  };
-  $('#cr-rm',m.el).onclick=async()=>{try{await Store.del('covers/'+code);await Store.update('campaigns/'+code,{coverV:0});delete coverCache[code];m.close();toast('Capa removida.')}catch(e){toast(errMsg(e),'err')}};
+function coverEditor(code){
+  const c=[st.camp,...st.home.master].find(x=>x&&x.code===code);if(!c)return;
+  const legacy=!c.coverSrc&&c.coverV&&coverCache[code]&&coverCache[code].img;
+  cropEditor({title:'Capa da campanha',FA:16/9,maxSide:1800,hint:'Proporção 16:9. Arraste para enquadrar e use o zoom para ajustar. Todos na mesa veem a capa.',
+    src:c.coverSrc||legacy||null,crop:c.coverSrc?c.coverCrop:null,pick:!c.coverSrc&&!legacy,
+    onSave:async({dataUrl,crop})=>{
+      const old=c.coverSrc;let ref=old;
+      if(!dataUrl&&!old&&legacy)dataUrl=legacy;
+      if(dataUrl)ref=await Media().save('capa',code,dataUrl);
+      await Store.update('campaigns/'+code,{coverSrc:ref,coverCrop:crop,coverV:0});
+      if(dataUrl&&old&&old!==ref)Media().remove(old);
+      if(legacy)Store.del('covers/'+code).catch(()=>{});
+      toast('Capa salva.','ok');
+    },
+    onRemove:async()=>{const old=c.coverSrc;await Store.update('campaigns/'+code,{coverSrc:'',coverCrop:null,coverV:0});if(old)Media().remove(old);Store.del('covers/'+code).catch(()=>{});toast('Capa removida.')}});
 }
+
+/* ===================== perfil ===================== */
+function profileModal(){
+  const m=openModal({title:'Seu perfil',body:`<div class="field"><label class="lbl" for="pf-n">Nome de exibição</label><input id="pf-n" maxlength="40" value="${esc(st.user.display)}"></div>
+   ${st.user.email?`<p class="hint">Conta: ${esc(st.user.email)}</p>`:''}<p class="hint">O novo nome aparece para o mestre e os jogadores de todas as suas campanhas.</p><div class="err" id="pf-e"></div>`,
+   footer:`<button class="btn" data-x>Cancelar</button><button class="btn primary" id="pf-ok">Salvar</button>`});
+  $('#pf-ok',m.el).onclick=async()=>{
+    const n=$('#pf-n',m.el).value.trim();if(!n)return $('#pf-e',m.el).textContent='Escreva um nome.';
+    $('#pf-ok',m.el).disabled=true;const u=st.user.uname;
+    try{
+      const fbMode=typeof firebaseConfig!=='undefined';
+      await Store.update((fbMode?'users/':'accounts/')+u,{display:n});
+      if(fbMode&&typeof updateProfile!=='undefined'&&fb.auth.currentUser)updateProfile(fb.auth.currentUser,{displayName:n}).catch(()=>{});
+      st.user.display=n;if(!fbMode)lsSet('itm.session',{uname:u,display:n});
+      const camps=[...st.home.master,...st.home.player];if(st.camp&&!camps.some(c=>c.code===st.camp.code))camps.push(st.camp);
+      await Promise.all(camps.map(c=>Store.update('campaigns/'+c.code,{names:{[u]:n}}).catch(e=>console.warn(e))));
+      $$('.who b').forEach(b=>b.textContent=n);m.close();toast('Nome atualizado.','ok');
+    }catch(e){$('#pf-e',m.el).textContent=errMsg(e);$('#pf-ok',m.el).disabled=false}
+  };
+}
+document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;const ms=$$('.modal-bg');if(ms.length){const x=$('[data-x]',ms[ms.length-1]);x&&x.click()}else{const p=$('#pop');if(p&&p.innerHTML)p.innerHTML=''}});
 
 /* ===================== Firebase ===================== */
 const firebaseConfig = {
@@ -813,23 +926,52 @@ function enc(v){if(Array.isArray(v))return v.map(x=>Array.isArray(x)?{__arr:enc(
 function dec(v){if(Array.isArray(v))return v.map(dec);if(v&&typeof v==='object'){if(Array.isArray(v.__arr)&&Object.keys(v).length===1)return dec(v.__arr);const o={};for(const k in v)o[k]=dec(v[k]);return o}return v}
 const snapData=s=>dec(structuredClone(s.data()));
 const Store={mode:'cloud',
-  init(){fb.app=initializeApp(firebaseConfig);fb.auth=getAuth(fb.app);fb.db=getFirestore(fb.app)},
+  init(){
+    fb.app=initializeApp(firebaseConfig);fb.auth=getAuth(fb.app);fb.storage=getStorage(fb.app);
+    /* cache local persistente: abre mais rápido, economiza leituras e funciona com a internet oscilando */
+    try{fb.db=initializeFirestore(fb.app,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})})}
+    catch(e){console.warn('cache persistente indisponível',e);fb.db=getFirestore(fb.app)}
+  },
   ref(p){return fsDoc(fb.db,...p.split('/'))},
   async retry(fn){try{return await fn()}catch(e){if(e&&e.code==='unavailable'){await sleep(500+Math.random()*700);return await fn()}throw e}},
-  _q(coll,w=[]){return fsQuery(fsCollection(fb.db,coll),...w.map(x=>fsWhere(...x)))},
+  _q(coll,w=[],order,limit){const parts=w.map(x=>fsWhere(...x));if(order)parts.push(fsOrderBy(order[0],order[1]||'asc'));if(limit)parts.push(fsLimit(limit));return fsQuery(fsCollection(fb.db,coll),...parts)},
   _post(rows,order,limit){if(order){const[f,dir]=order;rows.sort((a,b)=>((a[f]??0)>(b[f]??0)?1:(a[f]??0)<(b[f]??0)?-1:0)*(dir==='desc'?-1:1))}return limit?rows.slice(0,limit):rows},
+  _rows(s){return s.docs.map(d=>({...snapData(d),_id:d.id}))},
+  noIndex:false,
+  _idxWarn(e){if(!this.noIndex){this.noIndex=true;console.warn('Falta o índice composto (rolls: campaign + ts). Publique firestore.indexes.json ou use o link:',e.message)}},
   async get(p){return this.retry(async()=>{const s=await getDoc(this.ref(p));return s.exists()?{...snapData(s),_id:s.id}:null})},
   async set(p,d){return this.retry(()=>setDoc(this.ref(p),enc(clean(d))))},
   /* merge profundo: objetos aninhados se mesclam, listas são substituídas */
   async update(p,d){return this.retry(()=>setDoc(this.ref(p),enc(clean(d)),{merge:true}))},
   async del(p){return this.retry(()=>deleteDoc(this.ref(p)))},
-  async query(coll,w=[],order=null,limit=null){return this.retry(async()=>{const s=await getDocs(this._q(coll,w));return this._post(s.docs.map(d=>({...snapData(d),_id:d.id})),order,limit)})},
+  async delMany(paths){for(let i=0;i<paths.length;i+=400){const b=writeBatch(fb.db);paths.slice(i,i+400).forEach(p=>b.delete(this.ref(p)));await b.commit()}},
+  /* ordenação e limite no servidor quando pedidos; sem o índice, cai para ordenação local */
+  async query(coll,w=[],order=null,limit=null){return this.retry(async()=>{
+    if((order||limit)&&!this.noIndex){try{return this._rows(await getDocs(this._q(coll,w,order,limit)))}catch(e){if(e.code!=='failed-precondition')throw e;this._idxWarn(e)}}
+    const eq=w.filter(x=>x[1]==='=='||x[1]==='array-contains'),rest=w.filter(x=>!eq.includes(x));
+    const cmp={'<':(a,b)=>a<b,'<=':(a,b)=>a<=b,'>':(a,b)=>a>b,'>=':(a,b)=>a>=b,'!=':(a,b)=>a!==b};
+    const rows=this._rows(await getDocs(this._q(coll,eq))).filter(d=>rest.every(([k,op,v])=>cmp[op]?cmp[op](d[k],v):true));
+    return this._post(rows,order,limit)})},
   watch(coll,w,order,limit,cb){
-    return onSnapshot(this._q(coll,w),s=>cb(this._post(s.docs.map(d=>({...snapData(d),_id:d.id})),order,limit)),
-      e=>{console.warn(coll,e);if(e.code!=='permission-denied')toast('A conexão com a mesa caiu. Recarregue a página.','err')});
+    let un=null,dead=false;
+    const start=server=>{un=onSnapshot(server?this._q(coll,w,order,limit):this._q(coll,w),s=>cb(server?this._rows(s):this._post(this._rows(s),order,limit)),
+      e=>{if(server&&e.code==='failed-precondition'){this._idxWarn(e);if(!dead)start(false);return}
+        console.warn(coll,e);if(e.code!=='permission-denied')toast('A conexão com a mesa caiu. Recarregue a página.','err')})};
+    start(!!(order||limit)&&!this.noIndex);return()=>{dead=true;un&&un()};
   },
   watchDoc(p,cb){return onSnapshot(this.ref(p),s=>cb(s.exists()?{...snapData(s),_id:s.id}:null),e=>console.warn(p,e))},
   async claim(){return true}
+};
+/* imagens no Firebase Storage: campaigns/{código}/{tipo}-{id}.jpg */
+const MediaBackend={
+  limit:450000,
+  async save(kind,code,dataUrl){
+    const r=sRef(fb.storage,`campaigns/${code}/${kind}-${uid()}.jpg`);
+    await uploadString(r,dataUrl,'data_url',{contentType:'image/jpeg',cacheControl:'public,max-age=31536000,immutable'});
+    return await getDownloadURL(r);
+  },
+  async remove(ref){if(!ref||!/^https?:/.test(ref))return;try{await deleteObject(sRef(fb.storage,ref))}catch(e){console.warn('remover imagem',e)}},
+  async purge(code){try{const l=await listAll(sRef(fb.storage,`campaigns/${code}`));await Promise.all(l.items.map(i=>deleteObject(i).catch(()=>{})))}catch(e){console.warn('limpar imagens',e)}}
 };
 function errMsg(e){
   const c=(e&&e.code)||'';
@@ -837,6 +979,10 @@ function errMsg(e){
     'permission-denied':'Sem permissão para isso nesta mesa. Confira se você faz parte da campanha e se as regras do Firestore foram publicadas.',
     'resource-exhausted':'Muitas ações seguidas. Espere alguns segundos.',
     'unavailable':'Sem conexão com o servidor. Verifique a internet.',
+    'storage/unauthorized':'O Storage recusou a imagem. Publique storage.rules e confira se ela tem menos de 3 MB.',
+    'storage/quota-exceeded':'O espaço do Firebase Storage acabou.',
+    'storage/retry-limit-exceeded':'O envio da imagem demorou demais. Tente de novo.',
+    'storage/unknown':'Falha no Storage. Confira se o Storage está ativado no projeto.',
     'auth/invalid-email':'E-mail inválido.',
     'auth/missing-email':'Informe o e-mail.',
     'auth/user-not-found':'Não existe conta com esse e-mail.',
@@ -855,13 +1001,13 @@ function errMsg(e){
 /* ===================== login ===================== */
 let loginMode='entrar',signingUp=false;
 function viewLogin(){
-  clearSubs();st.view='login';hideLog();
+  clearSubs();st.view='login';hideLog();const tb=$('#toasts');tb&&(tb.innerHTML='');
   const m=loginMode;
   const title={entrar:'Abra o seu dossiê',criar:'Registre um novo investigador',recuperar:'Recuperar senha'}[m];
   $('#app').innerHTML=`<section class="login">
     <div class="login-art"><canvas id="abyss" aria-hidden="true"></canvas>
       <div class="copy"><h1><em>Bem-vindo ao</em>Into the Madness</h1><p>Fichas, rolagens e campanhas para investigadores que já viram demais.</p></div></div>
-    <div class="login-form"><form class="login-card" id="login-f" autocomplete="on" novalidate>
+    <div class="login-form"><button type="button" class="btn ghost icon sm theme-btn login-theme" data-act="theme" aria-label="Alternar tema claro/escuro" title="Alternar tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg></button><form class="login-card" id="login-f" autocomplete="on" novalidate>
       ${m!=='recuperar'?`<div class="seg" role="group" aria-label="Modo">
         <button type="button" data-act="lmode" data-m="entrar" aria-pressed="${m==='entrar'}">Entrar</button>
         <button type="button" data-act="lmode" data-m="criar" aria-pressed="${m==='criar'}">Criar conta</button></div>`:''}
@@ -918,7 +1064,7 @@ function merge(a,b){const o={...a};for(const k in b){const v=b[k];if(v&&typeof v
 /* ===================== campanha ===================== */
 function openCampaign(code){
   if(st.sheetId)flushSave();
-  clearSubs();Object.assign(st,{view:'camp',code,camp:null,sheets:[],rolls:[],rewards:[],sheetId:null,sheet:null,mtab:'mesa',rw:{sel:{},amt:{},all:'',reason:''}});
+  clearSubs();Object.assign(st,{view:'camp',code,camp:null,sheets:[],rolls:[],older:[],olderDone:false,olderBusy:false,combat:null,rewards:[],sheetId:null,sheet:null,mtab:'mesa',rw:{sel:{},amt:{},all:'',reason:''}});
   st.dr.last=null;st.lastSeen=Date.now();
   renderShell();$('#view').innerHTML=LOADING('Abrindo os arquivos da campanha…');
   let first=true;
@@ -935,23 +1081,26 @@ function openCampaign(code){
 function startCampSubs(){
   const code=st.code;
   subs.push(Store.watch('sheets',st.isMaster?[['campaign','==',code]]:[['campaign','==',code],['owner','==',st.user.uname]],null,null,rows=>{st.sheets=rows.sort((a,b)=>(a.created||0)-(b.created||0));onSheets()}));
-  subs.push(Store.watch('rolls',[['campaign','==',code]],['ts','desc'],80,rows=>{st.rolls=rows;renderLog()}));
+  subs.push(Store.watch('rolls',[['campaign','==',code]],['ts','desc'],LOG_PAGE,rows=>{st.rolls=rows;renderLog()}));
+  subs.push(Store.watchDoc('combat/'+code,d=>{const prev=st.combat;st.combat=d;renderCombatBar();notifyTurn(prev,d);if(st.tab==='mestre'&&st.mtab==='combat')softRender();else if(st.tab==='mestre'&&!st.sheetId){const t=$('[data-act="mtab"][data-t="combat"]');t&&(t.innerHTML=cmbTabLabel())}}));
   if(st.isMaster)subs.push(Store.watch('rewards',[['campaign','==',code]],null,null,rows=>{st.rewards=rows.sort((a,b)=>b.ts-a.ts);if(st.tab==='mestre'&&st.mtab==='rewards')softRender()}));
 }
 function softRender(){if(st.sheetId||st.view!=='camp')return;if(editingIn('#content')){pendingSoft=true;return}renderContent()}
 function onSheets(){
-  if(st.sheetId){const d=st.sheets.find(x=>x._id===st.sheetId);if(!d){toast('Esta ficha foi excluída.');st.sheetId=null;st.sheet=null;renderContent();return}sheetRemote(d)}
+  renderCombatBar();
+  if(st.sheetId){const d=st.sheets.find(x=>x._id===st.sheetId);if(!d){toast(st.isMaster?'Esta ficha foi excluída.':'Esta ficha não está mais disponível para você.');st.sheetId=null;st.sheet=null;renderCampHead();renderContent();return}sheetRemote(d)}
   else softRender();
 }
 const nameOf=u=>(st.camp&&st.camp.names&&st.camp.names[u])||u||'—';
 function renderCamp(){
   const v=$('#view');
-  v.innerHTML=`<div id="camp-head"></div><div class="tabs" role="tablist" id="camp-tabs"></div><div id="content"></div>`;
-  renderCampHead();renderContent();showLog();
+  v.innerHTML=`<div id="camp-head"></div><div class="tabs" role="tablist" id="camp-tabs"></div><div id="combat-bar"></div><div id="content"></div>`;
+  renderCampHead();renderCombatBar();renderContent();showLog();
 }
 function renderCampHead(){
   const c=st.camp,h=$('#camp-head');if(!h)return;
-  h.innerHTML=`<div class="camp-head"><div class="cover" data-cover="${esc(c.code)}">${coverInner(c.code,c.coverV)}</div>
+  if(st.sheetId){h.innerHTML=`<div class="camp-head compact"><div class="info"><div class="row" style="gap:10px"><button class="btn ghost sm back" data-act="home">← Minhas Campanhas</button><span class="crumb">${esc(c.name)}</span><span class="pill ${st.isMaster?'mestre':'jogador'}">${st.isMaster?'Mestre':'Jogador'}</span></div></div></div>`;}
+  else h.innerHTML=`<div class="camp-head"><div class="cover" data-cover="${esc(c.code)}">${coverInner(c)}</div>
   <div class="info"><button class="btn ghost sm back" data-act="home">← Minhas Campanhas</button>
   <div class="row"><span class="pill ${st.isMaster?'mestre':'jogador'}">${st.isMaster?'Você é o Mestre':'Você é Jogador'}</span><span class="muted">Mestre: ${esc(nameOf(c.master))} · ${(c.players||[]).length} jogador(es)</span></div>
   <h1>${esc(c.name)}</h1>${c.desc?`<p class="muted">${esc(c.desc)}</p>`:''}</div></div>`;
@@ -1008,26 +1157,28 @@ function masterHTML(){
    <button role="tab" aria-selected="${t==='mesa'}" data-act="mtab" data-t="mesa">Mesa do Mestre</button>
    <button role="tab" aria-selected="${t==='pcs'}" data-act="mtab" data-t="pcs">Fichas dos Jogadores <span class="count">${pcs.length}</span></button>
    <button role="tab" aria-selected="${t==='npcs'}" data-act="mtab" data-t="npcs">NPCs <span class="count">${npcs.length}</span></button>
+   <button role="tab" aria-selected="${t==='combat'}" data-act="mtab" data-t="combat">${cmbTabLabel()}</button>
    <button role="tab" aria-selected="${t==='rewards'}" data-act="mtab" data-t="rewards">Recompensas</button></div>`;
   let body='';
   if(t==='mesa')body=masterMesa();
   else if(t==='pcs')body=masterPCs(pcs);
   else if(t==='npcs')body=masterNPCs(npcs);
+  else if(t==='combat')body=combatHTML();
   else body=masterRewards(pcs);
   return tabs+body;
 }
 function masterMesa(){
   const c=st.camp,d=st.dr;
   const players=(c.players||[]);
-  return `<div class="master-grid">
+  return `<div class="master-grid">${scenePanel()}
   <section class="panel span5"><header><h3>Código da Campanha</h3></header>
-    <div class="code-box"><span class="code" id="camp-code">${esc(c.code)}</span><button class="btn sm" data-act="copycode">Copiar</button></div>
-    <p class="hint">Os jogadores usam esse código em “Entrar em Campanha”.</p>
+    <div class="code-box"><span class="code" id="camp-code">${esc(c.code)}</span><button class="btn sm" data-act="copycode">Copiar código</button>${INVITE_LINKS?`<button class="btn sm" data-act="copyinvite">Copiar link de convite</button>`:''}</div>
+    <p class="hint">${INVITE_LINKS?'Quem abrir o link de convite entra direto na campanha depois do login. Ou use o código em “Entrar em Campanha”.':'Os jogadores usam esse código em “Entrar em Campanha”.'}</p>
     <hr class="hr"><header><h3>Jogadores <small>${players.length}</small></h3></header>
     ${players.length?`<div class="list">${players.map(p=>{const n=st.sheets.filter(s=>s.type==='pc'&&s.owner===p).map(s=>s.name||'Sem nome');return `<div class="it"><div class="grow"><div class="t">${esc(nameOf(p))}</div><div class="s">${n.length?esc(n.join(', ')):'sem ficha'}</div></div><button class="btn danger xs" data-act="kick" data-u="${esc(p)}">Remover</button></div>`}).join('')}</div>`:`<p class="muted">Ninguém entrou ainda. Envie o código acima.</p>`}
   </section>
-  <section class="panel span7"><header><h3>Capa da Campanha</h3><button class="btn sm" data-act="cover" data-c="${esc(c.code)}">${c.coverV?'Trocar ou ajustar':'Subir imagem'}</button></header>
-    <div class="cover" style="border-radius:8px;border:1px solid var(--line)" data-cover="${esc(c.code)}">${coverInner(c.code,c.coverV)}</div>
+  <section class="panel span7"><header><h3>Capa da Campanha</h3><button class="btn sm" data-act="cover" data-c="${esc(c.code)}">${c.coverSrc||c.coverV?'Trocar ou ajustar':'Subir imagem'}</button></header>
+    <div class="cover" style="border-radius:8px;border:1px solid var(--line)" data-cover="${esc(c.code)}">${coverInner(c)}</div>
     <p class="hint">Todos na mesa veem a capa. Só você pode alterá-la.</p></section>
   <section class="panel span12"><header><h3>Rolagem</h3><label class="row" style="gap:8px;font-size:.95rem"><input type="checkbox" id="dr-sec" data-chg="drsec" ${d.secret?'checked':''}> Rolagem secreta (só você vê)</label></header>
     <div class="grid2" style="align-items:start">
@@ -1124,27 +1275,54 @@ async function delSheet(id){
 async function postRoll(r){
   const rec={campaign:st.code,by:st.user.uname,byName:st.user.display,ts:Date.now(),...r,secret:!!r.secret};
   try{await Store.set('rolls/'+uid(),rec)}catch(e){toast(errMsg(e),'err')}
-  if(Math.random()<.08)pruneRolls();
+  if(st.isMaster&&Math.random()<.03)pruneRolls();
   return rec;
 }
-async function pruneRolls(){try{const rows=await Store.query('rolls',[['campaign','==',st.code]]);if(rows.length<=160)return;rows.sort((a,b)=>b.ts-a.ts);for(const r of rows.slice(150))await Store.del('rolls/'+r._id)}catch{}}
-const visibleRolls=()=>st.rolls.filter(r=>!r.secret||st.isMaster||r.by===st.user.uname);
+/* mantém as 400 rolagens mais recentes; só o mestre limpa, de vez em quando */
+async function pruneRolls(){
+  if(!st.isMaster)return;
+  try{const code=st.code;const rows=await Store.query('rolls',[['campaign','==',code]],['ts','desc'],401);if(rows.length<=400)return;
+    const cut=rows[400].ts;const old=await Store.query('rolls',[['campaign','==',code],['ts','<=',cut]],['ts','asc'],300);
+    await Store.delMany(old.map(r=>'rolls/'+r._id))}catch(e){console.warn('limpeza do histórico',e)}
+}
 function showLog(){if(!$('#logw')){const d=document.createElement('div');d.id='logw';document.body.appendChild(d)}renderLog()}
-function hideLog(){const d=$('#logw');d&&d.remove();const p=$('#pop');p&&(p.innerHTML='')}
+function hideLog(){document.body.classList.remove('log-docked');const d=$('#logw');d&&d.remove();const p=$('#pop');p&&(p.innerHTML='')}
+const LOG_PAGE=60;
+function allRolls(){const seen=new Set(),out=[];for(const r of [...st.rolls,...st.older]){if(seen.has(r._id))continue;seen.add(r._id);out.push(r)}return out.sort((a,b)=>b.ts-a.ts)}
+function logEntryHTML(r){return `<div class="log-entry ${r.outcome||''} ${r.secret?'secret':''}"><div class="top"><span>${esc(r.byName||r.by)}${r.char?' · '+esc(r.char):''}</span><span class="num">${fmtDate(r.ts)}</span></div>
+   <div class="lbl2">${esc(r.label||'Rolagem')}</div>${rollBody(r)}</div>`}
 function renderLog(){
-  const w=$('#logw');if(!w||st.view!=='camp')return;const rolls=visibleRolls();
+  const w=$('#logw');if(!w||st.view!=='camp')return;
+  let rolls=allRolls().filter(r=>!r.secret||st.isMaster||r.by===st.user.uname);
   if(!st.logOpen){
+    document.body.classList.remove('log-docked');
     const unread=rolls.filter(r=>r.ts>st.lastSeen&&r.by!==st.user.uname).length;
-    w.innerHTML=`<button class="log-fab" data-act="logtoggle" aria-label="Abrir resumo de rolagens">${D20}${unread?`<span class="badge">${unread>9?'9+':unread}</span>`:''}</button>`;return;
+    w.innerHTML=`<button class="log-fab" data-act="logtoggle" aria-label="Abrir resumo de rolagens${unread?` (${unread} novas)`:''}">${D20}${unread?`<span class="badge">${unread>9?'9+':unread}</span>`:''}</button>`;return;
   }
-  st.lastSeen=Date.now();
-  const keep=$('#lg-in')?$('#lg-in').value:'';
-  w.innerHTML=`<section class="log-panel" aria-label="Resumo de rolagens"><header><h3>Rolagens da mesa</h3><button class="btn ghost sm" data-act="logtoggle" aria-label="Minimizar">Minimizar ▾</button></header>
-  <div class="log-list">${rolls.length?rolls.map(r=>`<div class="log-entry ${r.outcome||''} ${r.secret?'secret':''}"><div class="top"><span>${esc(r.byName||r.by)}${r.char?' · '+esc(r.char):''}</span><span class="num">${fmtTime(r.ts)}</span></div>
-   <div class="lbl2">${esc(r.label||'Rolagem')}</div>${rollBody(r)}</div>`).join(''):`<p class="muted" style="padding:10px">Nenhuma rolagem ainda. As rolagens de todos aparecem aqui.</p>`}</div>
-  <form class="log-form" id="lg-f"><input id="lg-in" class="mono" placeholder="Rolagem rápida: 1d20, 2d6+1" aria-label="Rolagem rápida" value="${esc(keep)}"><button class="btn primary sm" type="submit">Rolar</button></form></section>`;
-  $('#lg-f').addEventListener('submit',e=>{e.preventDefault();const v=$('#lg-in').value.trim();if(!v)return;const r=parseDice(v);if(!r)return toast('Não entendi “'+v+'”. Use dados e números com + e −, como 2d6+1 ou 1d20-2 (até 100 dados).','err');$('#lg-in').value='';
-    postRoll({kind:'free',label:'Rolagem livre',expr:v,faces:r.faces,mods:r.mods.filter(m=>m[1]),total:r.total,char:st.sheet&&st.sheet.type==='pc'?st.sheet.name:null})});
+  st.lastSeen=Date.now();document.body.classList.add('log-docked');
+  if(!$('.log-panel',w)){
+    w.innerHTML=`<section class="log-panel" aria-label="Resumo de rolagens"><header><h3>Rolagens da mesa</h3><div class="row" style="gap:6px;flex-wrap:nowrap"><div class="seg mini" role="group" aria-label="Filtro"><button type="button" data-act="logf" data-v="all">Todas</button><button type="button" data-act="logf" data-v="mine">Minhas</button></div><button class="btn ghost sm" data-act="logtoggle" aria-label="Minimizar">▾</button></div></header>
+    <div class="log-list" aria-live="polite"></div>
+    <form class="log-form" id="lg-f"><input id="lg-in" class="mono" placeholder="Rolagem rápida: 1d20, 2d6+1" aria-label="Rolagem rápida" autocomplete="off"><button class="btn primary sm" type="submit">Rolar</button></form></section>`;
+    $('#lg-f').addEventListener('submit',e=>{e.preventDefault();const v=$('#lg-in').value.trim();if(!v)return;const r=parseDice(v);if(!r)return toast('Não entendi “'+v+'”. Use dados e números com + e −, como 2d6+1 ou 1d20-2 (até 100 dados).','err');$('#lg-in').value='';
+      postRoll({kind:'free',label:'Rolagem livre',expr:v,faces:r.faces,mods:r.mods.filter(m=>m[1]),total:r.total,char:st.sheet&&st.sheet.type==='pc'?st.sheet.name:null})});
+  }
+  $$('[data-act="logf"]',w).forEach(b=>b.setAttribute('aria-pressed',(b.dataset.v==='mine')===(st.logFilter==='mine')));
+  if(st.logFilter==='mine')rolls=rolls.filter(r=>r.by===st.user.uname);
+  const list=$('.log-list',w),keep=list.scrollTop>40,before=list.scrollHeight,top=list.scrollTop;
+  const more=!st.olderDone&&allRolls().length>=LOG_PAGE;
+  list.innerHTML=(rolls.length?rolls.map(logEntryHTML).join(''):`<p class="muted" style="padding:10px">${st.logFilter==='mine'?'Você ainda não rolou nada nesta mesa.':'Nenhuma rolagem ainda. As rolagens de todos aparecem aqui.'}</p>`)
+    +(more?`<button class="btn sm ghost load-more" data-act="logmore">Carregar rolagens antigas</button>`:st.older.length?`<p class="hint" style="text-align:center;padding:8px">Início do histórico.</p>`:'');
+  if(keep)list.scrollTop=top+(list.scrollHeight-before);
+}
+async function loadOlderRolls(btn){
+  if(st.olderBusy)return;st.olderBusy=true;if(btn){btn.disabled=true;btn.textContent='Carregando…'}
+  try{
+    const all=allRolls();const oldest=all.length?all[all.length-1].ts:Date.now();
+    const rows=await Store.query('rolls',[['campaign','==',st.code],['ts','<',oldest]],['ts','desc'],50);
+    st.older=[...st.older,...rows];if(rows.length<50)st.olderDone=true;
+  }catch(e){toast(errMsg(e),'err')}
+  st.olderBusy=false;renderLog();
 }
 let popT=null;
 function showPop(rec,actions=''){
@@ -1152,7 +1330,132 @@ function showPop(rec,actions=''){
   p.innerHTML=`<div class="roll-pop" role="status"><div class="row between"><span class="label">${esc(rec.label||'Rolagem')}</span><button class="btn ghost xs" data-act="popx" aria-label="Fechar">✕</button></div>${rollBody(rec)}
   ${rec.outcome?`<p class="ref">${OUT[rec.outcome][1]}</p>`:''}${actions?`<div class="row" style="gap:8px">${actions}</div>`:''}</div>`;
   clearTimeout(popT);popT=setTimeout(()=>{if(!p.matches(':hover'))p.innerHTML=''},actions?20000:10000);
+  const b=$('.tt b',p);if(b&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&/^-?\d+$/.test(b.textContent)){
+    const fin=b.textContent,hi=Math.max(20,Math.abs(+fin));let i=0;const iv=setInterval(()=>{if(!b.isConnected)return clearInterval(iv);b.textContent=rnd(hi);if(++i>7){clearInterval(iv);b.textContent=fin;b.classList.add('land')}},45)}
 }
+
+/* ---------- painel da cena (mestre) ---------- */
+const INVITE_LINKS=typeof firebaseConfig!=='undefined';
+function checkInvite(){
+  const m=(location.hash||'').match(/^#entrar-([A-Za-z0-9]{6})$/);if(!m||!st.user)return;
+  try{history.replaceState(null,'',location.pathname+location.search)}catch{}
+  joinModal(m[1].toUpperCase());
+}
+function qbar(id,k,label,v){
+  const pct=v.max>0?clamp(v.at/v.max*100,0,100):0;
+  return `<div class="qbar ${k==='sanidade'?'san':''}"><span class="label">${label}</span><button class="btn xs icon" data-act="qadj" data-id="${id}" data-k="${k}" data-d="-1" aria-label="Menos 1 de ${label}">−</button><span class="bar"><i style="width:${pct}%"></i></span><span class="num">${esc(v.at)}/${esc(v.max)}</span><button class="btn xs icon" data-act="qadj" data-id="${id}" data-k="${k}" data-d="1" aria-label="Mais 1 de ${label}">+</button></div>`;
+}
+function sceneTile(raw){
+  const s=normSheet(raw),pc=s.type==='pc';
+  return `<div class="scene-tile ${s.saude.at<=0&&s.saude.max>0?'down':''}">${avatarHTML(s,true)}<div class="stack" style="gap:6px;min-width:0;flex:1">
+   <div class="row between" style="flex-wrap:nowrap;gap:8px"><button class="linkbtn" data-act="opensheet" data-id="${raw._id}">${esc(s.name||'Sem nome')}</button>${pc&&s.owner?`<span class="who-mini">${esc(nameOf(s.owner))}</span>`:''}</div>
+   ${qbar(raw._id,'saude','Saúde',s.saude)}${pc?qbar(raw._id,'sanidade','Sanidade',s.sanidade):''}
+   <div class="mini-stats">Defesa ${pc?sgn(calcPC(s).def):esc(s.defesa)}${pc?` · Determinação ${esc(s.determinacao)} · Nível ${esc(s.nivel)}`:` · Prof +${esc(s.prof)}`}${s.saude.at<=0&&s.saude.max>0?' · <b class="down-tag">caído</b>':''}</div></div></div>`;
+}
+function scenePanel(){
+  const pcs=st.sheets.filter(s=>s.type==='pc'),npcs=st.sheets.filter(s=>s.type==='npc');
+  if(!pcs.length&&!npcs.length)return '';
+  return `<section class="panel span12"><header><h3>Painel da cena</h3><span class="hint">Saúde e Sanidade de todos, ao vivo. Toque no nome para abrir a ficha.</span></header>
+   ${pcs.length?`<div class="scene-grid">${pcs.map(sceneTile).join('')}</div>`:'<p class="muted">Nenhum investigador ainda.</p>'}
+   ${npcs.length?`<details ${st.sceneNpc?'open':''} data-tog="sceneNpc"><summary class="label" style="cursor:pointer">NPCs (${npcs.length})</summary><div class="scene-grid" style="margin-top:10px">${npcs.map(sceneTile).join('')}</div></details>`:''}</section>`;
+}
+async function quickAdjust(id,k,d){
+  const s=st.sheets.find(x=>x._id===id);if(!s)return;const v=s[k]||{at:0,max:0};
+  const nv=clamp((+v.at||0)+d,0,(+v.max||0)>0?Math.max(+v.max,+v.at||0):999);if(nv===v.at)return;
+  s[k]={...v,at:nv};softRender();
+  try{await Store.update('sheets/'+id,{[k]:{at:nv},updated:Date.now()})}catch(e){toast(errMsg(e),'err')}
+}
+
+const cmbTabLabel=()=>`Combate${st.combat&&st.combat.active?' <span class="count live">ativo</span>':''}`;
+
+/* ===================== combate / iniciativa ===================== */
+/* Documento combat/{código}: {campaign, active, round, turn, order:[{id, ref, name, kind, init, hidden}]}
+   Só o mestre escreve; todos na campanha leem. */
+const cmbName=e=>e.hidden&&!st.isMaster?'Criatura desconhecida':(e.name||'Sem nome');
+function cmbSheet(e){return e.ref?st.sheets.find(s=>s._id===e.ref):null}
+function cmbIsMine(e){const s=cmbSheet(e);return !!(s&&s.owner===st.user.uname)}
+function renderCombatBar(){
+  const el=$('#combat-bar');if(!el)return;const c=st.combat;
+  if(!c||!c.active||!(c.order||[]).length){el.innerHTML='';return}
+  const cur=c.order[c.turn]||c.order[0];const mine=cmbIsMine(cur)&&!st.isMaster;
+  el.innerHTML=`<div class="combat-bar ${mine?'my-turn':''}" role="status"><div class="cb-head"><span class="cb-tag">Combate</span><b class="num">Rodada ${esc(c.round)}</b>
+   <span class="cb-now">${mine?'É a sua vez':'Vez de'}: <b>${esc(cmbName(cur))}</b></span>${st.isMaster?`<span class="sp"></span><button class="btn xs" data-act="cmbprev" aria-label="Turno anterior">←</button><button class="btn primary xs" data-act="cmbnext">Próximo turno →</button>`:''}</div>
+   <ol class="cb-order">${c.order.map((e,i)=>`<li class="${i===c.turn?'now':''} ${cmbIsMine(e)?'mine':''} ${e.kind}"><span class="num">${e.init??'—'}</span>${esc(cmbName(e))}</li>`).join('')}</ol>
+   ${mine?`<p class="cb-tip">Neste turno: 1 ação, 1 manobra e 1 espasmo. Dá para trocar a ação por outra manobra (máx. 2) ou gastar 1 de Saúde em esforço.</p>`:''}</div>`;
+}
+function notifyTurn(prev,cur){
+  if(!cur||!cur.active||st.isMaster)return;
+  if(prev&&prev.active&&prev.turn===cur.turn&&prev.round===cur.round)return;
+  const e=(cur.order||[])[cur.turn];if(e&&cmbIsMine(e))toast(`É a vez de ${e.name}!`,'ok');
+}
+async function saveCombat(c){
+  const prev=st.combat;st.combat={...c};renderCombatBar();
+  try{await Store.set('combat/'+st.code,{...c,campaign:st.code,updated:Date.now()})}catch(e){st.combat=prev;renderCombatBar();toast(errMsg(e),'err')}
+  if(st.tab==='mestre'&&st.mtab==='combat'&&!st.sheetId)softRender();
+}
+function initMod(e){
+  const s=cmbSheet(e);if(!s)return 0;const n=normSheet(s);
+  return n.type==='pc'?calcPC(n)['save-inic']:(+n.attrs.ast||0);
+}
+function rollInitiative(order,onlyMissing){
+  const lines=[];
+  const out=order.map(e=>{if(onlyMissing&&e.init!=null)return e;const d=rnd(20),m=initMod(e),v=d+m;if(!e.hidden)lines.push(`${e.name} ${v}`);return{...e,init:v,roll:d}});
+  if(lines.length)postRoll({kind:'init',label:'Iniciativa',faces:[],mods:[],total:lines.length,note:lines.join(' · ')});
+  return out;
+}
+const sortInit=o=>[...o].sort((a,b)=>(b.init??-99)-(a.init??-99)||(a.kind==='pc'?-1:1)-(b.kind==='pc'?-1:1)||(b.roll||0)-(a.roll||0));
+function combatHTML(){
+  const c=st.combat;const pcs=st.sheets.filter(s=>s.type==='pc'),npcs=st.sheets.filter(s=>s.type==='npc');
+  const tip=`<p class="hint">Cada participante tem, por turno, 1 ação, 1 manobra e 1 espasmo. A ação pode virar uma manobra extra (máx. 2). Esforço: gaste 1 de Saúde por uma manobra extra. A iniciativa aqui é 1d20 + Iniciativa (investigadores) ou 1d20 + Astúcia (NPCs).</p>`;
+  if(!c||!c.active){
+    st.cmbSel=st.cmbSel||Object.fromEntries(pcs.map(s=>[s._id,true]));
+    const row=s=>`<label class="row" style="gap:8px;flex-wrap:nowrap">${avatarHTML(normSheet(s),true)}<input type="checkbox" data-chg="cmbsel" data-id="${s._id}" ${st.cmbSel[s._id]?'checked':''}> <span>${esc(s.name||'Sem nome')}</span></label>`;
+    return `<div class="master-grid"><section class="panel span8"><header><h3>Preparar combate</h3></header>
+     ${pcs.length||npcs.length?`<div class="grid2"><div class="stack"><span class="lbl">Investigadores</span>${pcs.map(row).join('')||'<span class="muted">Nenhum</span>'}</div>
+     <div class="stack"><span class="lbl">NPCs</span>${npcs.map(row).join('')||'<span class="muted">Nenhum</span>'}</div></div>
+     <label class="row" style="gap:8px"><input type="checkbox" id="cmb-auto" checked> Rolar a iniciativa de todos ao iniciar</label>
+     <div class="row end"><button class="btn primary" data-act="cmbstart">Iniciar combate</button></div>`:`<p class="muted">Crie fichas de investigadores ou NPCs para montar a ordem de turno.</p>`}${tip}</section>
+     <section class="panel span4"><header><h3>Regra do livro</h3></header><p>No livro, o mestre e um jogador rolam 1d20; quem tirar mais começa. Use a disputa abaixo se preferir esse modo.</p>
+     <button class="btn roll" data-act="cmbsides">Disputa: Mestre × Jogadores</button></section></div>`;
+  }
+  const inOrder=new Set(c.order.map(e=>e.ref).filter(Boolean));
+  const avail=st.sheets.filter(s=>!inOrder.has(s._id));
+  return `<div class="master-grid"><section class="panel span12"><header><h3>Ordem de turno <small>Rodada ${esc(c.round)}</small></h3>
+   <div class="row" style="gap:8px"><button class="btn sm" data-act="cmbroll">Rolar iniciativa de todos</button><button class="btn sm" data-act="cmbsort">Ordenar</button><button class="btn sm" data-act="cmbprev">← Anterior</button><button class="btn primary sm" data-act="cmbnext">Próximo turno →</button></div></header>
+   <div class="tbl-wrap"><table class="tbl cmb-tbl"><thead><tr><th></th><th>Participante</th><th>Iniciativa</th><th>Saúde</th><th>Oculto</th><th></th></tr></thead><tbody>
+   ${c.order.map((e,i)=>{const s=cmbSheet(e);const n=s?normSheet(s):null;return `<tr class="${i===c.turn?'now':''}"><td class="cmb-mark">${i===c.turn?'▶':''}</td>
+    <td><div class="row" style="gap:10px;flex-wrap:nowrap">${n?avatarHTML(n,true):`<span class="avatar sm ph-portrait">${SILHOUETTE}</span>`}<div><div class="t">${esc(e.name)}</div><div class="s muted">${e.kind==='pc'?esc(nameOf(n&&n.owner)):e.kind==='npc'?'NPC':'Extra'}${e.roll?` · d20 ${e.roll}`:''}</div></div></div></td>
+    <td class="w-s"><input type="number" data-chg="cmbinit" data-i="${i}" value="${e.init??''}" aria-label="Iniciativa de ${esc(e.name)}"></td>
+    <td>${n?qbar(s._id,'saude','',n.saude):'<span class="muted">—</span>'}</td>
+    <td>${e.kind!=='pc'?`<input type="checkbox" data-chg="cmbhide" data-i="${i}" ${e.hidden?'checked':''} aria-label="Ocultar nome para os jogadores">`:''}</td>
+    <td><div class="row" style="gap:4px;flex-wrap:nowrap"><button class="btn ghost xs" data-act="cmbmove" data-i="${i}" data-d="-1" aria-label="Subir">↑</button><button class="btn ghost xs" data-act="cmbmove" data-i="${i}" data-d="1" aria-label="Descer">↓</button><button class="btn ghost xs" data-act="cmbturn" data-i="${i}" title="Passar a vez para este">Vez</button><button class="btn ghost xs" data-act="cmbrm" data-i="${i}" aria-label="Remover">✕</button></div></td></tr>`}).join('')}
+   </tbody></table></div>
+   <div class="row" style="align-items:flex-end">
+    ${avail.length?`<div class="field" style="min-width:200px"><label class="lbl" for="cmb-add">Adicionar ficha</label><select id="cmb-add">${avail.map(s=>`<option value="${s._id}">${esc(s.name||'Sem nome')}${s.type==='npc'?' (NPC)':''}</option>`).join('')}</select></div><button class="btn sm" data-act="cmbadd">Adicionar</button>`:''}
+    <div class="field" style="min-width:200px"><label class="lbl" for="cmb-x">Extra sem ficha</label><input id="cmb-x" placeholder="ex: Cultista 3"></div><button class="btn sm" data-act="cmbaddx">Adicionar extra</button>
+    <span style="flex:1"></span><button class="btn danger sm" data-act="cmbend">Encerrar combate</button></div>${tip}</section></div>`;
+}
+const CMB={
+  start:()=>{
+    const ids=Object.keys(st.cmbSel||{}).filter(k=>st.cmbSel[k]);const order=st.sheets.filter(s=>ids.includes(s._id)).map(s=>({id:uid(),ref:s._id,name:s.name||'Sem nome',kind:s.type,init:null,hidden:false}));
+    if(!order.length)return toast('Marque quem participa do combate.','err');
+    const auto=$('#cmb-auto')&&$('#cmb-auto').checked;
+    let o=auto?sortInit(rollInitiative(order)):order;
+    saveCombat({active:true,round:1,turn:0,order:o});
+  },
+  next:d=>{const c=st.combat;if(!c||!c.active||!c.order.length)return;let t=c.turn+d,r=c.round;
+    if(t>=c.order.length){t=0;r++}else if(t<0){if(r>1){t=c.order.length-1;r--}else t=0}
+    saveCombat({...c,turn:t,round:r})},
+  roll:()=>{const c=st.combat;saveCombat({...c,order:sortInit(rollInitiative(c.order)),turn:0})},
+  sort:()=>{const c=st.combat;const cur=c.order[c.turn];const o=sortInit(c.order);saveCombat({...c,order:o,turn:Math.max(0,o.indexOf(cur))})},
+  move:(i,d)=>{const c=st.combat;const o=[...c.order];const j=i+d;if(j<0||j>=o.length)return;[o[i],o[j]]=[o[j],o[i]];let t=c.turn;if(t===i)t=j;else if(t===j)t=i;saveCombat({...c,order:o,turn:t})},
+  rm:i=>{const c=st.combat;const o=c.order.filter((_,k)=>k!==i);let t=c.turn;if(i<t||(i===t&&t>=o.length))t=Math.max(0,t-1);saveCombat({...c,order:o,turn:Math.min(t,Math.max(0,o.length-1))})},
+  add:()=>{const id=$('#cmb-add')&&$('#cmb-add').value;const s=st.sheets.find(x=>x._id===id);if(!s)return;const e={id:uid(),ref:s._id,name:s.name||'Sem nome',kind:s.type,init:null,hidden:false};const[r]=rollInitiative([e]);saveCombat({...st.combat,order:[...st.combat.order,r]})},
+  addx:()=>{const n=($('#cmb-x').value||'').trim();if(!n)return toast('Dê um nome ao participante extra.','err');const[r]=rollInitiative([{id:uid(),ref:null,name:n,kind:'x',init:null,hidden:false}]);saveCombat({...st.combat,order:[...st.combat.order,r]})},
+  end:async()=>{if(!(await confirmBox({title:'Encerrar combate?',text:'A ordem de turno some da tela de todos.',ok:'Encerrar',danger:false})))return;saveCombat({active:false,round:1,turn:0,order:[]})},
+  sides:()=>{const a=rnd(20),b=rnd(20);const note=a===b?'Empate: rolem de novo.':a>b?'O mestre começa.':'Os jogadores começam.';
+    const rec={kind:'init',label:'Disputa de iniciativa',faces:[{v:a,s:20},{v:b,s:20}],mods:[],total:Math.max(a,b),note:`Mestre ${a} × Jogadores ${b}. ${note}`};postRoll(rec);showPop(rec)}
+};
 
 /* ===================== fichas ===================== */
 function openSheet(id){
@@ -1160,9 +1463,9 @@ function openSheet(id){
   if(d.type==='npc'&&!st.isMaster)return;
   st.sheetId=id;st.sheet=normSheet(d);st.dirty.clear();pendingSheet=false;
   st.rb={adv:0,dif:'',prof:false,secret:d.type==='npc'};
-  renderSheet();window.scrollTo({top:($('#content')?.offsetTop||0)-80,behavior:'smooth'});
+  renderCampHead();renderSheet();window.scrollTo({top:($('#content')?.offsetTop||0)-80,behavior:'smooth'});
 }
-async function closeSheet(){await flushSave();st.sheetId=null;st.sheet=null;renderContent()}
+async function closeSheet(){await flushSave();st.sheetId=null;st.sheet=null;renderCampHead();renderContent()}
 const normSheet=d=>merge(d.type==='npc'?blankNPC():blankPC(),structuredClone(d));
 const canEditSheet=s=>st.isMaster||(s.type==='pc'&&s.owner===st.user.uname);
 function scheduleSave(){clearTimeout(st.saveT);setSaveState('Salvando…');st.saveT=setTimeout(flushSave,650)}
@@ -1200,6 +1503,7 @@ function refreshCalc(){
   const pct=(x,y)=>y>0?clamp(x/y*100,0,100):0;
   const hb=$('#sheet [data-bar="hp"]');hb&&(hb.style.width=pct(s.saude.at,s.saude.max)+'%');
   const sb=$('#sheet [data-bar="san"]');sb&&(sb.style.width=pct(s.sanidade.at,s.sanidade.max)+'%');
+  const db=$('#sheet [data-act="spenddet"]');if(db){const v=+s.determinacao||0;db.disabled=v<1;db.textContent=`Gastar Determinação (${v})`}
   const tr=$('#carga-track');if(tr)tr.innerHTML=[0,1,2,3].map(i=>`<span class="${i<=c.lvlN?'on':''} ${c.lvlN>=2?'x':c.lvlN===1?'w':''}"></span>`).join('');
 }
 function syncField(k){const v=getPath(st.sheet,k);$$(`#sheet [data-k="${k}"]`).forEach(el=>{if(el.type==='checkbox')el.checked=!!v;else if(document.activeElement!==el)el.value=v??''});refreshCalc()}
@@ -1221,7 +1525,8 @@ function rollbarHTML(npc){
    <div class="seg" role="group" aria-label="Vantagem">${[[-1,'Desvantagem'],[0,'Normal'],[1,'Vantagem']].map(([v,n])=>`<button type="button" data-act="adv" data-v="${v}" aria-pressed="${rb.adv===v}">${n}</button>`).join('')}</div>
    <select data-rb="dif" aria-label="Dificuldade"><option value="">Sem dificuldade</option>${DIFS.map(d=>`<option value="${d.v}" ${String(rb.dif)===String(d.v)?'selected':''}>${d.n} (${d.v})</option>`).join('')}${[11,12,13,14,16,17,18].map(v=>`<option value="${v}" ${String(rb.dif)===String(v)?'selected':''}>Alvo ${v}</option>`).join('')}</select>
    ${npc?'':`<label class="tog"><input type="checkbox" data-rb="prof" ${rb.prof?'checked':''}> Somar proficiência</label>`}
-   ${st.isMaster?`<label class="tog"><input type="checkbox" data-rb="secret" ${rb.secret?'checked':''}> Secreta</label>`:''}</div>`;
+   ${st.isMaster?`<label class="tog"><input type="checkbox" data-rb="secret" ${rb.secret?'checked':''}> Secreta</label>`:''}
+   ${!npc&&!RO()?`<button type="button" class="btn xs det-btn" data-act="spenddet" ${(+st.sheet.determinacao||0)<1?'disabled':''} title="Gasta 1 de Determinação e dá vantagem na próxima rolagem">Gastar Determinação (${esc(st.sheet.determinacao||0)})</button>`:''}</div>`;
 }
 function renderSheet(){
   const el=$('#content');if(!el||!st.sheet)return;pendingSheet=false;
@@ -1233,7 +1538,7 @@ function pcHTML(){
   const arqOpts=[['','—'],...ARQUETIPOS.map(a=>[a.k,a.n])];
   const arq=ARQUETIPOS.find(a=>a.k===s.arquetipo);
   return `<div class="sheet" id="sheet">
-  <div class="row between"><button class="btn ghost sm" data-act="closesheet">← Voltar</button><div class="row"><span class="label" id="save-st">${ro?'Somente leitura':'Salvo'}</span>
+  <div class="row between"><button class="btn ghost sm" data-act="closesheet">← Voltar</button><div class="row"><span class="label" id="save-st">${ro?'Somente leitura':'Salvo'}</span>${CAN_PRINT?`<button class="btn sm" data-act="print">Exportar PDF</button>`:''}
    ${!ro?`<button class="btn sm" data-act="levelup">Subir de nível</button>`:''}</div></div>
   ${ro?`<div class="readonly-note">Você está vendo esta ficha sem permissão de edição.</div>`:''}
   <div class="sheet-top"><div class="stack">
@@ -1249,7 +1554,7 @@ function pcHTML(){
   ${rollbarHTML(false)}
   <div class="vitals">
    <div class="vital hp"><div class="head"><span class="label">Saúde</span><span class="big num"><span data-calc="hpAt">${esc(s.saude.at)}</span><small>/<span data-calc="hpMax">${esc(s.saude.max)}</span></small></span></div><div class="bar"><i data-bar="hp" style="width:${pct(s.saude.at,s.saude.max)}%"></i></div>
-    <div class="ctr">${ro?'':`<button class="btn xs icon" data-act="adj" data-k="saude.at" data-d="-1" aria-label="Perder 1 Saúde">−1</button>`}${fi('saude.at',{type:'number',lab:'Saúde atual'})}<span class="muted">/</span>${fi('saude.max',{type:'number',lab:'Saúde máxima'})}${ro?'':`<button class="btn xs icon" data-act="adj" data-k="saude.at" data-d="1" aria-label="Recuperar 1 Saúde">+1</button>`}</div></div>
+    <div class="ctr">${ro?'':`<button class="btn xs icon" data-act="adj" data-k="saude.at" data-d="-1" aria-label="Perder 1 Saúde">−1</button>`}${fi('saude.at',{type:'number',lab:'Saúde atual'})}<span class="muted">/</span>${fi('saude.max',{type:'number',lab:'Saúde máxima'})}${ro?'':`<button class="btn xs icon" data-act="adj" data-k="saude.at" data-d="1" aria-label="Recuperar 1 Saúde">+1</button>`}</div>${ro?'':dmgCtl('hp-amt')}</div>
    <div class="vital san"><div class="head"><span class="label">Sanidade</span><span class="big num"><span data-calc="sanAt">${esc(s.sanidade.at)}</span><small>/<span data-calc="sanMax">${esc(s.sanidade.max)}</span></small></span></div><div class="bar"><i data-bar="san" style="width:${pct(s.sanidade.at,s.sanidade.max)}%"></i></div>
     <div class="ctr">${ro?'':`<button class="btn xs icon" data-act="adj" data-k="sanidade.at" data-d="-1" aria-label="Perder 1 Sanidade">−1</button>`}${fi('sanidade.at',{type:'number',lab:'Sanidade atual'})}<span class="muted">/</span>${fi('sanidade.max',{type:'number',lab:'Sanidade máxima'})}${ro?'':`<button class="btn xs icon" data-act="adj" data-k="sanidade.at" data-d="1" aria-label="Recuperar 1 Sanidade">+1</button>`}</div></div>
    <div class="vital det"><div class="head"><span class="label">Determinação</span></div>${stepper('determinacao',0,99,'Determinação')}<span class="hint" style="font-size:.82rem">Gaste para ter vantagem.</span></div>
@@ -1327,11 +1632,11 @@ function pcHTML(){
 function npcHTML(){
   const s=st.sheet,ro=RO();
   return `<div class="sheet" id="sheet">
-  <div class="row between"><button class="btn ghost sm" data-act="closesheet">← Voltar</button><span class="label" id="save-st">Salvo</span></div>
+  <div class="row between"><button class="btn ghost sm" data-act="closesheet">← Voltar</button><div class="row"><span class="label" id="save-st">Salvo</span>${CAN_PRINT?`<button class="btn sm" data-act="print">Exportar PDF</button>`:''}</div></div>
   <div class="sheet-top"><div class="stack"><div class="row"><span class="pill npc">NPC</span></div><div class="sheet-name">${fi('name',{ph:'Nome do NPC',lab:'Nome'})}</div>${fi('desc',{ph:'Aparência em uma linha',lab:'Descrição'})}</div>${portraitHTML()}</div>
   ${rollbarHTML(true)}
   <div class="vitals">
-   <div class="vital hp"><div class="head"><span class="label">Saúde</span></div><div class="ctr"><button class="btn xs icon" data-act="adj" data-k="saude.at" data-d="-1" aria-label="−1 Saúde">−1</button>${fi('saude.at',{type:'number',lab:'Saúde atual'})}<span class="muted">/</span>${fi('saude.max',{type:'number',lab:'Saúde máxima'})}<button class="btn xs icon" data-act="adj" data-k="saude.at" data-d="1" aria-label="+1 Saúde">+1</button></div></div>
+   <div class="vital hp"><div class="head"><span class="label">Saúde</span></div><div class="ctr"><button class="btn xs icon" data-act="adj" data-k="saude.at" data-d="-1" aria-label="−1 Saúde">−1</button>${fi('saude.at',{type:'number',lab:'Saúde atual'})}<span class="muted">/</span>${fi('saude.max',{type:'number',lab:'Saúde máxima'})}<button class="btn xs icon" data-act="adj" data-k="saude.at" data-d="1" aria-label="+1 Saúde">+1</button></div>${dmgCtl('hp-amt')}</div>
    <div class="vital"><div class="head"><span class="label">Defesa</span></div>${stepper('defesa',0,40,'Defesa')}</div>
    <div class="vital"><div class="head"><span class="label">Proficiência</span></div>${stepper('prof',0,10,'Proficiência')}</div>
    <div class="vital san"><div class="head"><span class="label">Insanidade causada</span></div><div class="row" style="flex-wrap:nowrap">${fi('insanidade',{ph:'1d4',cls:'mono',lab:'Insanidade'})}<button class="btn roll xs" data-act="rnpcsan">Rolar</button></div></div>
@@ -1376,7 +1681,7 @@ function rollDmg(expr,label,crit,secret){
   postRoll(rec);showPop(rec);
 }
 function weaponDmgExpr(w){const s=st.sheet;let e=(w.d||'1d4').replace(/\s/g,'');if(w.t==='prox'){const m=+s.attrs[w.a||'cor']||0;if(m)e+=(m>0?'+':'')+m}return e}
-function rollTable(kind){
+function rollTable(kind,opts={}){
   let r,txt,label;
   if(kind==='curta'){r=rnd(100);txt=INS_CURTA.find(x=>r>=x[0]&&r<=x[1])[2];label='Insanidade de Curta Duração'}
   else if(kind==='longa'){r=rnd(100);txt=INS_LONGA.find(x=>r>=x[0]&&r<=x[1])[2];label='Insanidade de Longa Duração'}
@@ -1384,6 +1689,8 @@ function rollTable(kind){
   else{r=rnd(100);txt=FOBIAS[Math.ceil(r/2)-1];label='Fobia'}
   const dur=kind==='curta'?rnd(10)+' minutos':kind==='longa'?rnd(8)+' dias':'';
   const rec={kind:'table',label,char:st.sheet?st.sheet.name:null,faces:[{v:r,s:kind==='perm'?20:100}],mods:[],total:r,note:txt+(dur?` Duração: ${dur}.`:''),secret:st.rb.secret};
+  if(opts.prefix)rec.note=opts.prefix+' '+rec.note;
+  if(opts.auto&&st.sheet&&!RO()){st.sheet.insanidades.push({id:uid(),t:kind,x:txt+(dur?` (${dur})`:'')});touch('insanidades');rec.note+=' Anotada na ficha.';postRoll(rec);showPop(rec);if(!editingIn('#sheet'))renderSheet();return}
   postRoll(rec);
   showPop(rec,RO()?'':`<button class="btn xs primary" data-act="insadd" data-t="${kind}" data-x="${esc(txt+(dur?` (${dur})`:''))}">Adicionar à ficha</button>`);
 }
@@ -1434,61 +1741,183 @@ function levelUpModal(){
   };
 }
 
-/* ===================== retrato ===================== */
+/* ===================== imagens (retratos e capas) ===================== */
+/* A imagem-fonte é guardada uma vez; o corte é só {z,x,y,ar} e é aplicado por CSS.
+   No Firebase a fonte vai para o Storage; no artifact, para a coleção media. */
 const SILHOUETTE=`<svg viewBox="0 0 60 80" aria-hidden="true"><circle cx="30" cy="27" r="12" fill="currentColor"/><path d="M7 80c0-17 10.5-27 23-27s23 10 23 27z" fill="currentColor"/></svg>`;
-function avatarHTML(s,small){return s.retrato?`<img class="avatar ${small?'sm':''}" alt="" src="${s.retrato}">`:`<span class="avatar ph-portrait ${small?'sm':''}">${SILHOUETTE}</span>`}
+const DbMedia={
+  limit:200000,
+  async save(kind,code,dataUrl){const id=uid();await Store.set('media/'+id,{data:dataUrl,campaign:code,kind});mediaCache['db:'+id]=dataUrl;return 'db:'+id},
+  async remove(ref){if(ref&&ref.startsWith('db:'))await Store.del('media/'+ref.slice(3)).catch(()=>{})},
+  async purge(code){try{for(const m of await Store.query('media',[['campaign','==',code]]))await Store.del('media/'+m._id)}catch{}}
+};
+const Media=()=>typeof MediaBackend!=='undefined'?MediaBackend:DbMedia;
+const mediaCache={},mediaLoading={};
+function mediaUrl(ref){if(!ref)return '';if(!ref.startsWith('db:'))return ref;return mediaCache[ref]||''}
+async function loadMedia(ref){
+  if(!ref||!ref.startsWith('db:')||mediaCache[ref]||mediaLoading[ref])return;mediaLoading[ref]=1;
+  const d=await Store.get('media/'+ref.slice(3)).catch(()=>null);delete mediaLoading[ref];
+  if(d&&d.data){mediaCache[ref]=d.data;$$(`img[data-media="${ref}"]`).forEach(im=>im.src=d.data)}
+}
+/* geometria do corte: frame com largura 1 e altura 1/FA; imagem com proporção ar */
+function cropGeom(crop,FA){
+  const ar=crop.ar||1,z=crop.z||1,Hf=1/FA,base=Math.max(1/ar,Hf),dw=z*base*ar,dh=z*base;
+  const mx=Math.max(0,(dw-1)/2),my=Math.max(0,(dh-Hf)/2)/Hf;
+  const x=clamp(crop.x||0,-mx,mx),y=clamp(crop.y||0,-my,my);
+  return{w:dw*100,h:dh/Hf*100,l:50-dw*50+x*100,t:50-dh/Hf*50+y*100,x,y,mx,my};
+}
+function cropImg(ref,crop,FA,alt=''){
+  if(!ref)return '';const url=mediaUrl(ref);if(!url)loadMedia(ref);
+  const g=cropGeom(crop||{},FA);
+  return `<img class="cimg" alt="${esc(alt)}" ${ref.startsWith('db:')?`data-media="${esc(ref)}"`:''} src="${esc(url)}" style="width:${g.w.toFixed(3)}%;height:${g.h.toFixed(3)}%;left:${g.l.toFixed(3)}%;top:${g.t.toFixed(3)}%" draggable="false">`;
+}
+/* retrato: novo formato (fonte + corte) ou legado (imagem já recortada) */
+function portraitInner(s,alt){
+  if(s.retratoSrc&&s.retratoCrop&&s.retratoCrop.ar)return cropImg(s.retratoSrc,s.retratoCrop,3/4,alt);
+  if(s.retrato)return `<img class="cimg full" alt="${esc(alt)}" src="${esc(s.retrato)}">`;
+  return '';
+}
+function avatarHTML(s,small){const im=portraitInner(s,'');return im?`<span class="avatar ${small?'sm':''}">${im}</span>`:`<span class="avatar ph-portrait ${small?'sm':''}">${SILHOUETTE}</span>`}
 function portraitHTML(){
-  const s=st.sheet,ro=RO();
-  return `<div class="portrait-col"><div class="portrait-box">${s.retrato?`<img alt="Retrato de ${esc(s.name||'personagem')}" src="${s.retrato}">`:`<div class="ph-portrait">${SILHOUETTE}</div>`}</div>
-  ${ro?'':`<div class="row" style="gap:6px;justify-content:center">${s.retrato?`<button class="btn xs" data-act="portrait">Ajustar corte</button><button class="btn xs" data-act="portrait" data-new="1">Trocar</button><button class="btn ghost xs" data-act="portraitrm" aria-label="Remover retrato">✕</button>`:`<button class="btn sm" data-act="portrait" data-new="1">Adicionar retrato</button>`}</div>`}</div>`;
+  const s=st.sheet,ro=RO(),im=portraitInner(s,'Retrato de '+(s.name||'personagem'));const has=!!im;
+  return `<div class="portrait-col"><div class="portrait-box">${im||`<div class="ph-portrait">${SILHOUETTE}</div>`}</div>
+  ${ro?'':`<div class="row" style="gap:6px;justify-content:center">${has?`<button class="btn xs" data-act="portrait">Ajustar corte</button><button class="btn xs" data-act="portrait" data-new="1">Trocar</button><button class="btn ghost xs" data-act="portraitrm" aria-label="Remover retrato">✕</button>`:`<button class="btn sm" data-act="portrait" data-new="1">Adicionar retrato</button>`}</div>`}</div>`;
 }
 function loadImg(src){return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error('img'));i.src=src})}
-async function shrinkSrc(dataUrl){
+async function shrinkSrc(dataUrl,maxSide,maxLen){
   const img=await loadImg(dataUrl);let out='';
-  for(const[max,q]of[[760,.82],[640,.75],[520,.7],[420,.65]]){
-    const k=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);
-    c.getContext('2d').drawImage(img,0,0,c.width,c.height);out=c.toDataURL('image/jpeg',q);if(out.length<140000)break;
-  }
+  for(const k of[1,.85,.72,.6,.5]){const side=Math.round(maxSide*k);for(const q of[.84,.74]){
+    const f=Math.min(1,side/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*f);c.height=Math.round(img.height*f);
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);out=c.toDataURL('image/jpeg',q);if(out.length<maxLen)return out}}
   return out;
 }
-/* editor de corte 3:4. Guarda a imagem-fonte reduzida e o corte, para reajustar depois sem reenviar */
-async function portraitEditor({src,crop,pick,onSave,onRemove}){
-  const W=600,H=800;let img=null,zoom=(crop&&crop.z)||1,ox=((crop&&crop.x)||0)*W,oy=((crop&&crop.y)||0)*H,cur=src||'';
-  const m=openModal({title:'Retrato do personagem',body:`<p class="hint">Arraste a imagem para escolher o enquadramento e use o zoom para aproximar. O retrato é exibido em 3:4.</p>
-   <div class="crop portrait" id="pt-box"><canvas id="pt-cv" width="${W}" height="${H}"></canvas></div>
-   <div class="row"><label class="btn" for="pt-f">Escolher imagem</label><input id="pt-f" type="file" accept="image/*" hidden>
-   <div class="field" style="flex:1;min-width:160px"><label class="lbl" for="pt-z">Zoom</label><input id="pt-z" type="range" min="1" max="5" step="0.01" value="${zoom}"></div></div><div class="err" id="pt-e"></div>`,
-   footer:`${onRemove&&src?`<button class="btn danger" id="pt-rm">Remover</button>`:''}<span style="flex:1"></span><button class="btn" data-x>Cancelar</button><button class="btn primary" id="pt-ok">Salvar retrato</button>`});
-  const cv=$('#pt-cv',m.el),ctx=cv.getContext('2d'),box=$('#pt-box',m.el);
-  const base=()=>img?Math.max(W/img.width,H/img.height):1;
-  const lim=()=>{const s=base()*zoom;const mx=Math.max(0,(img.width*s-W)/2),my=Math.max(0,(img.height*s-H)/2);ox=clamp(ox,-mx,mx);oy=clamp(oy,-my,my)};
-  const draw=(c=ctx,w=W,h=H)=>{c.fillStyle='#111';c.fillRect(0,0,w,h);if(!img){c.fillStyle='#888';c.font='34px Georgia';c.textAlign='center';c.fillText('Escolha uma imagem',w/2,h/2);return}
-    lim();const k=w/W,s=base()*zoom*k;c.drawImage(img,w/2-img.width*s/2+ox*k,h/2-img.height*s/2+oy*k,img.width*s,img.height*s);
-    if(c===ctx){c.strokeStyle='rgba(255,255,255,.25)';c.lineWidth=2;[1,2].forEach(i=>{c.beginPath();c.moveTo(W*i/3,0);c.lineTo(W*i/3,H);c.moveTo(0,H*i/3);c.lineTo(W,H*i/3);c.stroke()})}};
-  const use=async(s,reset)=>{try{img=await loadImg(s);cur=s;if(reset){zoom=1;ox=oy=0;$('#pt-z',m.el).value=1}draw()}catch{$('#pt-e',m.el).textContent='Não consegui abrir essa imagem.'}};
-  if(src)await use(src,false);else draw();
-  const fileIn=$('#pt-f',m.el);
-  fileIn.onchange=e=>{const f=e.target.files[0];if(!f)return;if(!/^image\//.test(f.type))return $('#pt-e',m.el).textContent='Escolha um arquivo de imagem.';
-    const r=new FileReader();r.onload=async()=>{$('#pt-e',m.el).textContent='';use(await shrinkSrc(r.result),true)};r.readAsDataURL(f)};
-  if(pick&&!src)fileIn.click();
-  $('#pt-z',m.el).oninput=e=>{zoom=+e.target.value;draw()};
+/* editor de corte genérico, WYSIWYG: a prévia usa o mesmo CSS da exibição */
+function cropEditor({title,FA,src,crop,pick,maxSide,hint,onSave,onRemove}){
+  let ref=src||'',dataUrl=null,c={z:1,x:0,y:0,ar:0,...(crop||{})};
+  const m=openModal({title,wide:FA>1,body:`<p class="hint">${hint}</p>
+   <div class="crop-frame ${FA<1?'portrait':''}" id="ce-box" style="aspect-ratio:${FA}"><div class="ph-portrait" id="ce-ph">${FA<1?SILHOUETTE:SIGIL}</div></div>
+   <div class="row"><label class="btn" for="ce-f">Escolher imagem</label><input id="ce-f" type="file" accept="image/*" hidden>
+   <div class="field" style="flex:1;min-width:160px"><label class="lbl" for="ce-z">Zoom</label><input id="ce-z" type="range" min="1" max="5" step="0.01" value="${c.z}"></div>
+   <button class="btn sm ghost" id="ce-reset" type="button">Centralizar</button></div><div class="err" id="ce-e"></div>`,
+   footer:`${onRemove&&src?`<button class="btn danger" id="ce-rm">Remover</button>`:''}<span style="flex:1"></span><button class="btn" data-x>Cancelar</button><button class="btn primary" id="ce-ok">Salvar</button>`});
+  const box=$('#ce-box',m.el),err=$('#ce-e',m.el);
+  const draw=()=>{const cur=dataUrl||ref;if(!cur||!c.ar)return;const g=cropGeom(c,FA);c.x=g.x;c.y=g.y;
+    let im=$('img',box);if(!im){box.innerHTML='<img class="cimg" alt="" draggable="false"><div class="crop-grid"></div>';im=$('img',box)}
+    const url=dataUrl||mediaUrl(ref);if(url&&im.getAttribute('src')!==url)im.src=url;
+    Object.assign(im.style,{width:g.w+'%',height:g.h+'%',left:g.l+'%',top:g.t+'%'})};
+  const measure=async url=>{try{const i=await loadImg(url);c.ar=i.naturalWidth/i.naturalHeight;draw()}catch{err.textContent='Não consegui abrir essa imagem.'}};
+  (async()=>{if(ref){let url=mediaUrl(ref);if(!url){await loadMedia(ref);url=mediaUrl(ref)}if(url){if(!c.ar)await measure(url);else draw()}}})();
+  const fileIn=$('#ce-f',m.el);
+  fileIn.onchange=e=>{const f=e.target.files[0];if(!f)return;if(!/^image\//.test(f.type))return err.textContent='Escolha um arquivo de imagem.';
+    err.textContent='Preparando a imagem…';const r=new FileReader();r.onload=async()=>{dataUrl=await shrinkSrc(r.result,maxSide,Media().limit);err.textContent='';c={z:1,x:0,y:0,ar:0};$('#ce-z',m.el).value=1;await measure(dataUrl)};r.readAsDataURL(f)};
+  if(pick&&!src)setTimeout(()=>fileIn.click(),0);
+  $('#ce-z',m.el).oninput=e=>{c.z=+e.target.value;draw()};
+  $('#ce-reset',m.el).onclick=()=>{c.x=0;c.y=0;draw()};
   let drag=null;
-  box.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,ox,oy};box.setPointerCapture(e.pointerId)});
-  box.addEventListener('pointermove',e=>{if(!drag)return;const k=W/box.getBoundingClientRect().width;ox=drag.ox+(e.clientX-drag.x)*k;oy=drag.oy+(e.clientY-drag.y)*k;draw()});
+  box.addEventListener('pointerdown',e=>{if(!c.ar)return;drag={x:e.clientX,y:e.clientY,cx:c.x,cy:c.y};box.setPointerCapture(e.pointerId)});
+  box.addEventListener('pointermove',e=>{if(!drag)return;const r=box.getBoundingClientRect();c.x=drag.cx+(e.clientX-drag.x)/r.width;c.y=drag.cy+(e.clientY-drag.y)/r.height;draw()});
   box.addEventListener('pointerup',()=>drag=null);box.addEventListener('pointercancel',()=>drag=null);
-  box.addEventListener('wheel',e=>{if(!img)return;e.preventDefault();zoom=clamp(zoom*(e.deltaY<0?1.06:.94),1,5);$('#pt-z',m.el).value=zoom;draw()},{passive:false});
-  $('#pt-ok',m.el).onclick=()=>{
-    if(!img)return $('#pt-e',m.el).textContent='Escolha uma imagem primeiro.';
-    let out='';for(const[w,q]of[[360,.85],[300,.8],[240,.75]]){const c=document.createElement('canvas');c.width=w;c.height=w*4/3;draw(c.getContext('2d'),c.width,c.height);out=c.toDataURL('image/jpeg',q);if(out.length<50000)break}
-    m.close();onSave({img:out,src:cur,crop:{z:+zoom.toFixed(3),x:+(ox/W).toFixed(4),y:+(oy/H).toFixed(4)}});
+  box.addEventListener('wheel',e=>{if(!c.ar)return;e.preventDefault();c.z=clamp(c.z*(e.deltaY<0?1.06:.94),1,5);$('#ce-z',m.el).value=c.z;draw()},{passive:false});
+  $('#ce-ok',m.el).onclick=async()=>{
+    if(!c.ar)return err.textContent='Escolha uma imagem primeiro.';
+    const btn=$('#ce-ok',m.el);btn.disabled=true;btn.textContent=dataUrl?'Enviando…':'Salvando…';
+    try{await onSave({dataUrl,crop:{z:+c.z.toFixed(3),x:+c.x.toFixed(4),y:+c.y.toFixed(4),ar:+c.ar.toFixed(5)}});m.close()}
+    catch(e){console.warn(e);err.textContent=errMsg(e);btn.disabled=false;btn.textContent='Salvar'}
   };
-  const rmb=$('#pt-rm',m.el);if(rmb)rmb.onclick=()=>{m.close();onRemove()};
+  const rmb=$('#ce-rm',m.el);if(rmb)rmb.onclick=async()=>{rmb.disabled=true;try{await onRemove();m.close()}catch(e){err.textContent=errMsg(e);rmb.disabled=false}};
 }
+const PORTRAIT_HINT='Arraste para enquadrar e use o zoom para aproximar. O retrato aparece em 3:4 na ficha, nas listas e no PDF.';
+function portraitEditor(opts){cropEditor({title:'Retrato do personagem',FA:3/4,maxSide:1000,hint:PORTRAIT_HINT,...opts})}
 function editSheetPortrait(isNew){
-  if(!st.sheet||RO())return;const s=st.sheet;
-  const save=r=>{s.retrato=r.img;s.retratoSrc=r.src;s.retratoCrop=r.crop;['retrato','retratoSrc','retratoCrop'].forEach(k=>st.dirty.add(k));flushSave();renderSheet();toast('Retrato salvo.','ok')};
-  const remove=()=>{s.retrato='';s.retratoSrc='';s.retratoCrop=null;['retrato','retratoSrc','retratoCrop'].forEach(k=>st.dirty.add(k));flushSave();renderSheet();toast('Retrato removido.')};
-  portraitEditor({src:isNew?null:s.retratoSrc,crop:isNew?null:s.retratoCrop,pick:isNew,onSave:save,onRemove:remove});
+  if(!st.sheet||RO())return;const s=st.sheet,id=st.sheetId,code=st.code;
+  const keys=['retrato','retratoSrc','retratoCrop'];
+  portraitEditor({src:isNew?null:(s.retratoSrc||s.retrato||null),crop:isNew?null:s.retratoCrop,pick:isNew,
+    onSave:async({dataUrl,crop})=>{
+      const old=s.retratoSrc;let ref=old||s.retrato;
+      if(dataUrl)ref=await Media().save('retrato',code,dataUrl);
+      if(st.sheetId!==id)return;
+      s.retratoSrc=ref;s.retratoCrop=crop;s.retrato='';keys.forEach(k=>st.dirty.add(k));await flushSave();
+      if(dataUrl&&old&&old!==ref)Media().remove(old);
+      renderSheet();toast('Retrato salvo.','ok')},
+    onRemove:async()=>{const old=s.retratoSrc;s.retrato='';s.retratoSrc='';s.retratoCrop=null;keys.forEach(k=>st.dirty.add(k));await flushSave();if(old)Media().remove(old);renderSheet();toast('Retrato removido.')}});
+}
+/* ===================== automações de regra ===================== */
+function dmgCtl(id){return `<div class="dmg-ctl"><input id="${id}" type="number" min="1" placeholder="valor" aria-label="Quantidade de Saúde"><button class="btn xs danger" data-act="takedmg" data-src="${id}" data-sign="-1">Dano</button><button class="btn xs" data-act="takedmg" data-src="${id}" data-sign="1">Curar</button></div>`}
+function applyHP(n,sign){
+  const s=st.sheet;if(!s||RO())return;const before=+s.saude.at||0;
+  const after=sign<0?Math.max(0,before-n):Math.min(Math.max(+s.saude.max||0,before),before+n);
+  if(after===before)return toast(sign<0?'A Saúde já está em 0.':'A Saúde já está no máximo.');
+  setPath(s,'saude.at',after);touch('saude');syncField('saude.at');
+  postRoll({kind:'hp',label:sign<0?'Recebeu dano':'Recuperou Saúde',char:s.name,faces:[],mods:[],total:n,note:`Saúde ${before} → ${after}`,secret:s.type==='npc'&&st.rb.secret});
+  if(sign<0&&after===0){
+    if(s.type==='pc')showPop({label:'Saúde zerada',total:0,faces:[],mods:[],note:'Inconsciente. Role o Dano grave (3d6) e faça testes de morte (Fortitude) a cada turno: 3 sucessos antes de 3 falhas estabiliza. Há 1d6 turnos para alguém estancar (Astúcia 15).'},
+      `<button class="btn roll xs" data-act="rinj">Dano grave (3d6)</button><button class="btn roll xs" data-act="rdeath">Teste de morte</button>`);
+    else toast((s.name||'NPC')+' foi derrotado.','ok');
+  }else toast(`${sign<0?'−':'+'}${n} Saúde (${after}/${s.saude.max})`,'ok');
+}
+function sanTestModal(){
+  const s=st.sheet,ro=RO();const dif=st.rb.dif!==''?+st.rb.dif:15;
+  const m=openModal({title:'Teste de Sanidade',body:`<p>Rola <b>Vontade</b>. Se falhar, perde a Sanidade da situação e ganha uma insanidade: perdeu 1 → Curta, 2 → Longa, 3 ou mais → Permanente.</p>
+   <div class="field"><label class="lbl" for="st-sit">Situação</label><select id="st-sit"><option value="">Outra situação…</option>${PERDA_SAN.map(p=>`<option value="${esc(p[1])}">${esc(p[0])} (perde ${esc(p[1])})</option>`).join('')}</select></div>
+   <div class="grid2"><div class="field"><label class="lbl" for="st-loss">Perda se falhar</label><input id="st-loss" class="mono" value="1" placeholder="1, 2 ou 1d4"></div>
+   <div class="field"><label class="lbl" for="st-dif">Dificuldade</label><select id="st-dif">${DIFS.map(d=>`<option value="${d.v}" ${d.v===dif?'selected':''}>${d.n} (${d.v})</option>`).join('')}</select></div></div>
+   ${ro?'':`<label class="row" style="gap:8px"><input type="checkbox" id="st-auto" checked> Aplicar a perda e rolar a insanidade automaticamente</label>`}<div class="err" id="st-e"></div>`,
+   footer:`<button class="btn" data-x>Cancelar</button><button class="btn primary" id="st-go">Rolar Vontade</button>`});
+  $('#st-sit',m.el).onchange=e=>{if(e.target.value)$('#st-loss',m.el).value=e.target.value};
+  $('#st-go',m.el).onclick=()=>{
+    const lossExpr=$('#st-loss',m.el).value.trim()||'1';if(!parseDice(lossExpr))return $('#st-e',m.el).textContent='Use um número ou dado, como 2 ou 1d4.';
+    const auto=!ro&&$('#st-auto',m.el).checked,tg=+$('#st-dif',m.el).value;m.close();
+    const c=calcPC(s);const r=rollTest({label:'Teste de Sanidade (Vontade)',mods:[['Vontade',c['save-vont']]],target:tg});
+    if(r.success){r.note='Resistiu. A mente aguenta, por enquanto.';showPop(r,outcomeActions(r));return}
+    const lr=parseDice(lossExpr);const n=Math.max(1,lr.total);const kind=n>=3?'perm':n===2?'longa':'curta';
+    const kindN={curta:'Curta',longa:'Longa',perm:'Permanente'}[kind];
+    if(!auto){showPop(r,`<button class="btn xs" data-act="adj" data-k="sanidade.at" data-d="-${n}" data-min="0">−${n} Sanidade</button><button class="btn xs" data-act="rins" data-t="${kind}">Insanidade ${kindN}</button>`);return}
+    const before=+s.sanidade.at||0;adjust('sanidade.at',-n,0);
+    if(lr.faces.length)postRoll({kind:'loss',label:'Perda de Sanidade',char:s.name,expr:lossExpr,faces:lr.faces,mods:[],total:n,note:`Sanidade ${before} → ${s.sanidade.at}`});
+    const zero=s.sanidade.at===0;
+    rollTable(kind,{auto:true,prefix:`Falhou (${r.total} vs ${tg}) e perdeu ${n} de Sanidade (${before} → ${s.sanidade.at}).${zero?' SANIDADE ZERADA: a loucura toma a mente sem retorno.':''}`});
+  };
+}
+
+/* ===================== ficha para impressão / PDF ===================== */
+const CAN_PRINT=typeof firebaseConfig!=='undefined';
+function printSheet(){
+  const s=st.sheet;if(!s)return;const pc=s.type==='pc';
+  const box=(l,v)=>`<div class="pr-box"><span>${l}</span><b>${v}</b></div>`;
+  const list=(arr,f)=>arr&&arr.length?arr.map(f).join(''):'<p class="pr-empty">—</p>';
+  const txt=t=>t?`<p class="pr-text">${esc(t).replace(/\n/g,'<br>')}</p>`:'<p class="pr-empty">—</p>';
+  const im=portraitInner(s,'');let body='';
+  if(pc){
+    const c=calcPC(s),arq=(ARQUETIPOS.find(a=>a.k===s.arquetipo)||{}).n;
+    body=`<header class="pr-head">${im?`<div class="pr-portrait">${im}</div>`:''}<div class="pr-id"><h1>${esc(s.name||'Investigador sem nome')}</h1>
+      <p class="pr-sub">${esc([arq,s.profissao].filter(Boolean).join(' · ')||'Investigador')} · Nível ${esc(s.nivel)} · ${esc(s.xp||0)} XP</p>
+      ${s.concept?`<p class="pr-concept">${esc(s.concept)}</p>`:''}<p class="pr-meta">Jogador: ${esc(nameOf(s.owner))} · Campanha: ${esc(st.camp?st.camp.name:'')}</p></div></header>
+     <section class="pr-row">${box('Saúde',`${s.saude.at} / ${s.saude.max}`)}${box('Sanidade',`${s.sanidade.at} / ${s.sanidade.max}`)}${box('Defesa',sgn(c.def))}${box('Proficiência',s.prof)}${box('Determinação',s.determinacao)}${box('Inspiração',s.inspiracao)}${box('Recursos',`${s.recursos} / 5`)}</section>
+     <section class="pr-cols"><div><h2>Atributos</h2><div class="pr-row">${ATTRS.map(a=>box(a.n,sgn(+s.attrs[a.k]||0))).join('')}</div></div>
+      <div><h2>Salvaguardas</h2><table class="pr-tbl">${SAVES.map(v=>`<tr><td>${v.n}${s.saves[v.k].p?' <i>(prof.)</i>':''}</td><td class="r">${sgn(c['save-'+v.k])}</td></tr>`).join('')}</table></div></section>
+     <h2>Armas e ataques</h2>${s.armas.length?`<table class="pr-tbl"><tr><th>Arma</th><th>Ataque</th><th>Dano</th><th>Notas</th></tr>${s.armas.map(w=>{const a=w.t==='dist'?'agi':(w.a||'cor');const at=(+s.attrs[a]||0)+(w.p?(+s.prof||0):0);return `<tr><td>${esc(w.nome)}</td><td>1d20 ${sgn(at)}</td><td>${esc(weaponDmgExpr(w))}</td><td>${esc(w.o||'')}</td></tr>`}).join('')}</table>`:'<p class="pr-empty">Punhos: 1d4 + Corpo</p>'}
+     <section class="pr-cols"><div><h2>Perícias</h2><p class="pr-text">${esc(s.pericias.join(', ')||'—')}</p><h2>Idiomas</h2><p class="pr-text">${esc(s.idiomas.join(', ')||'—')}</p>
+       <h2>Proteção e carga</h2><p class="pr-text">${esc(s.armor.nome||'Sem proteção')} (Def ${esc(s.armor.def)}, máx. AGI ${esc(s.armor.max)}) · Carga ${c.used}/${c.leve} (${c.lvl})</p></div>
+      <div><h2>Equipamento</h2>${list(s.itens,t=>`<p class="pr-li">${esc(t.n)}${t.c?` <i>(${esc(t.c)})</i>`:''}${t.o?` · ${esc(t.o)}`:''}</p>`)}</div></section>
+     <section class="pr-cols"><div><h2>Personalidade</h2><p class="pr-text">Virtude: ${esc(s.virtude||'—')} · Vício: ${esc(s.vicio||'—')}</p><p class="pr-text">Motivação: ${esc(s.motivacao||'—')}</p>
+       <h2>Insanidades</h2>${list(s.insanidades,x=>`<p class="pr-li"><b>${{curta:'Curta',longa:'Longa',perm:'Permanente',fobia:'Fobia'}[x.t]||''}</b>: ${esc(x.x)}</p>`)}</div>
+      <div><h2>Feitiços</h2>${list(s.feiticos,f=>`<p class="pr-li"><b>${esc(f.n)}</b> (nível ${esc(f.l)}) · ${esc(f.d||'')}</p>`)}
+       <h2>Ferimentos</h2>${txt(s.ferimentos)}<p class="pr-text">Testes de morte: sucessos ${'●'.repeat(s.morte.s||0)}${'○'.repeat(3-(s.morte.s||0))} · falhas ${'●'.repeat(s.morte.f||0)}${'○'.repeat(3-(s.morte.f||0))}</p></div></section>
+     <section class="pr-cols"><div><h2>História</h2>${txt(s.historia)}</div><div><h2>Notas</h2>${txt(s.notas)}</div></section>`;
+  }else{
+    body=`<header class="pr-head">${im?`<div class="pr-portrait">${im}</div>`:''}<div class="pr-id"><h1>${esc(s.name||'NPC')}</h1>${s.desc?`<p class="pr-concept">${esc(s.desc)}</p>`:''}<p class="pr-meta">NPC · Campanha: ${esc(st.camp?st.camp.name:'')}</p></div></header>
+     <section class="pr-row">${ATTRS.map(a=>box(a.n.slice(0,3).toUpperCase(),sgn(+s.attrs[a.k]||0))).join('')}${box('Defesa',s.defesa)}${box('Saúde',`${s.saude.at} / ${s.saude.max}`)}${box('Prof.','+'+s.prof)}${box('Insanidade',esc(s.insanidade||'—'))}</section>
+     <h2>Ataques</h2>${s.ataques.length?`<table class="pr-tbl"><tr><th>Ataque</th><th>Valor fixo</th><th>Bônus</th><th>Dano</th></tr>${s.ataques.map(a=>`<tr><td>${esc(a.n)}</td><td>${esc(a.v)}</td><td>${sgn(+a.b||0)}</td><td>${esc(a.d)}</td></tr>`).join('')}</table>`:'<p class="pr-empty">—</p>'}
+     <section class="pr-cols"><div><h2>Resistências</h2>${txt(s.resist)}<h2>Fraquezas</h2>${txt(s.fraq)}</div><div><h2>Especial</h2>${txt(s.especial)}<h2>Notas</h2>${txt(s.notas)}</div></section>`;
+  }
+  $('#print-area')?.remove();
+  const el=document.createElement('div');el.id='print-area';el.innerHTML=`<article class="pr-sheet">${body}<footer class="pr-foot">Into the Madness · ${esc(new Date().toLocaleDateString('pt-BR'))}</footer></article>`;
+  document.body.appendChild(el);
+  const imgs=[...el.querySelectorAll('img')];
+  Promise.all(imgs.map(i=>i.complete?1:new Promise(r=>{i.onload=i.onerror=r;setTimeout(r,4000)}))).then(()=>{
+    const done=()=>{el.remove();removeEventListener('afterprint',done)};addEventListener('afterprint',done);
+    toast('Na janela de impressão, escolha “Salvar como PDF”.');window.print();
+  });
 }
 
 /* ===================== assistente de criação ===================== */
@@ -1497,7 +1926,7 @@ let wz=null,wzM=null;
 function startWizard(owner){
   wz={step:0,owner:owner||st.user.uname,arq:'',audaz:[],metodo:'pontos',base:{cor:0,agi:0,ast:0,pre:0},dice:null,save:'',prof:'',profDice:null,
     hp:'',hpDice:null,san:'',sanDice:null,rec:'',recDice:null,profissao:'',pericias:[],idiomas:['Português'],virtude:'',vicio:'',motivacao:'',historia:'',
-    armas:[],prot:'',itens:[],bolsa:'mochila',name:'',concept:'',retrato:'',retratoSrc:'',retratoCrop:null};
+    armas:[],prot:'',itens:[],bolsa:'mochila',name:'',concept:'',retratoData:'',retratoCrop:null};
   wzM=openModal({title:'Assistente de Criação',wide:true,body:'',footer:' ',onClose:()=>{wz=null;wzM=null}});
   renderWz();
 }
@@ -1564,8 +1993,8 @@ function renderWz(){
     b=`<h3>Nome e revisão</h3><div class="sheet-top"><div class="stack"><div class="grid2"><div class="field"><label class="lbl" for="wz-name">Nome</label><input id="wz-name" data-wz="name" value="${esc(wz.name)}" placeholder="Nome do investigador"></div>
      <div class="field"><label class="lbl" for="wz-con">Conceito (opcional)</label><input id="wz-con" data-wz="concept" value="${esc(wz.concept)}" placeholder="ex: Arqueóloga que leu o que não devia"></div></div>
     <div class="row"><button class="btn roll sm" data-act="wzname" data-g="f">Nome feminino (2d12)</button><button class="btn roll sm" data-act="wzname" data-g="m">Nome masculino (3d12)</button><button class="btn roll sm" data-act="wzname" data-g="s">Sobrenome (d100)</button></div></div>
-    <div class="portrait-col"><div class="portrait-box">${wz.retrato?`<img alt="Retrato" src="${wz.retrato}">`:`<div class="ph-portrait">${SILHOUETTE}</div>`}</div>
-     <div class="row" style="gap:6px;justify-content:center">${wz.retrato?`<button class="btn xs" data-act="wzportrait">Ajustar corte</button><button class="btn xs" data-act="wzportrait" data-new="1">Trocar</button>`:`<button class="btn sm" data-act="wzportrait" data-new="1">Adicionar retrato</button>`}</div></div></div>
+    <div class="portrait-col"><div class="portrait-box">${wz.retratoData?cropImg(wz.retratoData,wz.retratoCrop,3/4,'Retrato'):`<div class="ph-portrait">${SILHOUETTE}</div>`}</div>
+     <div class="row" style="gap:6px;justify-content:center">${wz.retratoData?`<button class="btn xs" data-act="wzportrait">Ajustar corte</button><button class="btn xs" data-act="wzportrait" data-new="1">Trocar</button>`:`<button class="btn sm" data-act="wzportrait" data-new="1">Adicionar retrato</button>`}</div></div></div>
     ${st.isMaster?`<div class="field"><label class="lbl" for="wz-own">Jogador</label><select id="wz-own" data-wz="owner"><option value="">Sem jogador</option><option value="${esc(st.camp.master)}" ${wz.owner===st.camp.master?'selected':''}>${esc(nameOf(st.camp.master))} (você)</option>${(st.camp.players||[]).map(p=>`<option value="${esc(p)}" ${wz.owner===p?'selected':''}>${esc(nameOf(p))}</option>`).join('')}</select></div>`:''}
     <div class="panel"><div class="grid2 ref" style="color:var(--fg)"><div><b>${esc(q?q.n:'Sem arquétipo')}</b> · ${esc(wz.profissao||'Sem profissão')}<br>${ATTRS.map(a=>`${a.n} ${sgn(A[a.k])}`).join(' · ')}<br>Salvaguarda: ${esc((SAVES.find(v=>v.k===wz.save)||{}).n||'—')} · Proficiência ${esc(wz.prof||0)}</div>
      <div>Saúde ${esc(wz.hp||0)} · Sanidade ${esc(wz.san||0)} · Recursos ${esc(wz.rec||0)}<br>${esc([wz.virtude,wz.vicio].filter(Boolean).join(' / ')||'Sem personalidade')}${wz.motivacao?' · '+esc(wz.motivacao):''}<br>${wz.armas.length} arma(s), ${wz.itens.length} item(ns)</div></div></div>`;
@@ -1605,11 +2034,13 @@ async function wzFinish(){
   const q=wzArq()||{},A=wzAttrs(),s=blankPC();
   Object.assign(s,{name:wz.name.trim(),concept:wz.concept,arquetipo:wz.arq,profissao:wz.profissao,attrs:A,prof:+wz.prof||0,
     saude:{at:+wz.hp||0,max:+wz.hp||0},sanidade:{at:+wz.san||0,max:+wz.san||0},recursos:clamp(+wz.rec||0,0,5),determinacao:q.det||0,
-    retrato:wz.retrato,retratoSrc:wz.retratoSrc,retratoCrop:wz.retratoCrop,virtude:wz.virtude,vicio:wz.vicio,motivacao:wz.motivacao,historia:wz.historia,pericias:[...wz.pericias],idiomas:[...wz.idiomas],bolsa:wz.bolsa,owner:wz.owner||null});
+    retrato:'',retratoSrc:'',retratoCrop:null,virtude:wz.virtude,vicio:wz.vicio,motivacao:wz.motivacao,historia:wz.historia,pericias:[...wz.pericias],idiomas:[...wz.idiomas],bolsa:wz.bolsa,owner:wz.owner||null});
   for(const v of SAVES)s.saves[v.k]={b:q.save===v.k?1:0,p:wz.save===v.k};
   s.armas=wz.armas.map(i=>{const w=ARMAS[i];return{id:uid(),nome:w.n,t:w.t,a:w.a,d:w.d,p:false,c:w.c,o:w.o||''}});
   if(wz.prot!==''){const p=PROTECOES[+wz.prot];s.armor={nome:p.n,def:p.def,max:p.max,c:p.c}}
   s.itens=wz.itens.map(i=>({id:uid(),n:ITENS[i][0],c:ITENS[i][1],o:ITENS[i][2]}));
+  if(wz.retratoData){const btn=$('[data-act="wzdone"]');if(btn){btn.disabled=true;btn.textContent='Enviando retrato…'}
+    try{s.retratoSrc=await Media().save('retrato',st.code,wz.retratoData);s.retratoCrop=wz.retratoCrop}catch(e){console.warn(e);toast('Não consegui enviar o retrato; a ficha foi criada sem ele.','err')}}
   const m=wzM;wzM=null;m.close();wz=null;
   await createSheet(s);toast('Investigador criado.','ok');
 }
@@ -1661,8 +2092,8 @@ const ACT={
   rattr:t=>rollAttr(t.dataset.a),
   rsave:t=>{const r=rollSave(t.dataset.s);showPop(r,outcomeActions(r))},
   rsave2:t=>{if(!st.sheet)return;const r=rollSave(t.dataset.s);showPop(r,outcomeActions(r))},
-  rsan:()=>{const r=rollSave('vont','Teste de Sanidade (Vontade)');showPop(r,RO()?'':`<button class="btn xs" data-act="adj" data-k="sanidade.at" data-d="-1" data-min="0">−1 Sanidade</button><button class="btn xs" data-act="rins" data-t="curta">Insanidade curta</button>${outcomeActions(r)}`)},
-  rdef:()=>{const c=calcPC(st.sheet);const r=rollTest({label:'Defesa',mods:[['Defesa',c.def]]});let note='';if(r.nat===20)note='20 natural: o inimigo sofre uma falha crítica.';if(r.nat===1)note='1 natural: como um 20 do inimigo, dano em dobro.';if(note){r.note=note}showPop(r,outcomeActions(r))},
+  rsan:()=>sanTestModal(),
+  rdef:()=>{const c=calcPC(st.sheet);const r=rollTest({label:'Defesa',mods:[['Defesa',c.def]]});let note='';if(r.nat===20)note='20 natural: o inimigo sofre uma falha crítica.';if(r.nat===1)note='1 natural: como um 20 do inimigo, dano em dobro.';if(note){r.note=note}showPop(r,(r.success!==true&&!RO()?dmgCtl('pop-dmg'):'')+outcomeActions(r))},
   ratk:t=>{const w=st.sheet.armas[+t.dataset.i];const a=w.t==='dist'?'agi':(w.a||'cor');const mods=[[a.toUpperCase(),+st.sheet.attrs[a]||0]];if(w.p&&st.sheet.prof)mods.push(['prof',+st.sheet.prof]);
     const r=rollTest({label:'Ataque: '+(w.nome||'arma'),mods});
     showPop(r,`<button class="btn roll xs" data-act="rdmg" data-i="${t.dataset.i}">Rolar dano</button>${r.nat===20?`<button class="btn roll xs" data-act="rdmg" data-i="${t.dataset.i}" data-crit="1">Dano crítico ×2</button>`:''}${r.nat===1?'<span class="hint">1 natural: arma cai, desequilibra ou emperra (1d4 turnos).</span>':''}${outcomeActions(r)}`)},
@@ -1677,9 +2108,20 @@ const ACT={
   rtab:t=>{const f=t.dataset.t;if(f==='virtude')st.sheet.virtude=VIRTUDES[rnd(20)-1];else if(f==='vicio')st.sheet.vicio=VICIOS[rnd(20)-1];else st.sheet.motivacao=MOTIVACOES[rnd(12)-1][0];touch(f);renderSheet()},
   ruse:t=>{const it=st.sheet.itens[+t.dataset.i];const m=(it.o||'').match(/(\d*)d(\d+)/i);const sd=+m[2];const v=rnd(sd);const rec={kind:'use',label:'Dado de uso: '+it.n,char:st.sheet.name,faces:[{v,s:sd}],mods:[],total:v,note:v<=2?'Último uso! Precisa de outro.':'Ainda funciona.',secret:st.rb.secret};postRoll(rec);showPop(rec)},
   cast:t=>castModal(+t.dataset.i),
+  spenddet:()=>{const s=st.sheet;if(!s||RO()||(+s.determinacao||0)<1)return;adjust('determinacao',-1,0);st.rb.adv=1;if(!editingIn('#sheet'))renderSheet();toast('1 de Determinação gasta: a próxima rolagem tem vantagem.','ok')},
+  takedmg:t=>{const inp=$('#'+t.dataset.src);const n=parseInt(inp&&inp.value,10);if(!n||n<1){inp&&inp.focus();return toast('Digite quanto de Saúde.','err')}inp.value='';applyHP(n,+t.dataset.sign)},
+  qadj:t=>quickAdjust(t.dataset.id,t.dataset.k,+t.dataset.d),
+  logf:t=>{st.logFilter=t.dataset.v;renderLog()},
+  logmore:t=>loadOlderRolls(t),
+  cmbstart:()=>CMB.start(),cmbnext:()=>CMB.next(1),cmbprev:()=>CMB.next(-1),cmbroll:()=>CMB.roll(),cmbsort:()=>CMB.sort(),
+  cmbmove:t=>CMB.move(+t.dataset.i,+t.dataset.d),cmbrm:t=>CMB.rm(+t.dataset.i),cmbadd:()=>CMB.add(),cmbaddx:()=>CMB.addx(),cmbend:()=>CMB.end(),cmbsides:()=>CMB.sides(),
+  cmbturn:t=>saveCombat({...st.combat,turn:+t.dataset.i}),
+  print:()=>printSheet(),
+  profile:()=>profileModal(),
+  copyinvite:()=>{const u=location.href.split('#')[0]+'#entrar-'+st.camp.code;try{navigator.clipboard.writeText(u).then(()=>toast('Link de convite copiado.','ok'),()=>toast(u))}catch{toast(u)}},
   portrait:t=>editSheetPortrait(!!t.dataset.new),
-  portraitrm:async()=>{if(!st.sheet||RO())return;if(!(await confirmBox({title:'Remover retrato?',text:'A imagem sai da ficha. Você pode adicionar outra depois.',ok:'Remover'})))return;const s=st.sheet;s.retrato='';s.retratoSrc='';s.retratoCrop=null;['retrato','retratoSrc','retratoCrop'].forEach(k=>st.dirty.add(k));flushSave();renderSheet()},
-  wzportrait:t=>portraitEditor({src:t.dataset.new?null:wz.retratoSrc,crop:t.dataset.new?null:wz.retratoCrop,pick:!!t.dataset.new,onSave:r=>{wz.retrato=r.img;wz.retratoSrc=r.src;wz.retratoCrop=r.crop;renderWz()},onRemove:()=>{wz.retrato='';wz.retratoSrc='';wz.retratoCrop=null;renderWz()}}),
+  portraitrm:async()=>{if(!st.sheet||RO())return;if(!(await confirmBox({title:'Remover retrato?',text:'A imagem sai da ficha. Você pode adicionar outra depois.',ok:'Remover'})))return;const s=st.sheet,old=s.retratoSrc;s.retrato='';s.retratoSrc='';s.retratoCrop=null;['retrato','retratoSrc','retratoCrop'].forEach(k=>st.dirty.add(k));await flushSave();if(old)Media().remove(old);renderSheet()},
+  wzportrait:t=>portraitEditor({src:t.dataset.new?null:wz.retratoData,crop:t.dataset.new?null:wz.retratoCrop,pick:!!t.dataset.new,onSave:async r=>{if(r.dataUrl)wz.retratoData=r.dataUrl;wz.retratoCrop=r.crop;renderWz()},onRemove:async()=>{wz.retratoData='';wz.retratoCrop=null;renderWz()}}),
   levelup:()=>levelUpModal(),
   rm:t=>{if(RO())return;const l=t.dataset.l;st.sheet[l].splice(+t.dataset.i,1);touch(l);renderSheet()},
   addcustom:t=>{const l=t.dataset.l;const n={armas:{id:uid(),nome:'',t:'prox',a:'cor',d:'1d6',p:false,c:1,o:''},itens:{id:uid(),n:'',c:1,o:''},insanidades:{id:uid(),t:'curta',x:''},ataques:{id:uid(),n:'',v:13,b:3,d:'1d6'}}[l];st.sheet[l].push(n);touch(l);renderSheet()},
@@ -1719,6 +2161,9 @@ const CHG={
   drsec:t=>{st.dr.secret=t.checked},
   owner:async t=>{try{await Store.update('sheets/'+t.dataset.id,{owner:t.value||null});if(st.sheet&&st.sheetId===t.dataset.id)st.sheet.owner=t.value||null;toast('Ficha atribuída a '+(t.value?nameOf(t.value):'ninguém')+'.','ok')}catch(e){toast(errMsg(e),'err')}},
   rwsel:t=>{st.rw.sel[t.dataset.id]=t.checked},
+  cmbsel:t=>{st.cmbSel=st.cmbSel||{};st.cmbSel[t.dataset.id]=t.checked},
+  cmbinit:t=>{const c=st.combat;if(!c)return;const o=c.order.map((e,i)=>i===+t.dataset.i?{...e,init:t.value===''?null:parseInt(t.value,10)}:e);saveCombat({...c,order:o})},
+  cmbhide:t=>{const c=st.combat;if(!c)return;const o=c.order.map((e,i)=>i===+t.dataset.i?{...e,hidden:t.checked}:e);saveCombat({...c,order:o})},
   rwselall:t=>{st.sheets.filter(s=>s.type==='pc').forEach(s=>st.rw.sel[s._id]=t.checked);renderContent()},
   wzaudaz:t=>{const k=t.dataset.a;if(t.checked){if(wz.audaz.length>=2){t.checked=false;return toast('O Audaz escolhe só 2 atributos.')}wz.audaz.push(k)}else wz.audaz=wz.audaz.filter(x=>x!==k);renderWz()},
   wzarma:t=>{const i=+t.dataset.i;wz.armas=t.checked?[...wz.armas,i]:wz.armas.filter(x=>x!==i)},
@@ -1745,6 +2190,9 @@ document.addEventListener('change',e=>{
   if(t.dataset.rb&&t.type==='checkbox'){st.rb[t.dataset.rb]=t.checked}
   if(t.tagName==='SELECT'&&t.dataset.k&&t.closest('#sheet')&&(t.dataset.k==='arquetipo'||t.dataset.k==='motivacao'))renderSheet();
 });
+document.addEventListener('keydown',e=>{const t=e.target;if(e.key==='Enter'&&t.dataset&&/^(dre|drn|drm|drl)$/.test(t.dataset.inp||'')){e.preventDefault();drRoll()}
+  if(e.key==='Enter'&&t.id&&/^(hp-amt|pop-dmg)$/.test(t.id)){e.preventDefault();const b=t.parentElement.querySelector('[data-sign="-1"]');b&&b.click()}});
+document.addEventListener('toggle',e=>{const d=e.target;if(d.dataset&&d.dataset.tog)st[d.dataset.tog]=d.open},true);
 addEventListener('beforeunload',()=>{if(st.sheetId)flushSave()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&st.sheetId)flushSave()});
 
