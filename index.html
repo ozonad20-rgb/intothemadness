@@ -468,8 +468,7 @@ button.who:hover{background:var(--bg-3)}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, sendPasswordResetEmail, sendEmailVerification, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, doc as fsDoc, getDoc, setDoc, deleteDoc, writeBatch, collection as fsCollection, query as fsQuery, where as fsWhere, orderBy as fsOrderBy, limit as fsLimit, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getStorage, ref as sRef, uploadString, getDownloadURL, deleteObject, listAll } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, doc as fsDoc, getDoc, getDocFromCache, setDoc, deleteDoc, writeBatch, collection as fsCollection, query as fsQuery, where as fsWhere, orderBy as fsOrderBy, limit as fsLimit, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* ===== Dados do sistema Into the Madness (Jonas Picholaro, CC BY-SA) ===== */
 const ATTRS = [
@@ -927,7 +926,7 @@ function dec(v){if(Array.isArray(v))return v.map(dec);if(v&&typeof v==='object')
 const snapData=s=>dec(structuredClone(s.data()));
 const Store={mode:'cloud',
   init(){
-    fb.app=initializeApp(firebaseConfig);fb.auth=getAuth(fb.app);fb.storage=getStorage(fb.app);
+    fb.app=initializeApp(firebaseConfig);fb.auth=getAuth(fb.app);
     /* cache local persistente: abre mais rápido, economiza leituras e funciona com a internet oscilando */
     try{fb.db=initializeFirestore(fb.app,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})})}
     catch(e){console.warn('cache persistente indisponível',e);fb.db=getFirestore(fb.app)}
@@ -940,6 +939,8 @@ const Store={mode:'cloud',
   noIndex:false,
   _idxWarn(e){if(!this.noIndex){this.noIndex=true;console.warn('Falta o índice composto (rolls: campaign + ts). Publique firestore.indexes.json ou use o link:',e.message)}},
   async get(p){return this.retry(async()=>{const s=await getDoc(this.ref(p));return s.exists()?{...snapData(s),_id:s.id}:null})},
+  /* documentos que nunca mudam (imagens): tenta o cache local antes de ir ao servidor */
+  async getCached(p){try{const s=await getDocFromCache(this.ref(p));if(s.exists())return{...snapData(s),_id:s.id}}catch{}return this.get(p)},
   async set(p,d){return this.retry(()=>setDoc(this.ref(p),enc(clean(d))))},
   /* merge profundo: objetos aninhados se mesclam, listas são substituídas */
   async update(p,d){return this.retry(()=>setDoc(this.ref(p),enc(clean(d)),{merge:true}))},
@@ -962,27 +963,12 @@ const Store={mode:'cloud',
   watchDoc(p,cb){return onSnapshot(this.ref(p),s=>cb(s.exists()?{...snapData(s),_id:s.id}:null),e=>console.warn(p,e))},
   async claim(){return true}
 };
-/* imagens no Firebase Storage: campaigns/{código}/{tipo}-{id}.jpg */
-const MediaBackend={
-  limit:450000,
-  async save(kind,code,dataUrl){
-    const r=sRef(fb.storage,`campaigns/${code}/${kind}-${uid()}.jpg`);
-    await uploadString(r,dataUrl,'data_url',{contentType:'image/jpeg',cacheControl:'public,max-age=31536000,immutable'});
-    return await getDownloadURL(r);
-  },
-  async remove(ref){if(!ref||!/^https?:/.test(ref))return;try{await deleteObject(sRef(fb.storage,ref))}catch(e){console.warn('remover imagem',e)}},
-  async purge(code){try{const l=await listAll(sRef(fb.storage,`campaigns/${code}`));await Promise.all(l.items.map(i=>deleteObject(i).catch(()=>{})))}catch(e){console.warn('limpar imagens',e)}}
-};
 function errMsg(e){
   const c=(e&&e.code)||'';
   const M={
     'permission-denied':'Sem permissão para isso nesta mesa. Confira se você faz parte da campanha e se as regras do Firestore foram publicadas.',
     'resource-exhausted':'Muitas ações seguidas. Espere alguns segundos.',
     'unavailable':'Sem conexão com o servidor. Verifique a internet.',
-    'storage/unauthorized':'O Storage recusou a imagem. Publique storage.rules e confira se ela tem menos de 3 MB.',
-    'storage/quota-exceeded':'O espaço do Firebase Storage acabou.',
-    'storage/retry-limit-exceeded':'O envio da imagem demorou demais. Tente de novo.',
-    'storage/unknown':'Falha no Storage. Confira se o Storage está ativado no projeto.',
     'auth/invalid-email':'E-mail inválido.',
     'auth/missing-email':'Informe o e-mail.',
     'auth/user-not-found':'Não existe conta com esse e-mail.',
@@ -1743,20 +1729,21 @@ function levelUpModal(){
 
 /* ===================== imagens (retratos e capas) ===================== */
 /* A imagem-fonte é guardada uma vez; o corte é só {z,x,y,ar} e é aplicado por CSS.
-   No Firebase a fonte vai para o Storage; no artifact, para a coleção media. */
+   A fonte fica na coleção media (base64) e é guardada no cache local depois da primeira leitura. */
 const SILHOUETTE=`<svg viewBox="0 0 60 80" aria-hidden="true"><circle cx="30" cy="27" r="12" fill="currentColor"/><path d="M7 80c0-17 10.5-27 23-27s23 10 23 27z" fill="currentColor"/></svg>`;
+/* imagens como documentos da coleção media (base64). No Firestore cabem até ~1 MB por documento. */
 const DbMedia={
-  limit:200000,
-  async save(kind,code,dataUrl){const id=uid();await Store.set('media/'+id,{data:dataUrl,campaign:code,kind});mediaCache['db:'+id]=dataUrl;return 'db:'+id},
+  limit:typeof firebaseConfig!=='undefined'?600000:200000,
+  async save(kind,code,dataUrl){const id=uid();await Store.set('media/'+id,{data:dataUrl,campaign:code,kind,by:st.user.uname,ts:Date.now()});mediaCache['db:'+id]=dataUrl;return 'db:'+id},
   async remove(ref){if(ref&&ref.startsWith('db:'))await Store.del('media/'+ref.slice(3)).catch(()=>{})},
-  async purge(code){try{for(const m of await Store.query('media',[['campaign','==',code]]))await Store.del('media/'+m._id)}catch{}}
+  async purge(code){try{const ms=await Store.query('media',[['campaign','==',code]]);await Store.delMany(ms.map(m=>'media/'+m._id))}catch(e){console.warn('limpar imagens',e)}}
 };
 const Media=()=>typeof MediaBackend!=='undefined'?MediaBackend:DbMedia;
 const mediaCache={},mediaLoading={};
 function mediaUrl(ref){if(!ref)return '';if(!ref.startsWith('db:'))return ref;return mediaCache[ref]||''}
 async function loadMedia(ref){
   if(!ref||!ref.startsWith('db:')||mediaCache[ref]||mediaLoading[ref])return;mediaLoading[ref]=1;
-  const d=await Store.get('media/'+ref.slice(3)).catch(()=>null);delete mediaLoading[ref];
+  const d=await(Store.getCached?Store.getCached('media/'+ref.slice(3)):Store.get('media/'+ref.slice(3))).catch(()=>null);delete mediaLoading[ref];
   if(d&&d.data){mediaCache[ref]=d.data;$$(`img[data-media="${ref}"]`).forEach(im=>im.src=d.data)}
 }
 /* geometria do corte: frame com largura 1 e altura 1/FA; imagem com proporção ar */
